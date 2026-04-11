@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer'
 import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import TableOfContents, { TocHeading } from '@/components/blog/TableOfContents'
+import PostNavigation from '@/components/blog/PostNavigation'
 import { formatDate } from '@/lib/utils'
 
 function extractHeadings(markdown: string): TocHeading[] {
@@ -49,8 +50,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const post = await getPostBySlug(params.slug)
   if (!post) notFound()
 
-  const content = await getPostContent(post.id)
+  const [content, allPosts] = await Promise.all([
+    getPostContent(post.id),
+    getAllPosts(),
+  ])
   const headings = extractHeadings(content)
+  const idx = allPosts.findIndex((p) => p.slug === post.slug)
+  const prev = idx < allPosts.length - 1 ? allPosts[idx + 1] : null
+  const next = idx > 0 ? allPosts[idx - 1] : null
 
   return (
     <>
@@ -119,8 +126,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
             {/* 본문 */}
             <PostBody content={content} />
 
+            {/* 이전글/다음글 */}
+            <PostNavigation prev={prev} next={next} />
+
             {/* 댓글 */}
-            <section style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border)' }}>
+            <section style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--border)' }}>
               <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>
                 댓글
               </h2>
