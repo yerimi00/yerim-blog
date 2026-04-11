@@ -8,7 +8,9 @@ export default function PostCard({ post, index }: { post: Post; index: number })
       <article
         className="card-hover"
         style={{
-          padding: '1.5rem 0',
+          padding: '1.5rem 0.75rem',
+          margin: '0 -0.75rem',
+          borderRadius: '8px',
           borderBottom: '1px solid var(--border)',
           display: 'grid',
           gridTemplateColumns: '1fr auto',

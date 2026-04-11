@@ -60,13 +60,14 @@ export async function getPostsBySeries() {
   return seriesMap
 }
 
-// 인기글 (views 기준 상위 5개)
+// 인기글 (views 기준 상위 5개, 조회수 없으면 최신순 fallback)
 export async function getPopularPosts(): Promise<Post[]> {
   const posts = await getAllPosts()
-  return posts
+  const withViews = posts
     .filter((p) => p.views !== undefined)
     .sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
-    .slice(0, 5)
+  if (withViews.length >= 2) return withViews.slice(0, 5)
+  return posts.slice(0, 5)
 }
 
 // 태그 목록 추출

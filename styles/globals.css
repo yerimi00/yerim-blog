@@ -107,7 +107,6 @@
 
   .card-hover:hover {
     background: var(--bg-secondary) !important;
-    border-color: var(--accent) !important;
     transform: translateY(-1px);
   }
 
