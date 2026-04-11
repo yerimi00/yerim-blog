@@ -99,7 +99,8 @@ function extractPostMeta(page: any): Post {
     props.Tags?.multi_select?.map((t: any) => t.name) || []
 
   const series =
-    props.Series?.select?.name || undefined
+    props.Series?.rich_text?.[0]?.plain_text || undefined
+
 
   const views =
     props.Views?.number ?? undefined

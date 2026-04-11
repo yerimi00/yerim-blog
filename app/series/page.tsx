@@ -88,7 +88,7 @@ export default async function SeriesPage() {
                       href={`/blog/${post.slug}`}
                       style={{ textDecoration: 'none' }}
                     >
-                      <div
+                      <div className="series-item"
                         style={{
                           padding: '1rem 1.5rem',
                           borderBottom: i < posts.length - 1 ? '1px solid var(--border)' : 'none',
@@ -98,12 +98,7 @@ export default async function SeriesPage() {
                           transition: 'background 0.15s',
                           background: 'transparent',
                         }}
-                        onMouseEnter={(e) => {
-                          ;(e.currentTarget as HTMLElement).style.background = 'var(--bg)'
-                        }}
-                        onMouseLeave={(e) => {
-                          ;(e.currentTarget as HTMLElement).style.background = 'transparent'
-                        }}
+                       
                       >
                         <span
                           style={{

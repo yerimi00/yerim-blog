@@ -1,5 +1,5 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,7 +12,7 @@
     --text: #111827;
     --text-muted: #6b7280;
     --border: #e5e7eb;
-    --accent: #3B82F6;
+    --accent: #3b82f6;
     --tag-bg: #eff6ff;
     --tag-text: #1d4ed8;
   }
@@ -23,7 +23,7 @@
     --text: #e5e7eb;
     --text-muted: #9ca3af;
     --border: #2d3748;
-    --accent: #60A5FA;
+    --accent: #60a5fa;
     --tag-bg: #1e3a5f;
     --tag-text: #93c5fd;
   }
@@ -31,16 +31,27 @@
   body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: 'Pretendard', system-ui, sans-serif;
-    transition: background-color 0.2s, color 0.2s;
+    font-family: "Pretendard", system-ui, sans-serif;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
   }
 
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   /* 스크롤바 */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
 
   /* 코드 하이라이트 */
   pre {
@@ -48,25 +59,39 @@
     border-radius: 8px;
     padding: 1.25rem !important;
     overflow-x: auto;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 0.875rem;
     line-height: 1.7;
   }
 
   /* 배너 슬라이더 애니메이션 */
   @keyframes slideIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .slide-in { animation: slideIn 0.5s ease forwards; }
+  .slide-in {
+    animation: slideIn 0.5s ease forwards;
+  }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
-  .fade-in { animation: fadeIn 0.4s ease forwards; }
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
 }
 
 @layer components {
@@ -90,5 +115,9 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.25rem;
+  }
+
+  .series-item:hover {
+    background: var(--bg) !important;
   }
 }
