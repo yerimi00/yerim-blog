@@ -25,8 +25,8 @@ export default function Footer() {
         </p>
         <div style={{ display: 'flex', gap: '1rem' }}>
           {[
-            { href: 'https://github.com/your-github', label: 'GitHub' },
-            { href: 'https://velog.io/@your-velog', label: 'Velog' },
+            { href: 'https://github.com/yerimi00', label: 'GitHub' },
+            { href: 'https://velog.io/@yerimi00', label: 'Velog' },
           ].map(({ href, label }) => (
             <a
               key={label}

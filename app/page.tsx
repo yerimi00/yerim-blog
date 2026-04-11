@@ -2,7 +2,7 @@ import { getAllPosts, getPopularPosts } from '@/lib/notion'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import HeroBanner from '@/components/blog/HeroBanner'
-import PostCard from '@/components/blog/PostCard'
+import BlogFilter from '@/components/blog/BlogFilter'
 import Sidebar from '@/components/blog/Sidebar'
 
 export const revalidate = 60
@@ -47,11 +47,10 @@ export default async function HomePage() {
             >
               전체 아티클 · {allPosts.length}개
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-              {allPosts.map((post, i) => (
-                <PostCard key={post.id} post={post} index={i} />
-              ))}
-            </div>
+            <BlogFilter
+              posts={allPosts}
+              tags={[...new Set(allPosts.flatMap((p) => p.tags))]}
+            />
           </section>
 
           {/* 사이드바 */}

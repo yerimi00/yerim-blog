@@ -104,8 +104,8 @@ export default function AboutPage() {
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {[
-                { label: 'GitHub', url: 'https://github.com/your-github' },
-                { label: 'Velog', url: 'https://velog.io/@your-velog' },
+                { label: 'GitHub', url: 'https://github.com/yerimi00' },
+                { label: 'Velog', url: 'https://velog.io/@yerimi00' },
               ].map(({ label, url }) => (
                 <a
                   key={label}
