@@ -16,6 +16,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   // 모달 열릴 때 포스트 데이터 fetch
   useEffect(() => {
@@ -38,6 +39,13 @@ export default function SearchModal({ isOpen, onClose }: Props) {
     }
   }, [isOpen])
 
+  // 키보드 이동 시 활성 항목 자동 스크롤
+  useEffect(() => {
+    if (!listRef.current) return
+    const activeEl = listRef.current.querySelector('[data-active="true"]')
+    activeEl?.scrollIntoView({ block: 'nearest' })
+  }, [activeIndex])
+
   // ESC 닫기
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -56,7 +64,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
           p.tags.some((t) => t.toLowerCase().includes(q))
         )
       })
-    : posts.slice(0, 6)
+    : []
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -147,60 +155,64 @@ export default function SearchModal({ isOpen, onClose }: Props) {
           </kbd>
         </div>
 
-        {/* 결과 목록 */}
-        <div style={{ maxHeight: '55vh', overflowY: 'auto' }}>
-          {loading ? (
-            <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              검색 중...
-            </p>
-          ) : filtered.length === 0 ? (
-            <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              검색 결과가 없어요.
-            </p>
-          ) : (
-            filtered.map((post, i) => (
-              <Link
-                key={post.id}
-                href={`/blog/${post.slug}`}
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '1rem 1.25rem',
-                  textDecoration: 'none',
-                  borderBottom: '1px solid var(--border)',
-                  background: i === activeIndex ? 'var(--bg-secondary)' : 'transparent',
-                  transition: 'background 0.1s',
-                }}
-                onMouseEnter={() => setActiveIndex(i)}
-              >
-                <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="tag-badge">{tag}</span>
-                  ))}
-                </div>
-                <p style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem', marginBottom: '0.2rem' }}>
-                  {post.title}
-                </p>
-                <p
+        {/* 결과 목록 — 쿼리 있을 때만 */}
+        {query.trim() && (
+          <div ref={listRef} style={{ maxHeight: '55vh', overflowY: 'auto' }}>
+            {loading ? (
+              <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                검색 중...
+              </p>
+            ) : filtered.length === 0 ? (
+              <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                검색 결과가 없어요.
+              </p>
+            ) : (
+              filtered.map((post, i) => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  onClick={onClose}
+                  data-active={i === activeIndex}
                   style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--text-muted)',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
+                    display: 'block',
+                    padding: '1rem 1.25rem',
+                    textDecoration: 'none',
+                    borderBottom: '1px solid var(--border)',
+                    background: i === activeIndex ? 'var(--bg-secondary)' : 'transparent',
+                    transition: 'background 0.1s',
                   }}
+                  onMouseEnter={() => setActiveIndex(i)}
                 >
-                  {post.description}
-                </p>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  {formatDate(post.date)}
-                </span>
-              </Link>
-            ))
-          )}
-        </div>
+                  <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <span key={tag} className="tag-badge">{tag}</span>
+                    ))}
+                  </div>
+                  <p style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem', marginBottom: '0.2rem' }}>
+                    {post.title}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--text-muted)',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {post.description}
+                  </p>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    {formatDate(post.date)}
+                  </span>
+                </Link>
+              ))
+            )}
+          </div>
+        )}
 
-        {/* 하단 단축키 힌트 */}
+        {/* 하단 단축키 힌트 — 쿼리 있을 때만 */}
+        {query.trim() && (
         <div
           style={{
             padding: '0.75rem 1.25rem',
@@ -230,6 +242,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
             </span>
           ))}
         </div>
+        )}
       </div>
     </div>
   )

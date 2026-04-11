@@ -21,7 +21,7 @@ export default function Footer() {
         }}
       >
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          © 2025 yerim.dev · 배우고 기록하는 중
+          © 2026 yerimi00.log
         </p>
         <div style={{ display: 'flex', gap: '1rem' }}>
           {[
