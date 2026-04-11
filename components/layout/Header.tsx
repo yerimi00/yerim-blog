@@ -90,23 +90,26 @@ export default function Header() {
           <button
             onClick={() => setIsSearchOpen(true)}
             style={{
-              width: '36px',
               height: '36px',
+              padding: '0 10px',
               borderRadius: '8px',
               border: '1px solid var(--border)',
               background: 'var(--bg-secondary)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              gap: '6px',
               transition: 'background 0.15s',
             }}
             aria-label="검색"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
             </svg>
+            <kbd style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'inherit', lineHeight: 1 }}>
+              ⌘K
+            </kbd>
           </button>
 
           {/* 다크모드 토글 */}

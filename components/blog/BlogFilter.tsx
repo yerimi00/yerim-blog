@@ -31,25 +31,29 @@ export default function BlogFilter({ tags, posts }: { tags: string[]; posts: Pos
         >
           전체
         </button>
-        {tags.map((tag) => (
-          <button
-            key={tag}
-            onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '20px',
-              border: '1px solid var(--border)',
-              background: selectedTag === tag ? 'var(--accent)' : 'transparent',
-              color: selectedTag === tag ? '#fff' : 'var(--text-muted)',
-              fontSize: '0.82rem',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s',
-            }}
-          >
-            {tag}
-          </button>
-        ))}
+        {tags.map((tag) => {
+          const count = posts.filter((p) => p.tags.includes(tag)).length
+          return (
+            <button
+              key={tag}
+              onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+              style={{
+                padding: '6px 14px',
+                borderRadius: '20px',
+                border: '1px solid var(--border)',
+                background: selectedTag === tag ? 'var(--accent)' : 'transparent',
+                color: selectedTag === tag ? '#fff' : 'var(--text-muted)',
+                fontSize: '0.82rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {tag}
+              <span style={{ marginLeft: '5px', opacity: 0.65, fontSize: '0.75rem' }}>{count}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* 글 목록 */}

@@ -18,8 +18,8 @@
   }
 
   .dark {
-    --bg: #0f1117;
-    --bg-secondary: #1a1d27;
+    --bg: hsl(225deg 15% 8%);
+    --bg-secondary: hsl(225deg 12% 12%);
     --text: #e5e7eb;
     --text-muted: #9ca3af;
     --border: #2d3748;
@@ -106,6 +106,7 @@
   }
 
   .card-hover:hover {
+    background: var(--bg-secondary) !important;
     border-color: var(--accent) !important;
     transform: translateY(-1px);
   }
