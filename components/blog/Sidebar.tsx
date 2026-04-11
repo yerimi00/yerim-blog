@@ -67,37 +67,47 @@ export default function Sidebar({ popularPosts, totalPosts, totalViews, seriesCo
         </ol>
       </div>
 
-      {/* 최신 댓글 (giscus는 iframe이라 최신댓글 목록은 별도 표시) */}
+      {/* About 미니 카드 */}
       <div className="sidebar-card">
-        <h3
-          style={{
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            color: 'var(--text-muted)',
-            letterSpacing: '0.07em',
-            textTransform: 'uppercase',
-            marginBottom: '0.75rem',
-          }}
-        >
-          최신 댓글
-        </h3>
-        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-          댓글은 각 글 하단의 giscus를 통해 확인할 수 있어요.
-        </p>
-        <a
-          href="https://github.com/your-repo/discussions"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-block',
-            marginTop: '0.5rem',
-            fontSize: '0.8rem',
-            color: 'var(--accent)',
-            textDecoration: 'none',
-          }}
-        >
-          GitHub Discussions 바로가기 →
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'var(--accent)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              color: '#fff',
+              flexShrink: 0,
+            }}
+          >
+            예
+          </div>
+          <div>
+            <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.1rem' }}>yerim</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>개발을 배우고, 배운 것을 기록합니다</p>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {[
+            { label: 'GitHub', href: 'https://github.com/yerimi00' },
+            { label: 'Velog', href: 'https://velog.io/@yerimi00' },
+          ].map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none' }}
+            >
+              {label} →
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* 태그 클라우드 공간 (추후 확장) */}

@@ -66,9 +66,10 @@ export default function PostCard({ post, index }: { post: Post; index: number })
             {post.description}
           </p>
 
-          {/* 날짜 + 조회수 */}
+          {/* 날짜 + 읽기 시간 + 조회수 */}
           <div style={{ marginTop: '0.6rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
             {formatDate(post.date)}
+            {` · ${Math.max(1, Math.ceil(post.description.length / 30))}분 읽기`}
             {post.views !== undefined && ` · 조회 ${post.views}`}
           </div>
         </div>

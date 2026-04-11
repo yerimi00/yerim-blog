@@ -56,16 +56,42 @@ export default function BlogFilter({ tags, posts }: { tags: string[]; posts: Pos
         })}
       </div>
 
-      {/* 글 목록 */}
-      <div>
-        {filtered.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem 0' }}>
-            해당 태그의 글이 없어요.
-          </p>
-        ) : (
-          filtered.map((post, i) => <PostCard key={post.id} post={post} index={i} />)
-        )}
-      </div>
+      {/* 글 목록 (연도별 그룹핑) */}
+      {filtered.length === 0 ? (
+        <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem 0' }}>
+          해당 태그의 글이 없어요.
+        </p>
+      ) : (() => {
+        const grouped = filtered.reduce<Record<string, Post[]>>((acc, post) => {
+          const year = new Date(post.date).getFullYear().toString()
+          if (!acc[year]) acc[year] = []
+          acc[year].push(post)
+          return acc
+        }, {})
+        const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a))
+        let globalIndex = 0
+        return years.map((year) => (
+          <div key={year}>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--text-muted)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                fontFamily: 'JetBrains Mono, monospace',
+                padding: '1.25rem 0 0.5rem',
+                borderTop: '1px solid var(--border)',
+              }}
+            >
+              {year}
+            </p>
+            {grouped[year].map((post) => (
+              <PostCard key={post.id} post={post} index={globalIndex++} />
+            ))}
+          </div>
+        ))
+      })()}
     </div>
   )
 }
