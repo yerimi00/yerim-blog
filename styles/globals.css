@@ -13,8 +13,6 @@
     --text-muted: #6b7280;
     --border: #e5e7eb;
     --accent: #3b82f6;
-    --tag-bg: #eff6ff;
-    --tag-text: #1d4ed8;
   }
 
   .dark {
@@ -24,8 +22,6 @@
     --text-muted: #9ca3af;
     --border: #2d3748;
     --accent: #60a5fa;
-    --tag-bg: #1e3a5f;
-    --tag-text: #93c5fd;
   }
 
   body {
@@ -96,9 +92,13 @@
 
 @layer components {
   .tag-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-    background: var(--tag-bg);
-    color: var(--tag-text);
+    @apply inline-flex items-center text-xs;
+    color: var(--text-muted);
+  }
+
+  .tag-badge::before {
+    content: '#';
+    margin-right: 1px;
   }
 
   .card-hover {

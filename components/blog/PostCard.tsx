@@ -19,20 +19,23 @@ export default function PostCard({ post, index }: { post: Post; index: number })
         }}
       >
         <div>
-          {/* 태그 + 시리즈 */}
-          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+          {/* 시리즈 + 태그 */}
+          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
             {post.series && (
-              <span
-                style={{
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  color: 'var(--accent)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {post.series}
-              </span>
+              <>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: 'var(--accent)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {post.series}
+                </span>
+                <span style={{ color: 'var(--border)', fontSize: '0.7rem' }}>·</span>
+              </>
             )}
             {post.tags.slice(0, 2).map((tag) => (
               <span key={tag} className="tag-badge">{tag}</span>
