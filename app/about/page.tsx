@@ -1,6 +1,5 @@
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-
 export const metadata = { title: 'About', description: '안녕하세요, 예림입니다' }
 
 export default function AboutPage() {

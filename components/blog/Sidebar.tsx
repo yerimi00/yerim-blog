@@ -1,10 +1,23 @@
 import Link from 'next/link'
 import { Post } from '@/types'
-import { formatDate } from '@/lib/utils'
 
-export default function Sidebar({ popularPosts }: { popularPosts: Post[] }) {
+interface Props {
+  popularPosts: Post[]
+  totalPosts: number
+  totalViews: number
+  seriesCount: number
+}
+
+export default function Sidebar({ popularPosts, totalPosts, totalViews, seriesCount }: Props) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* 통계 */}
+      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        글 <strong style={{ color: 'var(--text)' }}>{totalPosts}</strong>
+        {' · '}조회수 <strong style={{ color: 'var(--text)' }}>{totalViews.toLocaleString()}</strong>
+        {' · '}시리즈 <strong style={{ color: 'var(--text)' }}>{seriesCount}</strong>
+      </p>
+
       {/* 인기 있는 글 */}
       <div className="sidebar-card">
         <h3

@@ -55,7 +55,12 @@ export default async function HomePage() {
 
           {/* 사이드바 */}
           <aside style={{ position: 'sticky', top: '80px' }}>
-            <Sidebar popularPosts={popularPosts} />
+            <Sidebar
+              popularPosts={popularPosts}
+              totalPosts={allPosts.length}
+              totalViews={allPosts.reduce((s, p) => s + (p.views ?? 0), 0)}
+              seriesCount={new Set(allPosts.map((p) => p.series).filter(Boolean)).size}
+            />
           </aside>
         </div>
       </main>
