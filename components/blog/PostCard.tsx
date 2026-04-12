@@ -13,11 +13,23 @@ export default function PostCard({ post, index }: { post: Post; index: number })
           borderRadius: '8px',
           borderBottom: '1px solid var(--border)',
           display: 'grid',
-          gridTemplateColumns: '1fr auto',
+          gridTemplateColumns: post.coverImage ? 'auto 1fr auto' : '1fr auto',
           gap: '1rem',
-          alignItems: 'start',
+          alignItems: 'center',
         }}
       >
+        {/* 커버 이미지 */}
+        {post.coverImage && (
+          <div style={{ width: '72px', height: '72px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              src={post.coverImage}
+              alt=""
+              loading="lazy"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </div>
+        )}
+
         <div>
           {/* 시리즈 + 태그 */}
           <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>

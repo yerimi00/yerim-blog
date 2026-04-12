@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 
@@ -16,7 +17,7 @@ export default function PostBody({ content }: { content: string }) {
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight, rehypeSlug]}
+        rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
         components={{
           img: ({ src, alt }) => (
             <img
