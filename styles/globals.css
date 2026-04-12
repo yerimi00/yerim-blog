@@ -52,12 +52,18 @@
   /* 코드 하이라이트 */
   pre {
     background: #1e1e2e !important;
+    color: #cdd6f4 !important;
     border-radius: 8px;
     padding: 1.25rem !important;
     overflow-x: auto;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.875rem;
     line-height: 1.7;
+  }
+
+  pre code {
+    color: inherit !important;
+    background: transparent !important;
   }
 
   /* 배너 슬라이더 애니메이션 */
