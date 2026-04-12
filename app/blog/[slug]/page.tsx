@@ -7,20 +7,27 @@ import GiscusComments from '@/components/blog/GiscusComments'
 import TableOfContents, { TocHeading } from '@/components/blog/TableOfContents'
 import PostNavigation from '@/components/blog/PostNavigation'
 import { formatDate } from '@/lib/utils'
+import GithubSlugger from 'github-slugger'
 
 function extractHeadings(markdown: string): TocHeading[] {
-  const regex = /^(#{2,3})\s+(.+)$/gm
   const headings: TocHeading[] = []
-  let match
-  while ((match = regex.exec(markdown)) !== null) {
-    const level = match[1].length
-    const text = match[2].trim()
-    const id = text
-      .toLowerCase()
-      .replace(/[^\w\s-가-힣]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/^-+|-+$/g, '')
-    headings.push({ level, text, id })
+  const slugger = new GithubSlugger()
+  let inCodeBlock = false
+
+  for (const line of markdown.split('\n')) {
+    if (line.trimStart().startsWith('```')) {
+      inCodeBlock = !inCodeBlock
+      continue
+    }
+    if (inCodeBlock) continue
+
+    const match = line.match(/^(#{2,3})\s+(.+)$/)
+    if (match) {
+      const level = match[1].length
+      const text = match[2].trim()
+      const id = slugger.slug(text)
+      headings.push({ level, text, id })
+    }
   }
   return headings
 }

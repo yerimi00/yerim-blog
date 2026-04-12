@@ -54,7 +54,7 @@ export default function TableOfContents({ headings }: { headings: TocHeading[] }
       </p>
       <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
         {headings.map(({ id, text, level }) => (
-          <li key={id} style={{ paddingLeft: level === 3 ? '0.875rem' : '0' }}>
+          <li key={id} style={{ paddingLeft: level === 3 ? '1.25rem' : '0' }}>
             <a
               href={`#${id}`}
               onClick={(e) => {
@@ -63,16 +63,13 @@ export default function TableOfContents({ headings }: { headings: TocHeading[] }
               }}
               style={{
                 display: 'block',
-                padding: '0.3rem 0.5rem',
-                borderRadius: '6px',
-                fontSize: level === 2 ? '0.82rem' : '0.78rem',
+                padding: '0.25rem 0.25rem',
+                fontSize: level === 2 ? '0.82rem' : '0.76rem',
                 fontWeight: activeId === id ? 600 : 400,
-                color: activeId === id ? 'var(--accent)' : 'var(--text-muted)',
+                color: activeId === id ? 'var(--text)' : 'var(--text-muted)',
                 textDecoration: 'none',
                 lineHeight: 1.4,
-                transition: 'color 0.15s, background 0.15s',
-                background: activeId === id ? 'var(--tag-bg)' : 'transparent',
-                borderLeft: activeId === id ? '2px solid var(--accent)' : '2px solid transparent',
+                transition: 'color 0.15s',
               }}
             >
               {text}

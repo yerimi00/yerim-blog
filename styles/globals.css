@@ -49,6 +49,11 @@
     border-radius: 3px;
   }
 
+  /* 목차 스크롤 오프셋 (sticky 헤더 높이만큼) */
+  h2, h3 {
+    scroll-margin-top: 90px;
+  }
+
   /* 코드 하이라이트 */
   pre {
     background: #1e1e2e !important;
