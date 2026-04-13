@@ -200,6 +200,18 @@ export async function getPopularPosts(): Promise<Post[]> {
   return posts.slice(0, 5)
 }
 
+// 조회수 증가
+export async function incrementViews(pageId: string): Promise<void> {
+  const page = await notion.pages.retrieve({ page_id: pageId }) as any
+  const current = page.properties?.Views?.number ?? 0
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      Views: { number: current + 1 },
+    },
+  })
+}
+
 // 태그 목록 추출
 export async function getAllTags(): Promise<string[]> {
   const posts = await getAllPosts()

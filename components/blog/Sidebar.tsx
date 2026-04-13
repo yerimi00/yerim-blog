@@ -1,14 +1,16 @@
 import Link from 'next/link'
 import { Post } from '@/types'
+import { RecentComment } from '@/lib/github'
 
 interface Props {
   popularPosts: Post[]
   totalPosts: number
   totalViews: number
   seriesCount: number
+  recentComments?: RecentComment[]
 }
 
-export default function Sidebar({ popularPosts }: Props) {
+export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
@@ -39,6 +41,26 @@ export default function Sidebar({ popularPosts }: Props) {
                 {i + 1}
               </span>
               <div>
+                {/* 시리즈 + 태그 */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
+                  {post.series && (
+                    <span style={{
+                      fontSize: '0.65rem',
+                      fontWeight: 500,
+                      color: 'var(--accent)',
+                      background: 'rgba(59, 130, 246, 0.1)',
+                      padding: '1px 8px',
+                      borderRadius: '20px',
+                    }}>
+                      {post.series}
+                    </span>
+                  )}
+                  {post.tags.slice(0, 2).map((tag) => (
+                    <span key={tag} style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
                 <Link
                   href={`/blog/${post.slug}`}
                   style={{
@@ -55,11 +77,6 @@ export default function Sidebar({ popularPosts }: Props) {
                 >
                   {post.title}
                 </Link>
-                {post.tags[0] && (
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px', display: 'block' }}>
-                    {post.tags[0]}
-                  </span>
-                )}
               </div>
             </li>
           ))}
@@ -71,9 +88,24 @@ export default function Sidebar({ popularPosts }: Props) {
         <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.75rem' }}>
           최신 댓글
         </h3>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          아직 댓글이 없습니다.
-        </p>
+        {recentComments.length === 0 ? (
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>아직 댓글이 없습니다.</p>
+        ) : (
+          <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {recentComments.map((c, i) => (
+              <li key={i}>
+                <Link href={`/blog/${c.postSlug}`} style={{ textDecoration: 'none', display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    {c.author}
+                  </span>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    {c.body}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        )}
       </div>
 
       {/* About 카드 */}

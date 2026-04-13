@@ -69,9 +69,23 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
             transition: 'opacity 0.3s, transform 0.3s',
           }}
         >
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+            {post.series && (
+              <span style={{
+                fontSize: '0.73rem',
+                fontWeight: 500,
+                color: 'var(--accent)',
+                background: 'rgba(59, 130, 246, 0.1)',
+                padding: '2px 10px',
+                borderRadius: '20px',
+              }}>
+                {post.series}
+              </span>
+            )}
             {post.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="tag-badge">{tag}</span>
+              <span key={tag} style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                #{tag}
+              </span>
             ))}
           </div>
           <h2

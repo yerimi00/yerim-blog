@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Post } from '@/types'
 import PostCard from './PostCard'
 
-export default function BlogFilter({ tags, posts }: { tags: string[]; posts: Post[] }) {
+export default function BlogFilter({ tags, posts, commentCounts = {} }: { tags: string[]; posts: Post[]; commentCounts?: Record<string, number> }) {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
 
   const filtered = selectedTag
@@ -59,7 +59,7 @@ export default function BlogFilter({ tags, posts }: { tags: string[]; posts: Pos
       ) : (
         <div>
           {filtered.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} commentCount={commentCounts[post.slug] ?? 0} />
           ))}
         </div>
       )}

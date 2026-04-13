@@ -1,4 +1,5 @@
 import { getAllPosts, getPopularPosts } from '@/lib/notion'
+import { getCommentCounts, getRecentComments } from '@/lib/github'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import HeroBanner from '@/components/blog/HeroBanner'
@@ -8,10 +9,12 @@ import Sidebar from '@/components/blog/Sidebar'
 export const revalidate = 60
 
 export default async function HomePage() {
-  const [allPosts, popularPosts] = await Promise.all([
+  const [allPosts, popularPosts, recentComments] = await Promise.all([
     getAllPosts(),
     getPopularPosts(),
+    getRecentComments(),
   ])
+  const commentCounts = await getCommentCounts(allPosts.map((p) => p.slug))
 
   return (
     <>
@@ -44,6 +47,7 @@ export default async function HomePage() {
             <BlogFilter
               posts={allPosts}
               tags={[...new Set(allPosts.flatMap((p) => p.tags))]}
+              commentCounts={commentCounts}
             />
           </section>
 
@@ -54,6 +58,7 @@ export default async function HomePage() {
               totalPosts={allPosts.length}
               totalViews={allPosts.reduce((s, p) => s + (p.views ?? 0), 0)}
               seriesCount={new Set(allPosts.map((p) => p.series).filter(Boolean)).size}
+              recentComments={recentComments}
             />
           </aside>
         </div>

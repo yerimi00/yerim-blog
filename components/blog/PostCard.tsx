@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
 
-export default function PostCard({ post }: { post: Post; index?: number }) {
+export default function PostCard({ post, commentCount = 0 }: { post: Post; index?: number; commentCount?: number }) {
   return (
     <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
       <article
@@ -88,7 +88,7 @@ export default function PostCard({ post }: { post: Post; index?: number }) {
             {formatDate(post.date)}
           </span>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            💬 0
+            💬 {commentCount}
           </span>
         </div>
       </article>

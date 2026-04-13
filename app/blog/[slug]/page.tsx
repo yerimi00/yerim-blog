@@ -6,6 +6,7 @@ import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import TableOfContents, { TocHeading } from '@/components/blog/TableOfContents'
 import PostNavigation from '@/components/blog/PostNavigation'
+import ViewTracker from '@/components/blog/ViewTracker'
 import { formatDate } from '@/lib/utils'
 import GithubSlugger from 'github-slugger'
 
@@ -81,22 +82,29 @@ export default async function PostPage({ params }: { params: { slug: string } })
         >
           {/* 본문 영역 */}
           <article>
+            <ViewTracker slug={post.slug} />
             {/* 포스트 헤더 */}
             <header style={{ marginBottom: '3rem' }}>
-              {post.series && (
-                <p
-                  style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
+              {/* 시리즈 + 태그 */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.9rem', flexWrap: 'wrap' }}>
+                {post.series && (
+                  <span style={{
+                    fontSize: '0.73rem',
+                    fontWeight: 500,
                     color: 'var(--accent)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  {post.series}
-                </p>
-              )}
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    padding: '2px 10px',
+                    borderRadius: '20px',
+                  }}>
+                    {post.series}
+                  </span>
+                )}
+                {post.tags.map((tag) => (
+                  <span key={tag} style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
               <h1
                 style={{
                   fontFamily: "Pretendard, sans-serif",
@@ -121,11 +129,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     조회 {post.views}
                   </span>
                 )}
-                <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="tag-badge">{tag}</span>
-                  ))}
-                </div>
               </div>
               <hr style={{ marginTop: '2rem', borderColor: 'var(--border)', borderTop: '1px solid' }} />
             </header>
