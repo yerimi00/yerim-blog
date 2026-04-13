@@ -69,19 +69,7 @@ export default function Header() {
             { href: '/series', label: 'Series' },
             { href: '/about', label: 'About' },
           ].map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              style={{
-                fontSize: '0.9rem',
-                color: 'var(--text-muted)',
-                textDecoration: 'none',
-                fontWeight: 500,
-                transition: 'color 0.15s',
-              }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--accent)')}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--text-muted)')}
-            >
+            <Link key={href} href={href} className="nav-link">
               {label}
             </Link>
           ))}
