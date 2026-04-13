@@ -1,3 +1,4 @@
+import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -115,6 +116,31 @@ export default function PostBody({ content }: { content: string }) {
           em: ({ children }) => (
             <em style={{ fontStyle: 'italic', color: 'inherit' }}>{children}</em>
           ),
+          pre: ({ children, ...props }) => {
+            const codeChild = React.Children.toArray(children).find(
+              (child) => React.isValidElement(child) && (child as React.ReactElement).type === 'code'
+            ) as React.ReactElement | undefined
+            const lang = codeChild?.props?.className?.replace('language-', '') ?? null
+            return (
+              <div style={{ position: 'relative', margin: '1rem 0' }}>
+                {lang && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '0.5rem',
+                    right: '0.75rem',
+                    fontSize: '0.72rem',
+                    color: '#6b7280',
+                    fontFamily: 'JetBrains Mono, monospace',
+                    userSelect: 'none',
+                    zIndex: 1,
+                  }}>
+                    {lang}
+                  </span>
+                )}
+                <pre {...props} style={{ margin: 0 }}>{children}</pre>
+              </div>
+            )
+          },
           blockquote: ({ children }) => (
             <blockquote className="prose-blockquote">
               {children}

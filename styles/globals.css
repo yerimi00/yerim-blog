@@ -164,11 +164,13 @@
 
   /* ---- Callout ---- */
   .callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
     padding: 1rem 1.25rem;
-    border-radius: 8px;
+    border-radius: 6px;
     margin: 1.5rem 0;
-    border: 1px solid transparent;
-    border-left-width: 3px;
+    border: none;
   }
 
   .callout p {
@@ -176,13 +178,17 @@
   }
 
   .callout-icon {
-    display: none;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
   }
 
   .callout-body {
+    flex: 1;
+    min-width: 0;
     line-height: 1.8;
     font-size: 0.95rem;
-    color: var(--text-muted);
+    color: var(--text);
   }
 
   .callout-body p { margin: 0; }
@@ -195,27 +201,27 @@
     font-size: 0.875em;
   }
 
-  /* Light mode */
-  .callout-default { background: var(--bg-secondary); border-color: var(--border); }
-  .callout-blue    { background: #dbeafe; border-color: #93c5fd; }
-  .callout-yellow  { background: #fef9c3; border-color: #fde047; }
-  .callout-red     { background: #fee2e2; border-color: #fca5a5; }
-  .callout-green   { background: #dcfce7; border-color: #86efac; }
-  .callout-purple  { background: #f3e8ff; border-color: #d8b4fe; }
-  .callout-gray    { background: #f3f4f6; border-color: #d1d5db; }
-  .callout-orange  { background: #ffedd5; border-color: #fdba74; }
-  .callout-pink    { background: #fce7f3; border-color: #f9a8d4; }
+  /* Light mode — Notion 정확한 색상 */
+  .callout-default { background: #F1F1EF; }
+  .callout-gray    { background: #F1F1EF; }
+  .callout-blue    { background: #E7F3F8; }
+  .callout-yellow  { background: #FBF3DB; }
+  .callout-orange  { background: #FBECDD; }
+  .callout-red     { background: #FDEBEC; }
+  .callout-green   { background: #EDF3EC; }
+  .callout-purple  { background: #F4F0F7; }
+  .callout-pink    { background: #F9EEF3; }
 
-  /* Dark mode */
-  .dark .callout-default { background: var(--bg-secondary); border-color: var(--border); }
-  .dark .callout-blue    { background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.3); }
-  .dark .callout-yellow  { background: rgba(234, 179, 8, 0.12);  border-color: rgba(234, 179, 8, 0.3); }
-  .dark .callout-red     { background: rgba(239, 68, 68, 0.12);  border-color: rgba(239, 68, 68, 0.3); }
-  .dark .callout-green   { background: rgba(34, 197, 94, 0.12);  border-color: rgba(34, 197, 94, 0.3); }
-  .dark .callout-purple  { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.3); }
-  .dark .callout-gray    { background: var(--bg-secondary);      border-color: var(--border); }
-  .dark .callout-orange  { background: rgba(249, 115, 22, 0.12); border-color: rgba(249, 115, 22, 0.3); }
-  .dark .callout-pink    { background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.3); }
+  /* Dark mode — Notion 다크 색상 */
+  .dark .callout-default { background: rgba(151, 154, 155, 0.15); }
+  .dark .callout-gray    { background: rgba(151, 154, 155, 0.15); }
+  .dark .callout-blue    { background: rgba(92, 155, 183, 0.15); }
+  .dark .callout-yellow  { background: rgba(203, 145, 47, 0.15); }
+  .dark .callout-orange  { background: rgba(215, 129, 50, 0.15); }
+  .dark .callout-red     { background: rgba(212, 76, 71, 0.15); }
+  .dark .callout-green   { background: rgba(82, 158, 114, 0.15); }
+  .dark .callout-purple  { background: rgba(154, 109, 185, 0.15); }
+  .dark .callout-pink    { background: rgba(186, 85, 211, 0.15); }
 
   .dark .callout-body code {
     background: rgba(255, 255, 255, 0.1);
