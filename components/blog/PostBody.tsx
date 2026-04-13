@@ -17,7 +17,7 @@ export default function PostBody({ content }: { content: string }) {
               style={{
                 fontFamily: "Pretendard, sans-serif",
                 fontSize: '1.5rem',
-                fontWeight: 700,
+                fontWeight: 600,
                 lineHeight: 1.5,
                 color: 'var(--text)',
                 margin: '3rem 0 1.25rem',
@@ -33,7 +33,7 @@ export default function PostBody({ content }: { content: string }) {
               id={id}
               style={{
                 fontSize: '1.2rem',
-                fontWeight: 600,
+                fontWeight: 500,
                 lineHeight: 1.5,
                 color: 'var(--text)',
                 margin: '2rem 0 0.75rem',
@@ -60,7 +60,7 @@ export default function PostBody({ content }: { content: string }) {
               id={id}
               style={{
                 fontSize: '1rem',
-                fontWeight: 600,
+                fontWeight: 500,
                 color: 'var(--text)',
                 margin: '1.5rem 0 0.5rem',
                 lineHeight: 1.5,
