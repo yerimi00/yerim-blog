@@ -56,19 +56,30 @@
 
   /* 코드 하이라이트 */
   pre {
-    background: #1e1e2e !important;
-    color: #cdd6f4 !important;
-    border-radius: 8px;
-    padding: 1.25rem !important;
+    background: #f6f8fa !important;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.9rem 1rem !important;
+    margin: 0.75rem 0;
     overflow-x: auto;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.875rem;
-    line-height: 1.7;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    font-weight: 400;
   }
 
   pre code {
-    color: inherit !important;
     background: transparent !important;
+  }
+
+  .dark pre {
+    background: #1e1e2e !important;
+    border-color: #2d3748;
+    color: #cdd6f4 !important;
+  }
+
+  .dark pre code {
+    color: inherit !important;
   }
 
   /* 배너 슬라이더 애니메이션 */
@@ -158,6 +169,10 @@
     margin: 1.5rem 0;
     border: 1px solid transparent;
     border-left-width: 3px;
+  }
+
+  .callout p {
+    margin: 0 !important;
   }
 
   .callout-icon {

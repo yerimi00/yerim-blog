@@ -110,7 +110,7 @@ export default function PostBody({ content }: { content: string }) {
             </a>
           ),
           strong: ({ children }) => (
-            <strong style={{ fontWeight: 700, color: 'inherit' }}>{children}</strong>
+            <strong style={{ fontWeight: 600, color: 'inherit' }}>{children}</strong>
           ),
           em: ({ children }) => (
             <em style={{ fontStyle: 'italic', color: 'inherit' }}>{children}</em>
@@ -129,10 +129,11 @@ export default function PostBody({ content }: { content: string }) {
                     fontFamily: 'JetBrains Mono, monospace',
                     fontSize: '0.85em',
                     background: 'var(--bg-secondary)',
-                    color: 'var(--accent)',
+                    color: 'var(--text)',
                     padding: '0.15em 0.4em',
                     borderRadius: '4px',
                     border: '1px solid var(--border)',
+                    fontWeight: 400,
                   }}
                   {...props}
                 >

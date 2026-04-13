@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
+import 'highlight.js/styles/github.css'
 
 export const metadata: Metadata = {
   title: { default: 'yerim.dev', template: '%s | yerim.dev' },
