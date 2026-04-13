@@ -135,27 +135,39 @@
     background: var(--bg) !important;
   }
 
+  /* ---- Blockquote ---- */
+  .prose-blockquote {
+    border-left: 3px solid var(--border);
+    background: transparent;
+    border-radius: 0;
+    padding: 0.5rem 1.25rem;
+    margin: 1.5rem 0;
+    color: var(--text);
+    font-style: normal;
+  }
+
+  .prose-blockquote p {
+    margin: 0 !important;
+    line-height: 1.85;
+  }
+
   /* ---- Callout ---- */
   .callout {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
     padding: 1rem 1.25rem;
     border-radius: 8px;
     margin: 1.5rem 0;
     border: 1px solid transparent;
+    border-left-width: 3px;
   }
 
   .callout-icon {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    flex-shrink: 0;
+    display: none;
   }
 
   .callout-body {
-    flex: 1;
-    line-height: 1.7;
+    line-height: 1.8;
     font-size: 0.95rem;
+    color: var(--text-muted);
   }
 
   .callout-body p { margin: 0; }

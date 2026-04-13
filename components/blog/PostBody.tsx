@@ -18,7 +18,7 @@ export default function PostBody({ content }: { content: string }) {
                 fontFamily: "Pretendard, sans-serif",
                 fontSize: '1.5rem',
                 fontWeight: 700,
-                lineHeight: 1.35,
+                lineHeight: 1.5,
                 color: 'var(--text)',
                 margin: '3rem 0 1.25rem',
                 paddingBottom: '0.75rem',
@@ -32,8 +32,9 @@ export default function PostBody({ content }: { content: string }) {
             <h3
               id={id}
               style={{
-                fontSize: '1.05rem',
+                fontSize: '1.2rem',
                 fontWeight: 600,
+                lineHeight: 1.5,
                 color: 'var(--text)',
                 margin: '2rem 0 0.75rem',
                 display: 'flex',
@@ -58,19 +59,18 @@ export default function PostBody({ content }: { content: string }) {
             <h4
               id={id}
               style={{
-                fontSize: '0.95rem',
+                fontSize: '1rem',
                 fontWeight: 600,
-                color: 'var(--text-muted)',
+                color: 'var(--text)',
                 margin: '1.5rem 0 0.5rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                lineHeight: 1.5,
               }}
             >
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p style={{ margin: '0 0 1.1rem', color: 'var(--text)', lineHeight: 1.85, fontSize: '1rem' }}>
+            <p style={{ margin: '0 0 1.1rem', color: 'var(--text)', lineHeight: 1.85, fontSize: '1rem', fontWeight: 300 }}>
               {children}
             </p>
           ),
@@ -109,18 +109,14 @@ export default function PostBody({ content }: { content: string }) {
               {children}
             </a>
           ),
+          strong: ({ children }) => (
+            <strong style={{ fontWeight: 700, color: 'inherit' }}>{children}</strong>
+          ),
+          em: ({ children }) => (
+            <em style={{ fontStyle: 'italic', color: 'inherit' }}>{children}</em>
+          ),
           blockquote: ({ children }) => (
-            <blockquote
-              style={{
-                borderLeft: '3px solid var(--accent)',
-                background: 'var(--bg-secondary)',
-                borderRadius: '0 8px 8px 0',
-                padding: '1rem 1.25rem',
-                margin: '1.5rem 0',
-                color: 'var(--text-muted)',
-                fontStyle: 'normal',
-              }}
-            >
+            <blockquote className="prose-blockquote">
               {children}
             </blockquote>
           ),
