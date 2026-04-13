@@ -76,7 +76,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
           </div>
           <h2
             style={{
-              fontFamily: 'Noto Serif KR, serif',
+              fontFamily: "Pretendard, sans-serif",
               fontSize: '1.5rem',
               fontWeight: 700,
               color: 'var(--text)',

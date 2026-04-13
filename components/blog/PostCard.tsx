@@ -2,108 +2,95 @@ import Link from 'next/link'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
 
-export default function PostCard({ post, index }: { post: Post; index: number }) {
+export default function PostCard({ post }: { post: Post; index?: number }) {
   return (
-    <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
+    <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
       <article
-        className="card-hover"
         style={{
-          padding: '1.5rem 0.75rem',
-          margin: '0 -0.75rem',
-          borderRadius: '8px',
+          padding: '1.5rem 0',
           borderBottom: '1px solid var(--border)',
-          display: 'grid',
-          gridTemplateColumns: post.coverImage ? 'auto 1fr auto' : '1fr auto',
-          gap: '1rem',
-          alignItems: 'center',
+          cursor: 'pointer',
+        }}
+        onMouseEnter={(e) => {
+          const title = (e.currentTarget as HTMLElement).querySelector('.post-title') as HTMLElement
+          if (title) title.style.color = 'var(--accent)'
+        }}
+        onMouseLeave={(e) => {
+          const title = (e.currentTarget as HTMLElement).querySelector('.post-title') as HTMLElement
+          if (title) title.style.color = 'var(--text)'
         }}
       >
-        {/* 커버 이미지 */}
-        {post.coverImage && (
-          <div style={{ width: '72px', height: '72px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
-            <img
-              src={post.coverImage}
-              alt=""
-              loading="lazy"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-        )}
-
-        <div>
-          {/* 시리즈 + 태그 */}
-          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            {post.series && (
-              <>
-                <span
-                  style={{
-                    fontSize: '0.72rem',
-                    fontWeight: 600,
-                    color: 'var(--accent)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {post.series}
-                </span>
-                <span style={{ color: 'var(--border)', fontSize: '0.7rem' }}>·</span>
-              </>
-            )}
-            {post.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="tag-badge">{tag}</span>
-            ))}
-          </div>
-
-          {/* 제목 */}
-          <h3
-            style={{
-              fontSize: '1.05rem',
-              fontWeight: 700,
-              color: 'var(--text)',
-              marginBottom: '0.4rem',
-              lineHeight: 1.4,
-              transition: 'color 0.15s',
-            }}
-          >
-            {post.title}
-          </h3>
-
-          {/* 설명 */}
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: 'var(--text-muted)',
-              lineHeight: 1.6,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-            }}
-          >
-            {post.description}
-          </p>
-
-          {/* 날짜 + 읽기 시간 + 조회수 */}
-          <div style={{ marginTop: '0.6rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            {formatDate(post.date)}
-            {` · ${Math.max(1, Math.ceil(post.description.length / 30))}분 읽기`}
-            {post.views !== undefined && ` · 조회 ${post.views}`}
-          </div>
+        {/* 시리즈 + 태그 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
+          {/* 시리즈: 파란 배지 */}
+          {post.series && (
+            <span
+              style={{
+                fontSize: '0.73rem',
+                fontWeight: 500,
+                color: 'var(--accent)',
+                background: 'rgba(59, 130, 246, 0.1)',
+                padding: '2px 10px',
+                borderRadius: '20px',
+              }}
+            >
+              {post.series}
+            </span>
+          )}
+          {/* 태그: # 접두사 텍스트 */}
+          {post.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              style={{
+                fontSize: '0.78rem',
+                color: 'var(--text-muted)',
+              }}
+            >
+              #{tag}
+            </span>
+          ))}
         </div>
 
-        {/* 번호 */}
-        <span
+        {/* 제목 */}
+        <h3
+          className="post-title"
           style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: 'var(--border)',
-            lineHeight: 1,
-            paddingTop: '4px',
-            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '1.1rem',
+            fontWeight: 700,
+            color: 'var(--text)',
+            marginBottom: '0.4rem',
+            lineHeight: 1.45,
+            transition: 'color 0.15s',
           }}
         >
-          {String(index + 1).padStart(2, '0')}
-        </span>
+          {post.title}
+        </h3>
+
+        {/* 설명 */}
+        <p
+          style={{
+            fontSize: '0.875rem',
+            color: 'var(--text-muted)',
+            lineHeight: 1.65,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            marginBottom: '0.6rem',
+          }}
+        >
+          {post.description}
+        </p>
+
+        {/* 날짜 + 댓글 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            {formatDate(post.date)}
+          </span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            💬 0
+          </span>
+        </div>
       </article>
     </Link>
   )

@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Pretendard', 'system-ui', 'sans-serif'],
-        serif: ['Noto Serif KR', 'serif'],
+        serif: ['Pretendard', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {

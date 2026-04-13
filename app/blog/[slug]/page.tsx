@@ -99,7 +99,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               )}
               <h1
                 style={{
-                  fontFamily: 'Noto Serif KR, serif',
+                  fontFamily: "Pretendard, sans-serif",
                   fontSize: '2.2rem',
                   fontWeight: 700,
                   lineHeight: 1.35,

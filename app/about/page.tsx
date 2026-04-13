@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div>
             <h1
               style={{
-                fontFamily: 'Noto Serif KR, serif',
+                fontFamily: "Pretendard, sans-serif",
                 fontSize: '1.7rem',
                 fontWeight: 700,
                 color: 'var(--text)',

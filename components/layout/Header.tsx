@@ -50,7 +50,7 @@ export default function Header() {
         <Link href="/" style={{ textDecoration: 'none' }}>
           <span
             style={{
-              fontFamily: 'Noto Serif KR, serif',
+              fontFamily: "Pretendard, sans-serif",
               fontWeight: 700,
               fontSize: '1.2rem',
               color: 'var(--text)',

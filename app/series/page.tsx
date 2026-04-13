@@ -17,7 +17,7 @@ export default async function SeriesPage() {
         <div style={{ marginBottom: '2.5rem' }}>
           <h1
             style={{
-              fontFamily: 'Noto Serif KR, serif',
+              fontFamily: "Pretendard, sans-serif",
               fontSize: '2rem',
               fontWeight: 700,
               color: 'var(--text)',

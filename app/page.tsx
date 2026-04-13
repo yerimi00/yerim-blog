@@ -33,20 +33,14 @@ export default async function HomePage() {
         >
           {/* 전체 아티클 */}
           <section>
-            <h2
-              style={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                color: 'var(--text-muted)',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                marginBottom: '1.5rem',
-                paddingBottom: '0.75rem',
-                borderBottom: '1px solid var(--border)',
-              }}
-            >
-              전체 아티클 · {allPosts.length}개
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)' }}>
+                전체 아티클
+              </h2>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                {allPosts.length}개의 글
+              </span>
+            </div>
             <BlogFilter
               posts={allPosts}
               tags={[...new Set(allPosts.flatMap((p) => p.tags))]}
