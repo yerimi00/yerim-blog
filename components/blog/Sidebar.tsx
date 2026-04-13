@@ -16,29 +16,23 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
 
       {/* 인기 있는 글 */}
       <div className="sidebar-card">
-        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>
+        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 1rem' }}>
           인기 있는 글
         </h3>
         <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
-          {popularPosts.map((post, i) => (
+          {popularPosts.slice(0, 3).map((post, i) => (
             <li key={post.id} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span
                 style={{
-                  width: '22px',
-                  height: '22px',
-                  borderRadius: '50%',
-                  background: 'var(--accent)',
-                  color: '#fff',
                   fontSize: '0.7rem',
                   fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  color: 'var(--accent)',
+                  fontFamily: 'JetBrains Mono, monospace',
                   flexShrink: 0,
                   marginTop: '2px',
                 }}
               >
-                {i + 1}
+                {String(i + 1).padStart(2, '0')}
               </span>
               <div>
                 {/* 시리즈 + 태그 */}
@@ -85,14 +79,14 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
 
       {/* 최신 댓글 */}
       <div className="sidebar-card">
-        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.75rem' }}>
+        <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 0.75rem' }}>
           최신 댓글
         </h3>
         {recentComments.length === 0 ? (
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>아직 댓글이 없습니다.</p>
         ) : (
           <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {recentComments.map((c, i) => (
+            {recentComments.slice(0, 3).map((c, i) => (
               <li key={i}>
                 <Link href={`/blog/${c.postSlug}`} style={{ textDecoration: 'none', display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
                   <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>
