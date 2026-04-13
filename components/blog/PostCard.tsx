@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
+import { HiOutlineChatBubbleLeft } from 'react-icons/hi2'
 
 export default function PostCard({ post, commentCount = 0 }: { post: Post; index?: number; commentCount?: number }) {
   return (
@@ -87,8 +88,9 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
             {formatDate(post.date)}
           </span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            💬 {commentCount}
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <HiOutlineChatBubbleLeft style={{ fontSize: '0.95rem' }} />
+            {commentCount}
           </span>
         </div>
       </article>

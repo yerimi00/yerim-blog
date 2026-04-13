@@ -13,7 +13,7 @@ export default async function SeriesPage() {
   return (
     <>
       <Header />
-      <main style={{ maxWidth: '860px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <h1 style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '2rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem' }}>
             Series
