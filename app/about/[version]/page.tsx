@@ -60,7 +60,7 @@ export default function AboutVersionPage({ params }: { params: { version: string
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
 
         {/* 프로필 헤더 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem' }}>
+        <div className="profile-header" style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem' }}>
           <img
             src="/profile.jpg"
             alt="프로필 사진"

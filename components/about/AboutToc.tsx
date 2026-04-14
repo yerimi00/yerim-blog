@@ -52,6 +52,7 @@ export default function AboutToc() {
   return (
     <nav
       aria-label="페이지 목차"
+      className="about-toc-fixed"
       style={{
         position: 'fixed',
         top: `${top}px`,

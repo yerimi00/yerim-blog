@@ -27,6 +27,7 @@ export default async function HomePage() {
 
         {/* 본문 + 사이드바 */}
         <div
+          className="home-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 280px',
@@ -52,7 +53,7 @@ export default async function HomePage() {
           </section>
 
           {/* 사이드바 */}
-          <aside style={{ position: 'sticky', top: '80px' }}>
+          <aside className="home-sidebar" style={{ position: 'sticky', top: '80px' }}>
             <Sidebar
               popularPosts={popularPosts}
               totalPosts={allPosts.length}

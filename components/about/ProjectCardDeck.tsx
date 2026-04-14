@@ -49,14 +49,14 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: '1rem', alignItems: 'start' }}>
+    <div className="project-deck-grid" style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '0', alignItems: 'start' }}>
       {/* 스크롤바 숨김 */}
       <style>{`
         .project-carousel::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* 좌측 목차 */}
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', paddingTop: '0.25rem' }}>
+      <nav className="project-toc-nav" style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', paddingTop: '0.25rem', overflow: 'visible', position: 'relative', zIndex: 1 }}>
         {projects.map((project, i) => (
           <button
             key={project.slug}
@@ -92,9 +92,6 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
               lineHeight: 1.3,
               transition: 'color 0.2s, font-weight 0.2s',
               whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              maxWidth: '110px',
             }}>
               {project.name}
             </span>

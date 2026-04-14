@@ -28,6 +28,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
 
   return (
     <div
+      className="hero-banner"
       style={{
         position: 'relative',
         borderRadius: '16px',
@@ -56,6 +57,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
         style={{ textDecoration: 'none', display: 'block', height: '100%' }}
       >
         <div
+          className="hero-banner-content"
           style={{
             position: 'relative',
             zIndex: 1,
@@ -69,7 +71,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
             transition: 'opacity 0.3s, transform 0.3s',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+          <div className="hero-banner-tags" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             {post.series && (
               <span style={{
                 fontSize: '0.73rem',
@@ -94,13 +96,13 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
               fontSize: '1.5rem',
               fontWeight: 700,
               color: 'var(--text)',
-              marginBottom: '0.5rem',
+              margin: '0.5rem 0',
               lineHeight: 1.4,
             }}
           >
             {post.title}
           </h2>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {post.description}
           </p>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
