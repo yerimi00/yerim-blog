@@ -220,6 +220,20 @@ export async function getAllTags(): Promise<string[]> {
   return Array.from(tagSet)
 }
 
+// 시리즈 목록 추출
+export async function getAllSeries(): Promise<string[]> {
+  const posts = await getAllPosts()
+  const seen = new Set<string>()
+  const series: string[] = []
+  posts.forEach((post) => {
+    if (post.series && !seen.has(post.series)) {
+      seen.add(post.series)
+      series.push(post.series)
+    }
+  })
+  return series
+}
+
 // 페이지 메타데이터 파싱 헬퍼
 function extractPostMeta(page: any): Post {
   const props = page.properties

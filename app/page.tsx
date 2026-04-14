@@ -46,7 +46,7 @@ export default async function HomePage() {
             </div>
             <BlogFilter
               posts={allPosts}
-              tags={Array.from(new Set(allPosts.flatMap((p) => p.tags)))}
+              series={Array.from(new Set(allPosts.map((p) => p.series).filter((s): s is string => !!s)))}
               commentCounts={commentCounts}
             />
           </section>

@@ -1,4 +1,4 @@
-import { getAllPosts, getAllTags } from '@/lib/notion'
+import { getAllPosts, getAllSeries } from '@/lib/notion'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import PostCard from '@/components/blog/PostCard'
@@ -12,7 +12,7 @@ export const metadata = {
 }
 
 export default async function BlogPage() {
-  const [posts, tags] = await Promise.all([getAllPosts(), getAllTags()])
+  const [posts, series] = await Promise.all([getAllPosts(), getAllSeries()])
 
   return (
     <>
@@ -35,8 +35,8 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        {/* 태그 필터 */}
-        <BlogFilter tags={tags} posts={posts} />
+        {/* 시리즈 필터 */}
+        <BlogFilter series={series} posts={posts} />
       </main>
       <Footer />
     </>

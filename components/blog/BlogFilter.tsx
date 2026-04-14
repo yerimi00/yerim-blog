@@ -4,18 +4,18 @@ import { useState } from 'react'
 import { Post } from '@/types'
 import PostCard from './PostCard'
 
-export default function BlogFilter({ tags, posts, commentCounts = {} }: { tags: string[]; posts: Post[]; commentCounts?: Record<string, number> }) {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+export default function BlogFilter({ series, posts, commentCounts = {} }: { series: string[]; posts: Post[]; commentCounts?: Record<string, number> }) {
+  const [selectedSeries, setSelectedSeries] = useState<string | null>(null)
 
-  const filtered = selectedTag
-    ? posts.filter((p) => p.tags.includes(selectedTag))
+  const filtered = selectedSeries
+    ? posts.filter((p) => p.series === selectedSeries)
     : posts
 
-  const allTabs = ['전체', ...tags]
+  const allTabs = ['전체', ...series]
 
   return (
     <div>
-      {/* 탭 필터 */}
+      {/* 시리즈 탭 필터 */}
       <div
         style={{
           display: 'flex',
@@ -26,11 +26,11 @@ export default function BlogFilter({ tags, posts, commentCounts = {} }: { tags: 
         }}
       >
         {allTabs.map((tab) => {
-          const isActive = tab === '전체' ? !selectedTag : selectedTag === tab
+          const isActive = tab === '전체' ? !selectedSeries : selectedSeries === tab
           return (
             <button
               key={tab}
-              onClick={() => setSelectedTag(tab === '전체' ? null : tab === selectedTag ? null : tab)}
+              onClick={() => setSelectedSeries(tab === '전체' ? null : tab === selectedSeries ? null : tab)}
               style={{
                 padding: '0.6rem 1rem',
                 border: 'none',
@@ -54,7 +54,7 @@ export default function BlogFilter({ tags, posts, commentCounts = {} }: { tags: 
       {/* 글 목록 */}
       {filtered.length === 0 ? (
         <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem 0' }}>
-          해당 태그의 글이 없어요.
+          해당 시리즈의 글이 없어요.
         </p>
       ) : (
         <div>
