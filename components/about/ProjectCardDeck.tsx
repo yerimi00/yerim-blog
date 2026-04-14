@@ -8,7 +8,9 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   const [index, setIndex] = useState(0)
   const total = projects.length
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const carouselRef = useRef<HTMLDivElement | null>(null)
   const isFirstMount = useRef(true)
+  const isProgrammaticScroll = useRef(false)
 
   useEffect(() => setMounted(true), [])
 
@@ -16,12 +18,42 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   useEffect(() => {
     if (!mounted) return
     if (isFirstMount.current) { isFirstMount.current = false; return }
+    isProgrammaticScroll.current = true
     cardRefs.current[index]?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
       inline: 'center',
     })
+    setTimeout(() => { isProgrammaticScroll.current = false }, 500)
   }, [index, mounted])
+
+  // 터치/트랙패드 스크롤로 넘길 때 index 동기화
+  useEffect(() => {
+    if (!mounted) return
+    const carousel = carouselRef.current
+    if (!carousel) return
+
+    let scrollTimer: ReturnType<typeof setTimeout>
+    const onScroll = () => {
+      if (isProgrammaticScroll.current) return
+      clearTimeout(scrollTimer)
+      scrollTimer = setTimeout(() => {
+        const center = carousel.scrollLeft + carousel.clientWidth / 2
+        let closest = 0
+        let minDist = Infinity
+        cardRefs.current.forEach((card, i) => {
+          if (!card) return
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2
+          const dist = Math.abs(cardCenter - center)
+          if (dist < minDist) { minDist = dist; closest = i }
+        })
+        setIndex(closest)
+      }, 50)
+    }
+
+    carousel.addEventListener('scroll', onScroll, { passive: true })
+    return () => { carousel.removeEventListener('scroll', onScroll); clearTimeout(scrollTimer) }
+  }, [mounted])
 
   const prev = useCallback(() => setIndex((i) => Math.max(i - 1, 0)), [])
   const next = useCallback(() => setIndex((i) => Math.min(i + 1, total - 1)), [total])
@@ -103,6 +135,7 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
       <div>
         {/* 캐러셀 트랙 */}
         <div
+          ref={carouselRef}
           className="project-carousel"
           style={{
             display: 'flex',

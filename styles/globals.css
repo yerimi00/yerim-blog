@@ -282,6 +282,12 @@
 
 /* ── 모바일 반응형 ── */
 @media (max-width: 768px) {
+  /* 한국어 단어 단위 줄바꿈 */
+  body {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
   /* 홈: 사이드바 그리드 → 단일 컬럼 */
   .home-grid {
     grid-template-columns: 1fr !important;
