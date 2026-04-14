@@ -3,15 +3,14 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
-import TechStackGrid from '@/components/about/TechStackGrid'
-import ProjectCardDeck from '@/components/about/ProjectCardDeck'
+// import TechStackGrid from '@/components/about/TechStackGrid'
+// import ProjectCardDeck from '@/components/about/ProjectCardDeck'
 import AboutToc from '@/components/about/AboutToc'
 import {
-  education,
-  techStackByVersion,
+  // techStackByVersion,
   interestsByVersion,
   awards,
-  projects,
+  // projects,
 } from './data'
 
 export function generateStaticParams() {
@@ -41,15 +40,15 @@ export default function AboutVersionPage({ params }: { params: { version: string
   if (!VALID.includes(params.version)) notFound()
   const version = params.version as AboutVersion
 
-  const techStack = techStackByVersion[version]
+  // const techStack = techStackByVersion[version]
   const interests = interestsByVersion[version]
 
-  const projectsByVersion: Record<AboutVersion, typeof projects> = {
-    fe: projects.filter((p) => p.roles.includes('FE')),
-    be: projects.filter((p) => p.roles.includes('BE')),
-    pm: projects.filter((p) => p.roles.some((r) => ['기획', 'PM'].includes(r))),
-  }
-  const versionProjects = projectsByVersion[version]
+  // const projectsByVersion: Record<AboutVersion, typeof projects> = {
+  //   fe: projects.filter((p) => p.roles.includes('FE')),
+  //   be: projects.filter((p) => p.roles.includes('BE')),
+  //   pm: projects.filter((p) => p.roles.some((r) => ['기획', 'PM'].includes(r))),
+  // }
+  // const versionProjects = projectsByVersion[version]
 
   return (
     <>
@@ -120,14 +119,15 @@ export default function AboutVersionPage({ params }: { params: { version: string
             {/* ── Education & Experience ── */}
             <section id="education" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
               <h2 style={sectionHeadingStyle}>Education &amp; Experience</h2>
-              <div>
+              {/* <div>
                 {education.map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', padding: '1.1rem 0', borderBottom: i < education.length - 1 ? '1px solid var(--border)' : 'none' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '130px' }}>{item.period}</span>
                     <span style={{ fontSize: '0.925rem', color: 'var(--text)', fontWeight: 500 }}>{item.title}</span>
                   </div>
                 ))}
-              </div>
+              </div> */}
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>정리중입니다.</p>
             </section>
 
             <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
@@ -135,7 +135,8 @@ export default function AboutVersionPage({ params }: { params: { version: string
             {/* ── Tech Stack ── */}
             <section id="stack" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
               <h2 style={sectionHeadingStyle}>Tech Stack</h2>
-              <TechStackGrid techStack={techStack} />
+              {/* <TechStackGrid techStack={techStack} /> */}
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>정리중입니다.</p>
             </section>
 
             <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
@@ -192,13 +193,15 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
             {/* ── Project ── */}
             <section id="project" style={{ scrollMarginTop: '100px' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <h2 style={sectionHeadingStyle}>Project</h2>
+              {/* <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                 <h2 style={{ ...sectionHeadingStyle, marginBottom: 0 }}>Project</h2>
                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.6, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.03em' }}>
                   ← → 방향키로 탐색
                 </span>
               </div>
-              <ProjectCardDeck projects={versionProjects} />
+              <ProjectCardDeck projects={versionProjects} /> */}
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>정리중입니다.</p>
             </section>
 
         </div>
