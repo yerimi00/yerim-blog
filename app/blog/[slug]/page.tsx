@@ -72,6 +72,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div
+          className="post-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: headings.length ? '1fr 220px' : '760px',
@@ -81,7 +82,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           }}
         >
           {/* 본문 영역 */}
-          <article>
+          <article className="post-article">
             <ViewTracker slug={post.slug} />
             {/* 포스트 헤더 */}
             <header style={{ marginBottom: '3rem' }}>
@@ -106,6 +107,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 ))}
               </div>
               <h1
+                className="post-title"
                 style={{
                   fontFamily: "Pretendard, sans-serif",
                   fontSize: '2.2rem',
@@ -150,7 +152,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
           {/* TOC 사이드바 */}
           {headings.length > 0 && (
-            <aside style={{ position: 'sticky', top: '80px' }}>
+            <aside className="post-toc-aside" style={{ position: 'sticky', top: '80px' }}>
               <TableOfContents headings={headings} />
             </aside>
           )}

@@ -331,6 +331,26 @@
   .notion-column {
     flex: 1 1 100% !important;
   }
+
+  /* 블로그 글 페이지 */
+  .post-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    justify-content: unset !important;
+  }
+  .post-toc-aside {
+    display: none !important;
+  }
+  .post-title {
+    font-size: 1.6rem !important;
+  }
+}
+
+/* 블로그 글 article: 항상 overflow 방지 */
+.post-article {
+  min-width: 0;
+  overflow-x: hidden;
+  word-break: break-word;
 }
 
 @media (max-width: 480px) {
