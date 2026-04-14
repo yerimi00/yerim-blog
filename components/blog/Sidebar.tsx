@@ -105,23 +105,17 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
       {/* About 카드 */}
       <div className="sidebar-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-          <div
+          <img
+            src="/profile.jpg"
+            alt="프로필 사진"
             style={{
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              background: 'var(--accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              color: '#fff',
+              objectFit: 'cover',
               flexShrink: 0,
             }}
-          >
-            예
-          </div>
+          />
           <div>
             <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.1rem' }}>yerim</p>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>개발을 배우고, 배운 것을 기록합니다</p>
