@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
@@ -81,7 +82,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
 
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div
       onClick={onClose}
       style={{
@@ -93,7 +94,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingTop: '10vh',
+        paddingTop: '30vh',
       }}
     >
       <div
@@ -185,7 +186,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
                 >
                   <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
                     {post.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="tag-badge">{tag}</span>
+                      <span key={tag} style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>#{tag}</span>
                     ))}
                   </div>
                   <p style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem', marginBottom: '0.2rem' }}>
@@ -244,6 +245,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
         </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
