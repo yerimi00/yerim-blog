@@ -14,7 +14,7 @@ function githubRequest(token: string, query: string, variables: object) {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 },
+    next: { revalidate: 86400 },
   })
 }
 

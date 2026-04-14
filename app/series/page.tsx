@@ -3,7 +3,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import SeriesList from '@/components/blog/SeriesList'
 
-export const revalidate = 60
+export const revalidate = 86400
 export const metadata = { title: 'Series', description: '시리즈별로 묶인 글 모음' }
 
 export default async function SeriesPage() {

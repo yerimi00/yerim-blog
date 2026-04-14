@@ -33,7 +33,7 @@ function extractHeadings(markdown: string): TocHeading[] {
   return headings
 }
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export async function generateStaticParams() {
   const posts = await getAllPosts()

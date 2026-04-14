@@ -4,7 +4,7 @@ import Footer from '@/components/layout/Footer'
 import PostCard from '@/components/blog/PostCard'
 import BlogFilter from '@/components/blog/BlogFilter'
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export const metadata = {
   title: 'Blog',

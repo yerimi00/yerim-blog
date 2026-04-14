@@ -1,7 +1,7 @@
 import { getAllPosts } from '@/lib/notion'
 import { NextResponse } from 'next/server'
 
-export const revalidate = 60
+export const revalidate = 86400
 
 export async function GET() {
   const posts = await getAllPosts()
