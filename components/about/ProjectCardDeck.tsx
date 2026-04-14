@@ -8,12 +8,14 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   const [index, setIndex] = useState(0)
   const total = projects.length
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const isFirstMount = useRef(true)
 
   useEffect(() => setMounted(true), [])
 
-  // index 바뀔 때마다 해당 카드를 스크롤 중앙에 맞춤
+  // index 바뀔 때마다 해당 카드를 스크롤 중앙에 맞춤 (첫 마운트 제외)
   useEffect(() => {
     if (!mounted) return
+    if (isFirstMount.current) { isFirstMount.current = false; return }
     cardRefs.current[index]?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
