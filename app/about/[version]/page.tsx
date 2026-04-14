@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import AboutToc from '@/components/about/AboutToc'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
 import TechStackGrid from '@/components/about/TechStackGrid'
+import ProjectCardDeck from '@/components/about/ProjectCardDeck'
+import AboutToc from '@/components/about/AboutToc'
 import {
   education,
   techStackByVersion,
   interestsByVersion,
   awards,
   projects,
-  type Project,
 } from './data'
 
 export function generateStaticParams() {
@@ -44,7 +44,7 @@ export default function AboutVersionPage({ params }: { params: { version: string
   const techStack = techStackByVersion[version]
   const interests = interestsByVersion[version]
 
-  const projectsByVersion: Record<AboutVersion, Project[]> = {
+  const projectsByVersion: Record<AboutVersion, typeof projects> = {
     fe: projects.filter((p) => p.roles.includes('FE')),
     be: projects.filter((p) => p.roles.includes('BE')),
     pm: projects.filter((p) => p.roles.some((r) => ['기획', 'PM'].includes(r))),
@@ -54,6 +54,9 @@ export default function AboutVersionPage({ params }: { params: { version: string
   return (
     <>
       <Header />
+
+      <AboutToc />
+
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
 
         {/* 프로필 헤더 */}
@@ -78,14 +81,7 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
         <hr style={{ borderColor: 'var(--border)', marginBottom: '3rem' }} />
 
-        {/* 목차 + 전체 콘텐츠 그리드 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '3.5rem', alignItems: 'start' }}>
-
-          <aside style={{ position: 'sticky', top: '100px' }}>
-            <AboutToc />
-          </aside>
-
-          <div>
+        <div>
 
             {/* ── About ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '3.5rem' }}>
@@ -196,43 +192,15 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
             {/* ── Project ── */}
             <section id="project" style={{ scrollMarginTop: '100px' }}>
-              <h2 style={sectionHeadingStyle}>Project</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {versionProjects.map((project) => (
-                  <div key={project.name} style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '1.25rem 1.5rem', background: 'var(--bg-secondary)', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text)' }}>{project.name}</span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: project.status === '진행중' ? 'rgba(59,130,246,0.12)' : 'rgba(107,114,128,0.12)', color: project.status === '진행중' ? 'var(--accent)' : 'var(--text-muted)', flexShrink: 0 }}>{project.status}</span>
-                    </div>
-                    {(project.period || project.updatedAt) && (
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '0.75rem' }}>
-                        {project.period && <span>{project.period}</span>}
-                        {project.period && project.updatedAt && <span>·</span>}
-                        {project.updatedAt && <span>최종 업데이트 {project.updatedAt}</span>}
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                      {project.roles.map((role) => (
-                        <span key={role} style={{ fontSize: '0.75rem', fontWeight: 500, padding: '2px 9px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>{role}</span>
-                      ))}
-                    </div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text)', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
-                    {project.award && (
-                      <div style={{ fontSize: '0.8rem', color: '#b45309', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '6px', padding: '4px 10px', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', alignSelf: 'flex-start' }}>
-                        🏆 {project.award}
-                      </div>
-                    )}
-                    {project.github && (
-                      <a href={project.github} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.82rem', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', alignSelf: 'flex-start' }}>
-                        GitHub →
-                      </a>
-                    )}
-                  </div>
-                ))}
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <h2 style={{ ...sectionHeadingStyle, marginBottom: 0 }}>Project</h2>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.6, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.03em' }}>
+                  ← → 방향키로 탐색
+                </span>
               </div>
+              <ProjectCardDeck projects={versionProjects} />
             </section>
 
-          </div>
         </div>
 
       </main>

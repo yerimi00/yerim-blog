@@ -106,25 +106,146 @@ export const awards = [
 
 export type Project = {
   name: string
+  slug: string
   description: string
+  overview?: string
   status: '완료' | '진행중'
   period: string
   updatedAt: string
   roles: string[]
+  tech?: string[]
+  responsibilities?: string[]
+  problemSolving?: { title: string; body: string }[]
   award?: string
   github?: string
+  url?: string
+  image?: string
 }
 
 export const projects: Project[] = [
-  { name: '리얼매치', description: '브랜드·마이크로 인플루언서 매칭 및 협업 플랫폼', status: '진행중', period: '2025.09 ~ 현재', updatedAt: '2026.04', roles: ['BE', '팀원'] },
-  { name: '루미클린', description: '[외주] 에어비앤비 청소 매칭 웹앱', status: '완료', period: '', updatedAt: '', roles: ['FE', '팀원'] },
-  { name: '넥스트 커리어', description: '중장년층의 숨은 경험을 자산으로 바꿔 맞춤 직업과 일자리를 제안하는 서비스', status: '완료', period: '2025.03 ~ 2025.05', updatedAt: '2025.05', roles: ['FE', '개발팀장'], award: '2025 kakao X 9oorm 시즌톤 최우수상' },
-  { name: '스타트업 라이브러리', description: '창업 성공을 위한 맞춤형 도서 추천 플랫폼', status: '완료', period: '', updatedAt: '', roles: ['FE', '팀원'] },
-  { name: 'ComNCheck', description: '한국외국어대학교 컴퓨터공학부 알리미', status: '완료', period: '', updatedAt: '', roles: ['FE', '기획', '디자인', '팀원'] },
-  { name: '별자리', description: '스타(star)트업 자리 정보 별자리 서비스', status: '완료', period: '2024', updatedAt: '2024', roles: ['FE', '팀원'], award: '2024 취·창업 해커톤(HUFSTHON 2024) 최우수상' },
-  { name: 'SODA', description: '오늘 하루 수고한 당신을 위한 AI 다이어리', status: '완료', period: '', updatedAt: '', roles: ['FE', '기획', '디자인', '팀원'] },
-  { name: 'HUFamilyS(한식구)', description: '한 사람의 건강 식품 공동구매 서비스', status: '완료', period: '2024.07', updatedAt: '2024.07', roles: ['FE', '기획', '디자인', 'PM', '개발팀장'], award: '2024 HUFSummer 해커톤 대상' },
-  { name: 'Eating', description: '복학생, 신입생을 위한 학식 메이트 매칭 Platform', status: '완료', period: '', updatedAt: '', roles: ['FE', '기획', '디자인', '팀원'] },
-  { name: '졸업할 결심', description: '외대인의 졸업학점계산 서비스', status: '완료', period: '', updatedAt: '', roles: ['FE', '디자인', '개발팀장'] },
-  { name: 'HUFSLaundry', description: '기숙사 세탁기 알림 서비스', status: '완료', period: '2023.07', updatedAt: '2023.07', roles: ['FE', '기획', '디자인', '팀원'], award: '2023 HUFSummer 해커톤 우수상' },
+  {
+    name: '리얼매치',
+    slug: 'real-match',
+    description: '브랜드·마이크로 인플루언서 매칭 및 협업 플랫폼',
+    status: '진행중',
+    period: '2025.09 ~ 현재',
+    updatedAt: '2026.04',
+    roles: ['BE', '팀원'],
+  },
+  {
+    name: '루미클린',
+    slug: 'lumi-clean',
+    description: '[외주] 에어비앤비 청소 매칭 웹앱',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '팀원'],
+  },
+  {
+    name: '넥스트 커리어',
+    slug: 'next-career',
+    description: '중장년층의 숨은 경험을 자산으로 바꿔 맞춤 직업과 일자리를 제안하는 서비스',
+    overview: '2025 kakao X 9oorm 시즌톤에서 최우수상을 수상한 프로젝트입니다. 중장년층이 자신의 경험을 정리하고, AI 기반 매칭을 통해 맞춤형 직업 정보와 일자리를 추천받을 수 있는 서비스를 Next.js App Router 기반으로 개발했습니다. 프론트엔드 개발팀장으로 아키텍처 설계부터 CI/CD 자동화, 성능 최적화까지 전반적인 프론트엔드 개발을 주도했습니다.',
+    status: '완료',
+    period: '2025.03 ~ 2025.05',
+    updatedAt: '2025.05',
+    roles: ['FE', '개발팀장'],
+    tech: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Axios', 'Sentry', 'Google Analytics', 'PWA'],
+    responsibilities: [
+      'Axios Interceptor 및 중앙화된 인증 처리를 구현하여, JWT 토큰 자동 갱신 및 중복 코드 제거를 통한 유지보수성 향상',
+      'Zustand 기반의 전역 상태 관리를 도입하여, 복잡한 커리어 로드맵 데이터의 흐름 제어 및 컴포넌트 간 불필요한 Props Drilling 방지',
+      'Sentry를 활용한 실시간 에러 모니터링 시스템을 구축하여, 클라이언트/서버 런타임 오류 추적 및 네트워크 에러 클래스 분리를 통한 디버깅 효율화',
+      'Google Analytics 및 Web Vitals를 적용하여, 사용자 행동 데이터 수집 및 LCP/CLS 등 핵심 성능 지표 측정을 통한 UX 개선 근거 마련',
+      'GitHub Actions와 Docker를 활용한 CI/CD 자동화 파이프라인 구축 및 Husky를 통한 커밋 전 코드 품질(Lint) 검사 자동화',
+      'PWA(Service Worker, Manifest) 및 Lottie 애니메이션을 도입하여, 모바일 앱과 유사한 설치 환경 제공 및 동적 인터랙션을 통한 사용자 몰입감 증대',
+    ],
+    problemSolving: [
+      {
+        title: 'JWT 토큰 만료 시 API 요청 중단 문제',
+        body: 'Axios Interceptor에서 401 응답을 감지하면 자동으로 토큰을 갱신하고, 갱신 중 발생한 동시 요청들을 큐에 쌓아 순차적으로 재전송하는 방식으로 해결했습니다. 이를 통해 사용자가 로그인 만료를 인식하지 못하고 자연스럽게 서비스를 이용할 수 있게 되었습니다.',
+      },
+      {
+        title: '복잡한 커리어 로드맵 상태 관리',
+        body: '여러 단계에 걸친 커리어 로드맵 데이터가 컴포넌트 간 깊게 공유되어 Props Drilling이 심각했습니다. Zustand로 전역 스토어를 구성하고 슬라이스 패턴으로 도메인별로 상태를 분리하여 가독성과 유지보수성을 개선했습니다.',
+      },
+    ],
+    award: '2025 kakao X 9oorm 시즌톤 최우수상',
+    url: 'https://www.next-career.co.kr/',
+  },
+  {
+    name: '스타트업 라이브러리',
+    slug: 'startup-library',
+    description: '창업 성공을 위한 맞춤형 도서 추천 플랫폼',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '팀원'],
+  },
+  {
+    name: 'ComNCheck',
+    slug: 'comncheck',
+    description: '한국외국어대학교 컴퓨터공학부 알리미',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '기획', '디자인', '팀원'],
+    url: 'https://www.comncheck.com/',
+  },
+  {
+    name: '별자리',
+    slug: 'byeoljari',
+    description: '스타(star)트업 자리 정보 별자리 서비스',
+    status: '완료',
+    period: '2024',
+    updatedAt: '2024',
+    roles: ['FE', '팀원'],
+    award: '2024 취·창업 해커톤(HUFSTHON 2024) 최우수상',
+  },
+  {
+    name: 'SODA',
+    slug: 'soda',
+    description: '오늘 하루 수고한 당신을 위한 AI 다이어리',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '기획', '디자인', '팀원'],
+  },
+  {
+    name: 'HUFamilyS(한식구)',
+    slug: 'hufamilys',
+    description: '한 사람의 건강 식품 공동구매 서비스',
+    status: '완료',
+    period: '2024.07',
+    updatedAt: '2024.07',
+    roles: ['FE', '기획', '디자인', 'PM', '개발팀장'],
+    award: '2024 HUFSummer 해커톤 대상',
+  },
+  {
+    name: 'Eating',
+    slug: 'eating',
+    description: '복학생, 신입생을 위한 학식 메이트 매칭 Platform',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '기획', '디자인', '팀원'],
+  },
+  {
+    name: '졸업할 결심',
+    slug: 'graduation',
+    description: '외대인의 졸업학점계산 서비스',
+    status: '완료',
+    period: '',
+    updatedAt: '',
+    roles: ['FE', '디자인', '개발팀장'],
+  },
+  {
+    name: 'HUFSLaundry',
+    slug: 'hufs-laundry',
+    description: '기숙사 세탁기 알림 서비스',
+    status: '완료',
+    period: '2023.07',
+    updatedAt: '2023.07',
+    roles: ['FE', '기획', '디자인', '팀원'],
+    award: '2023 HUFSummer 해커톤 우수상',
+  },
 ]

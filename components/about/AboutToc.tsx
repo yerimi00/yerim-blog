@@ -10,8 +10,20 @@ const TOC_ITEMS = [
   { id: 'project', label: 'Project' },
 ]
 
+const INITIAL_TOP = 310
+const MIN_TOP = 100
+
 export default function AboutToc() {
   const [activeId, setActiveId] = useState('')
+  const [top, setTop] = useState(INITIAL_TOP)
+
+  useEffect(() => {
+    const onScroll = () => {
+      setTop(Math.max(MIN_TOP, INITIAL_TOP - window.scrollY))
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,7 +50,16 @@ export default function AboutToc() {
   }
 
   return (
-    <nav aria-label="페이지 목차">
+    <nav
+      aria-label="페이지 목차"
+      style={{
+        position: 'fixed',
+        top: `${top}px`,
+        left: 'max(1rem, calc((100vw - 960px) / 2 - 200px))',
+        zIndex: 10,
+        transition: 'top 0.1s linear',
+      }}
+    >
       <p
         style={{
           fontSize: '0.75rem',
