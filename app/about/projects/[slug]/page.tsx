@@ -30,23 +30,8 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
   return (
     <>
       <Header />
-      <main style={{ maxWidth: '760px', margin: '0 auto', padding: '4rem 1.5rem' }}>
+      <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
 
-        {/* 뒤로가기 */}
-        <Link
-          href="/about/fe"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.35rem',
-            fontSize: '0.82rem',
-            color: 'var(--text-muted)',
-            textDecoration: 'none',
-            marginBottom: '2.5rem',
-          }}
-        >
-          ← About으로 돌아가기
-        </Link>
 
         {/* 헤더 */}
         <div style={{ marginBottom: '2.5rem' }}>
@@ -54,18 +39,20 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
             <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
               {project.name}
             </h1>
-            <span
-              style={{
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                padding: '3px 12px',
-                borderRadius: '999px',
-                background: project.status === '진행중' ? 'rgba(59,130,246,0.12)' : 'rgba(107,114,128,0.12)',
-                color: project.status === '진행중' ? 'var(--accent)' : 'var(--text-muted)',
-              }}
-            >
-              {project.status}
-            </span>
+            {project.status === '진행중' && (
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  padding: '3px 12px',
+                  borderRadius: '999px',
+                  background: 'rgba(59,130,246,0.12)',
+                  color: 'var(--accent)',
+                }}
+              >
+                진행중
+              </span>
+            )}
           </div>
 
           {/* 메타 정보 */}

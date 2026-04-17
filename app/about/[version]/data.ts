@@ -131,6 +131,7 @@ export const projects: Project[] = [
     period: '2025.09 ~ 현재',
     updatedAt: '2026.04',
     roles: ['BE', '팀원'],
+    image: '/projects/real-match.png',
   },
   {
     name: '루미클린',
@@ -140,6 +141,7 @@ export const projects: Project[] = [
     period: '',
     updatedAt: '',
     roles: ['FE', '팀원'],
+    image: '/projects/lumi-clean.png',
   },
   {
     name: '넥스트 커리어',
@@ -171,6 +173,7 @@ export const projects: Project[] = [
     ],
     award: '2025 kakao X 9oorm 시즌톤 최우수상',
     url: 'https://www.next-career.co.kr/',
+    image: '/projects/next-career.png',
   },
   {
     name: '스타트업 라이브러리',
@@ -180,6 +183,7 @@ export const projects: Project[] = [
     period: '',
     updatedAt: '',
     roles: ['FE', '팀원'],
+    image: '/projects/startup-library.png',
   },
   {
     name: 'ComNCheck',
@@ -190,6 +194,7 @@ export const projects: Project[] = [
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
     url: 'https://www.comncheck.com/',
+    image: '/projects/comncheck.png',
   },
   {
     name: '별자리',
@@ -200,6 +205,7 @@ export const projects: Project[] = [
     updatedAt: '2024',
     roles: ['FE', '팀원'],
     award: '2024 취·창업 해커톤(HUFSTHON 2024) 최우수상',
+    image: '/projects/byeoljari.png',
   },
   {
     name: 'SODA',
@@ -209,6 +215,7 @@ export const projects: Project[] = [
     period: '',
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
+    image: '/projects/soda.png',
   },
   {
     name: 'HUFamilyS(한식구)',
@@ -219,6 +226,7 @@ export const projects: Project[] = [
     updatedAt: '2024.07',
     roles: ['FE', '기획', '디자인', 'PM', '개발팀장'],
     award: '2024 HUFSummer 해커톤 대상',
+    image: '/projects/hufamilys.png',
   },
   {
     name: 'Eating',
@@ -228,6 +236,7 @@ export const projects: Project[] = [
     period: '',
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
+    image: '/projects/eating.png',
   },
   {
     name: '졸업할 결심',
@@ -237,6 +246,7 @@ export const projects: Project[] = [
     period: '',
     updatedAt: '',
     roles: ['FE', '디자인', '개발팀장'],
+    image: '/projects/graduation.png',
   },
   {
     name: 'HUFSLaundry',
@@ -247,5 +257,6 @@ export const projects: Project[] = [
     updatedAt: '2023.07',
     roles: ['FE', '기획', '디자인', '팀원'],
     award: '2023 HUFSummer 해커톤 우수상',
+    image: '/projects/hufs-laundry.png',
   },
 ]

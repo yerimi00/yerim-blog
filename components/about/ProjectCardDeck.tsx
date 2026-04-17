@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ProjectCard from './ProjectCard'
 import type { Project } from '@/app/about/[version]/data'
 
@@ -7,56 +7,8 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   const [mounted, setMounted] = useState(false)
   const [index, setIndex] = useState(0)
   const total = projects.length
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const carouselRef = useRef<HTMLDivElement | null>(null)
-  const isFirstMount = useRef(true)
-  const isProgrammaticScroll = useRef(false)
-  const isScrollInitiated = useRef(false)
 
   useEffect(() => setMounted(true), [])
-
-  // index 바뀔 때마다 해당 카드를 스크롤 중앙에 맞춤 (첫 마운트 제외)
-  useEffect(() => {
-    if (!mounted) return
-    if (isFirstMount.current) { isFirstMount.current = false; return }
-    if (isScrollInitiated.current) { isScrollInitiated.current = false; return }
-    isProgrammaticScroll.current = true
-    cardRefs.current[index]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center',
-    })
-    setTimeout(() => { isProgrammaticScroll.current = false }, 500)
-  }, [index, mounted])
-
-  // 터치/트랙패드 스크롤로 넘길 때 index 동기화
-  useEffect(() => {
-    if (!mounted) return
-    const carousel = carouselRef.current
-    if (!carousel) return
-
-    let scrollTimer: ReturnType<typeof setTimeout>
-    const onScroll = () => {
-      if (isProgrammaticScroll.current) return
-      clearTimeout(scrollTimer)
-      scrollTimer = setTimeout(() => {
-        const center = carousel.scrollLeft + carousel.clientWidth / 2
-        let closest = 0
-        let minDist = Infinity
-        cardRefs.current.forEach((card, i) => {
-          if (!card) return
-          const cardCenter = card.offsetLeft + card.offsetWidth / 2
-          const dist = Math.abs(cardCenter - center)
-          if (dist < minDist) { minDist = dist; closest = i }
-        })
-        isScrollInitiated.current = true
-        setIndex(closest)
-      }, 50)
-    }
-
-    carousel.addEventListener('scroll', onScroll, { passive: true })
-    return () => { carousel.removeEventListener('scroll', onScroll); clearTimeout(scrollTimer) }
-  }, [mounted])
 
   const prev = useCallback(() => setIndex((i) => Math.max(i - 1, 0)), [])
   const next = useCallback(() => setIndex((i) => Math.min(i + 1, total - 1)), [total])
@@ -72,7 +24,6 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [mounted, next, prev])
 
-  // SSR fallback
   if (!mounted) {
     return (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
@@ -84,14 +35,9 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   }
 
   return (
-    <div className="project-deck-grid" style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '0', alignItems: 'start' }}>
-      {/* 스크롤바 숨김 */}
-      <style>{`
-        .project-carousel::-webkit-scrollbar { display: none; }
-      `}</style>
-
+    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '0', alignItems: 'start' }}>
       {/* 좌측 목차 */}
-      <nav className="project-toc-nav" style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', paddingTop: '0.25rem', overflow: 'visible', position: 'relative', zIndex: 1 }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', paddingTop: '0.25rem' }}>
         {projects.map((project, i) => (
           <button
             key={project.slug}
@@ -116,7 +62,6 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
               fontFamily: 'JetBrains Mono, monospace',
               color: 'var(--accent)',
               flexShrink: 0,
-              opacity: i === index ? 1 : 0.5,
             }}>
               {String(i + 1).padStart(2, '0')}
             </span>
@@ -134,80 +79,48 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
         ))}
       </nav>
 
-      {/* 우측: 캐러셀 + 인디케이터 */}
+      {/* 우측: 카드 + 인디케이터 */}
       <div>
-        {/* 캐러셀 트랙 */}
-        <div
-          ref={carouselRef}
-          className="project-carousel"
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            paddingInline: '10%',
-            paddingBottom: '56px',
-          }}
-        >
-          {projects.map((project, i) => {
-            const dist = Math.abs(i - index)
-            const isActive = dist === 0
-            const isAdjacent = dist === 1
-
-            return (
-              <div
-                key={project.slug}
-                ref={(el) => { cardRefs.current[i] = el }}
-                style={{
-                  minWidth: '80%',
-                  flexShrink: 0,
-                  scrollSnapAlign: 'center',
-                  borderRadius: '14px',
-                  transform: `scale(${isActive ? 1 : isAdjacent ? 0.88 : 0.78}) translateY(${dist * 5}px)`,
-                  opacity: isActive ? 1 : isAdjacent ? 0.55 : 0.2,
-                  boxShadow: isActive ? '0 16px 40px rgba(0,0,0,0.12)' : 'none',
-                  transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, box-shadow 0.4s ease',
-                  transformOrigin: i < index ? 'right center' : i > index ? 'left center' : 'center',
-                  pointerEvents: isActive ? 'auto' : 'none',
-                }}
-              >
-                <ProjectCard project={project} />
-              </div>
-            )
-          })}
+        {/* 카드 영역 */}
+        <div style={{ position: 'relative' }}>
+          {projects.map((project, i) => (
+            <div
+              key={project.slug}
+              style={{
+                position: i === index ? 'relative' : 'absolute',
+                inset: 0,
+                opacity: i === index ? 1 : 0,
+                transition: 'opacity 0.3s ease',
+                pointerEvents: i === index ? 'auto' : 'none',
+              }}
+            >
+              <ProjectCard project={project} />
+            </div>
+          ))}
         </div>
 
-        {/* 점 인디케이터 + 카운터 */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '-0.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            {projects.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                aria-label={`${i + 1}번 카드`}
-                style={{
-                  width: i === index ? 20 : 6,
-                  height: 6,
-                  borderRadius: '999px',
-                  background: i === index ? 'var(--accent)' : 'var(--border)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  transition: 'width 0.3s ease, background 0.3s ease',
-                  flexShrink: 0,
-                }}
-              />
-            ))}
-          </div>
-          <span style={{
-            fontSize: '0.68rem',
-            color: 'var(--text-muted)',
-            fontFamily: 'JetBrains Mono, monospace',
-          }}>
-            {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-          </span>
+        {/* 점 인디케이터 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem' }}>
+          {projects.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`${i + 1}번 카드`}
+              style={{
+                width: i === index ? 20 : 6,
+                height: 6,
+                borderRadius: '999px',
+                background: i === index ? 'var(--accent)' : 'var(--border)',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'width 0.3s ease, background 0.3s ease',
+                flexShrink: 0,
+              }}
+            />
+          ))}
         </div>
+
       </div>
     </div>
   )

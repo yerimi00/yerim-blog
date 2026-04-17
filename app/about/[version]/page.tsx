@@ -192,11 +192,8 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
             {/* ── Project ── */}
             <section id="project" style={{ scrollMarginTop: '100px' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <div style={{ marginBottom: '0.75rem' }}>
                 <h2 style={{ ...sectionHeadingStyle, marginBottom: 0 }}>Project</h2>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.6, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.03em' }}>
-                  ← → 방향키로 탐색
-                </span>
               </div>
               <ProjectCardDeck projects={versionProjects} />
             </section>
