@@ -14,9 +14,15 @@ module.exports = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
+        bg: 'var(--bg)',
+        'bg-secondary': 'var(--bg-secondary)',
+        text: 'var(--text)',
+        'text-muted': 'var(--text-muted)',
+        border: 'var(--border)',
         accent: {
-          DEFAULT: '#3B82F6',
-          dark: '#60A5FA',
+          DEFAULT: 'var(--accent)',
+          blue: '#3B82F6',
+          'blue-dark': '#60A5FA',
         },
       },
       typography: {
