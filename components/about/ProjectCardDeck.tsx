@@ -11,6 +11,7 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   const carouselRef = useRef<HTMLDivElement | null>(null)
   const isFirstMount = useRef(true)
   const isProgrammaticScroll = useRef(false)
+  const isScrollInitiated = useRef(false)
 
   useEffect(() => setMounted(true), [])
 
@@ -18,6 +19,7 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
   useEffect(() => {
     if (!mounted) return
     if (isFirstMount.current) { isFirstMount.current = false; return }
+    if (isScrollInitiated.current) { isScrollInitiated.current = false; return }
     isProgrammaticScroll.current = true
     cardRefs.current[index]?.scrollIntoView({
       behavior: 'smooth',
@@ -47,6 +49,7 @@ export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
           const dist = Math.abs(cardCenter - center)
           if (dist < minDist) { minDist = dist; closest = i }
         })
+        isScrollInitiated.current = true
         setIndex(closest)
       }, 50)
     }

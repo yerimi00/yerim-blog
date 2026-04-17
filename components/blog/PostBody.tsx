@@ -94,11 +94,13 @@ export default function PostBody({ content }: { content: string }) {
             <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '2.5rem 0' }} />
           ),
           img: ({ src, alt }) => (
-            <img
-              src={src}
-              alt={alt}
-              style={{ borderRadius: '8px', maxWidth: '100%', margin: '1.5rem 0', display: 'block' }}
-            />
+            <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
+              <img
+                src={src}
+                alt={alt}
+                style={{ borderRadius: '8px', maxWidth: '100%', display: 'block' }}
+              />
+            </div>
           ),
           a: ({ href, children }) => (
             <a

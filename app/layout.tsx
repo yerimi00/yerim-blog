@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
+import MobileBlockModal from '@/components/MobileBlockModal'
 
 export const metadata: Metadata = {
   title: { default: 'yerim.dev', template: '%s | yerim.dev' },
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <MobileBlockModal />
           {children}
         </ThemeProvider>
       </body>
