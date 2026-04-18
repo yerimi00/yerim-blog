@@ -16,34 +16,14 @@ export default function BlogFilter({ series, posts, commentCounts = {} }: { seri
   return (
     <div>
       {/* 시리즈 탭 필터 */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '0',
-          flexWrap: 'wrap',
-          borderBottom: '1px solid var(--border)',
-          marginBottom: '0',
-        }}
-      >
+      <div className="series-tab-bar">
         {allTabs.map((tab) => {
           const isActive = tab === '전체' ? !selectedSeries : selectedSeries === tab
           return (
             <button
               key={tab}
               onClick={() => setSelectedSeries(tab === '전체' ? null : tab === selectedSeries ? null : tab)}
-              style={{
-                padding: '0.6rem 1rem',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--text)' : '2px solid transparent',
-                background: 'transparent',
-                color: isActive ? 'var(--text)' : 'var(--text-muted)',
-                fontSize: '0.875rem',
-                fontWeight: isActive ? 700 : 400,
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-                marginBottom: '-1px',
-                fontFamily: 'inherit',
-              }}
+              className={`series-tab-btn${isActive ? ' active' : ''}`}
             >
               {tab}
             </button>

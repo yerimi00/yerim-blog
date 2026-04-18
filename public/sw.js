@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yerim-dev-v1'
+const CACHE_NAME = 'yerim-dev-v2'
 const STATIC_ASSETS = ['/', '/blog', '/about', '/series']
 
 self.addEventListener('install', (event) => {
@@ -20,8 +20,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return
   const url = new URL(event.request.url)
-  // API / Notion 요청은 캐시 안 함
-  if (url.pathname.startsWith('/api/') || url.hostname.includes('notion')) return
+  // Next.js 내부 번들, API, Notion 요청은 캐시 안 함
+  if (
+    url.pathname.startsWith('/_next/') ||
+    url.pathname.startsWith('/api/') ||
+    url.hostname.includes('notion')
+  ) return
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
