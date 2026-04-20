@@ -1,5 +1,11 @@
+import { cache } from 'react'
 import { Client } from '@notionhq/client'
 import { NotionToMarkdown } from 'notion-to-md'
+import type {
+  PageObjectResponse,
+  RichTextItemResponse,
+  BlockObjectResponse,
+} from '@notionhq/client/build/src/api-endpoints'
 import { Post } from '@/types'
 
 const notion = new Client({
@@ -10,16 +16,16 @@ const n2m = new NotionToMarkdown({ notionClient: notion })
 
 // ---- Callout / Column 커스텀 변환 ----
 
-function richTextToHtml(richText: any[]): string {
+function richTextToHtml(richText: RichTextItemResponse[]): string {
   if (!richText?.length) return ''
   return richText
-    .map((t: any) => {
+    .map((t) => {
       let text = t.plain_text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/\n/g, '<br/>')
-      const a = t.annotations || {}
+      const a = t.annotations
       if (a.code) text = `<code>${text}</code>`
       if (a.bold) text = `<strong>${text}</strong>`
       if (a.italic) text = `<em>${text}</em>`
@@ -46,14 +52,14 @@ const CALLOUT_BG: Record<string, string> = {
   default:           'callout-default',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function calloutBlockToHtml(block: any): Promise<string> {
   const c = block.callout
   if (!c) return ''
   const icon = c.icon
   const emoji = icon?.type === 'emoji' ? icon.emoji : '💡'
   const colorClass = CALLOUT_BG[c.color || 'default'] || 'callout-default'
-  const firstLine = richTextToHtml(c.rich_text)
-  // 콜아웃 안에 여러 줄이 있으면 children 블록으로 관리됨
+  const firstLine = richTextToHtml(c.rich_text as RichTextItemResponse[])
   const childrenHtml = block.has_children ? await columnBlocksToHtml(block.id) : ''
 
   const titleHtml = firstLine ? `<p class="callout-title">${firstLine}</p>` : ''
@@ -66,9 +72,10 @@ async function columnBlocksToHtml(blockId: string): Promise<string> {
   const parts: string[] = []
   let listType: 'ul' | 'ol' | null = null
 
-  for (const b of results as any[]) {
+  for (const b of results as BlockObjectResponse[]) {
     const type = b.type
-    const c = b[type]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const c = (b as any)[type]
 
     if (type !== 'bulleted_list_item' && listType === 'ul') { parts.push('</ul>'); listType = null }
     if (type !== 'numbered_list_item' && listType === 'ol') { parts.push('</ol>'); listType = null }
@@ -80,9 +87,6 @@ async function columnBlocksToHtml(blockId: string): Promise<string> {
       case 'heading_1': parts.push(`<h1>${richTextToHtml(c.rich_text)}</h1>`); break
       case 'heading_2': parts.push(`<h2>${richTextToHtml(c.rich_text)}</h2>`); break
       case 'heading_3': parts.push(`<h3>${richTextToHtml(c.rich_text)}</h3>`); break
-      case 'heading_4': parts.push(`<h4>${richTextToHtml(c.rich_text)}</h4>`); break
-      case 'heading_5': parts.push(`<h5>${richTextToHtml(c.rich_text)}</h5>`); break
-      case 'heading_6': parts.push(`<h6>${richTextToHtml(c.rich_text)}</h6>`); break
       case 'callout':   parts.push(await calloutBlockToHtml(b)); break
       case 'bulleted_list_item':
         if (listType !== 'ul') { parts.push('<ul>'); listType = 'ul' }
@@ -109,15 +113,18 @@ async function columnBlocksToHtml(blockId: string): Promise<string> {
   return parts.join('')
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 n2m.setCustomTransformer('callout', async (block: any) => {
   return calloutBlockToHtml(block)
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 n2m.setCustomTransformer('column_list', async (block: any) => {
   if (!block?.id) return ''
   try {
     const { results: columns } = await notion.blocks.children.list({ block_id: block.id })
     const colHtmls = await Promise.all(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       columns.map(async (col: any) => {
         try {
           const content = await columnBlocksToHtml(col.id)
@@ -133,15 +140,60 @@ n2m.setCustomTransformer('column_list', async (block: any) => {
   }
 })
 
-// column 블록 자체는 column_list에서 처리하므로 개별 출력 방지
 n2m.setCustomTransformer('column', async () => '')
 
 // ---- End custom transformers ----
 
 const DATABASE_ID = process.env.NOTION_DATABASE_ID!
 
-// Notion DB에서 모든 게시글 가져오기
-export async function getAllPosts(): Promise<Post[]> {
+// 페이지 메타데이터 파싱 헬퍼
+function extractPostMeta(page: PageObjectResponse): Post {
+  const props = page.properties
+
+  const titleProp = props.Title ?? props.Name
+  const title =
+    titleProp?.type === 'title' ? titleProp.title[0]?.plain_text ?? 'Untitled' : 'Untitled'
+
+  const slugProp = props.Slug
+  const slug =
+    slugProp?.type === 'rich_text' ? slugProp.rich_text[0]?.plain_text ?? page.id : page.id
+
+  const descProp = props.Description
+  const description =
+    descProp?.type === 'rich_text' ? descProp.rich_text[0]?.plain_text ?? '' : ''
+
+  const dateProp = props.Date
+  const date =
+    dateProp?.type === 'date' ? dateProp.date?.start ?? page.created_time : page.created_time
+
+  const tagsProp = props.Tags
+  const tags =
+    tagsProp?.type === 'multi_select' ? tagsProp.multi_select.map((t) => t.name) : []
+
+  const seriesProp = props.Series
+  const series =
+    seriesProp?.type === 'rich_text' ? seriesProp.rich_text[0]?.plain_text || undefined : undefined
+
+  const viewsProp = props.Views
+  const views =
+    viewsProp?.type === 'number' ? viewsProp.number ?? undefined : undefined
+
+  const coverImage =
+    page.cover?.type === 'external'
+      ? page.cover.external.url
+      : page.cover?.type === 'file'
+      ? page.cover.file.url
+      : undefined
+
+  const publishedProp = props.Published
+  const published =
+    publishedProp?.type === 'checkbox' ? publishedProp.checkbox : false
+
+  return { id: page.id, title, slug, description, date, tags, series, coverImage, views, published }
+}
+
+// Notion DB에서 모든 게시글 가져오기 (React cache로 요청 수명 내 중복 호출 dedup)
+export const getAllPosts = cache(async (): Promise<Post[]> => {
   const response = await notion.databases.query({
     database_id: DATABASE_ID,
     filter: {
@@ -151,8 +203,10 @@ export async function getAllPosts(): Promise<Post[]> {
     sorts: [{ property: 'Date', direction: 'descending' }],
   })
 
-  return response.results.map((page: any) => extractPostMeta(page))
-}
+  return response.results
+    .filter((page): page is PageObjectResponse => 'properties' in page)
+    .map((page) => extractPostMeta(page))
+})
 
 // 슬러그로 단일 게시글 메타 가져오기
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -165,7 +219,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   })
 
   if (!response.results.length) return null
-  return extractPostMeta(response.results[0] as any)
+  const page = response.results[0]
+  if (!('properties' in page)) return null
+  return extractPostMeta(page as PageObjectResponse)
 }
 
 // 게시글 본문 Markdown으로 변환
@@ -190,20 +246,19 @@ export async function getPostsBySeries() {
   return seriesMap
 }
 
-// 인기글 (views 기준 상위 5개, 조회수 없으면 최신순 fallback)
+// 인기글 (views 내림차순 상위 5개, views 없는 글은 0으로 처리)
 export async function getPopularPosts(): Promise<Post[]> {
   const posts = await getAllPosts()
-  const withViews = posts
-    .filter((p) => p.views !== undefined)
+  return [...posts]
     .sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
-  if (withViews.length >= 2) return withViews.slice(0, 5)
-  return posts.slice(0, 5)
+    .slice(0, 5)
 }
 
 // 조회수 증가
 export async function incrementViews(pageId: string): Promise<void> {
-  const page = await notion.pages.retrieve({ page_id: pageId }) as any
-  const current = page.properties?.Views?.number ?? 0
+  const page = await notion.pages.retrieve({ page_id: pageId }) as PageObjectResponse
+  const viewsProp = page.properties.Views
+  const current = viewsProp?.type === 'number' ? viewsProp.number ?? 0 : 0
   await notion.pages.update({
     page_id: pageId,
     properties: {
@@ -232,41 +287,4 @@ export async function getAllSeries(): Promise<string[]> {
     }
   })
   return series
-}
-
-// 페이지 메타데이터 파싱 헬퍼
-function extractPostMeta(page: any): Post {
-  const props = page.properties
-
-  const title =
-    props.Title?.title?.[0]?.plain_text ||
-    props.Name?.title?.[0]?.plain_text ||
-    'Untitled'
-
-  const slug =
-    props.Slug?.rich_text?.[0]?.plain_text || page.id
-
-  const description =
-    props.Description?.rich_text?.[0]?.plain_text || ''
-
-  const date =
-    props.Date?.date?.start || page.created_time
-
-  const tags =
-    props.Tags?.multi_select?.map((t: any) => t.name) || []
-
-  const series =
-    props.Series?.rich_text?.[0]?.plain_text || undefined
-
-
-  const views =
-    props.Views?.number ?? undefined
-
-  const coverImage =
-    page.cover?.external?.url || page.cover?.file?.url || undefined
-
-  const published =
-    props.Published?.checkbox ?? false
-
-  return { id: page.id, title, slug, description, date, tags, series, coverImage, views, published }
 }

@@ -9,13 +9,15 @@ export interface RecentComment {
   url: string
 }
 
-function githubRequest(token: string, query: string, variables: object) {
-  return fetch('https://api.github.com/graphql', {
+async function githubRequest(token: string, query: string, variables: object) {
+  const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),
     next: { revalidate: 86400 },
   })
+  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${res.statusText}`)
+  return res
 }
 
 export async function getRecentComments(): Promise<RecentComment[]> {
@@ -23,7 +25,12 @@ export async function getRecentComments(): Promise<RecentComment[]> {
   const repo = process.env.NEXT_PUBLIC_GISCUS_REPO
   const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID
 
-  if (!token || !repo || !categoryId) return []
+  if (!token || !repo || !categoryId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[github.ts] GITHUB_TOKEN 또는 Giscus 환경변수가 설정되지 않았습니다.')
+    }
+    return []
+  }
 
   const [owner, name] = repo.split('/')
   if (!owner || !name) return []
@@ -79,7 +86,12 @@ export async function getCommentCounts(slugs: string[]): Promise<Record<string, 
   const repo = process.env.NEXT_PUBLIC_GISCUS_REPO
   const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID
 
-  if (!token || !repo || !categoryId) return {}
+  if (!token || !repo || !categoryId) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[github.ts] GITHUB_TOKEN 또는 Giscus 환경변수가 설정되지 않았습니다.')
+    }
+    return {}
+  }
 
   const [owner, name] = repo.split('/')
   if (!owner || !name) return {}

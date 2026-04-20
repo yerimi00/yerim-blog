@@ -6,7 +6,7 @@ import HeroBanner from '@/components/blog/HeroBanner'
 import BlogFilter from '@/components/blog/BlogFilter'
 import Sidebar from '@/components/blog/Sidebar'
 
-export const revalidate = 86400
+export const revalidate = 3600
 
 export default async function HomePage() {
   const [allPosts, popularPosts, recentComments] = await Promise.all([
