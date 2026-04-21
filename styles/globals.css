@@ -24,7 +24,7 @@
   body {
     background-color: var(--bg);
     color: var(--text);
-    font-family: 'Pretendard', system-ui, sans-serif;
+    font-family: "Pretendard", system-ui, sans-serif;
     transition:
       background-color 0.2s,
       color 0.2s;
@@ -47,7 +47,8 @@
   }
 
   /* 목차 스크롤 오프셋 (sticky 헤더 높이만큼) */
-  h2, h3 {
+  h2,
+  h3 {
     scroll-margin-top: 90px;
   }
 
@@ -176,7 +177,9 @@
     text-decoration: none;
     padding: 4px 12px;
     border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
 
   .toc-link:hover {
@@ -241,7 +244,9 @@
     color: var(--text);
   }
 
-  .callout-body p { margin: 0; }
+  .callout-body p {
+    margin: 0;
+  }
 
   .callout-body code {
     background: rgba(0, 0, 0, 0.08);
@@ -252,26 +257,62 @@
   }
 
   /* Light mode — Notion 정확한 색상 */
-  .callout-default { background: #F1F1EF; }
-  .callout-gray    { background: #F1F1EF; }
-  .callout-blue    { background: #E7F3F8; }
-  .callout-yellow  { background: #FBF3DB; }
-  .callout-orange  { background: #FBECDD; }
-  .callout-red     { background: #FDEBEC; }
-  .callout-green   { background: #EDF3EC; }
-  .callout-purple  { background: #F4F0F7; }
-  .callout-pink    { background: #F9EEF3; }
+  .callout-default {
+    background: #f1f1ef;
+  }
+  .callout-gray {
+    background: #f1f1ef;
+  }
+  .callout-blue {
+    background: #e7f3f8;
+  }
+  .callout-yellow {
+    background: #fbf3db;
+  }
+  .callout-orange {
+    background: #fbecdd;
+  }
+  .callout-red {
+    background: #fdebec;
+  }
+  .callout-green {
+    background: #edf3ec;
+  }
+  .callout-purple {
+    background: #f4f0f7;
+  }
+  .callout-pink {
+    background: #f9eef3;
+  }
 
   /* Dark mode — Notion 다크 색상 */
-  .dark .callout-default { background: rgba(151, 154, 155, 0.15); }
-  .dark .callout-gray    { background: rgba(151, 154, 155, 0.15); }
-  .dark .callout-blue    { background: rgba(92, 155, 183, 0.15); }
-  .dark .callout-yellow  { background: rgba(203, 145, 47, 0.15); }
-  .dark .callout-orange  { background: rgba(215, 129, 50, 0.15); }
-  .dark .callout-red     { background: rgba(212, 76, 71, 0.15); }
-  .dark .callout-green   { background: rgba(82, 158, 114, 0.15); }
-  .dark .callout-purple  { background: rgba(154, 109, 185, 0.15); }
-  .dark .callout-pink    { background: rgba(186, 85, 211, 0.15); }
+  .dark .callout-default {
+    background: rgba(151, 154, 155, 0.15);
+  }
+  .dark .callout-gray {
+    background: rgba(151, 154, 155, 0.15);
+  }
+  .dark .callout-blue {
+    background: rgba(92, 155, 183, 0.15);
+  }
+  .dark .callout-yellow {
+    background: rgba(203, 145, 47, 0.15);
+  }
+  .dark .callout-orange {
+    background: rgba(215, 129, 50, 0.15);
+  }
+  .dark .callout-red {
+    background: rgba(212, 76, 71, 0.15);
+  }
+  .dark .callout-green {
+    background: rgba(82, 158, 114, 0.15);
+  }
+  .dark .callout-purple {
+    background: rgba(154, 109, 185, 0.15);
+  }
+  .dark .callout-pink {
+    background: rgba(186, 85, 211, 0.15);
+  }
 
   .dark .callout-body code {
     background: rgba(255, 255, 255, 0.1);
