@@ -193,6 +193,7 @@ export const projects: Project[] = [
     roles: ['FE', '기획', '디자인', '팀원'],
     url: 'https://www.comncheck.com/',
     image: '/projects/comncheck.png',
+    relatedPosts: ['ComNCheck'],
   },
   {
     name: '별자리',
