@@ -153,6 +153,7 @@ export const projects: Project[] = [
     updatedAt: '',
     roles: ['FE', '팀원'],
     image: '/projects/lumi-clean.png',
+    relatedPosts: ['RumiClean'],
   },
   {
     name: '넥스트 커리어',

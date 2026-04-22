@@ -192,7 +192,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                           Blog Post
                         </p>
                         <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
-                          /blog/{slug}
+                          {slug}
                         </p>
                       </div>
                       <span style={{ color: 'var(--accent)', fontSize: '1.25rem', flexShrink: 0 }}>→</span>
