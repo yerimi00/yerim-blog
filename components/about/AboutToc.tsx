@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 
 const TOC_ITEMS = [
   { id: 'about', label: 'About' },
+  { id: 'awards', label: 'Awards' },
   { id: 'education', label: 'Education' },
   { id: 'activities', label: 'Activities' },
   { id: 'stack', label: 'Tech Stack' },
-  { id: 'awards', label: 'Awards' },
-  { id: 'project', label: 'Project' },
+  { id: 'contact', label: 'Contact' },
 ]
 
 const INITIAL_TOP = 310

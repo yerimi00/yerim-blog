@@ -1,13 +1,7 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
-import ProjectCard from './ProjectCard'
 import type { Project } from '@/app/about/[version]/data'
 
 export default function ProjectList({ projects }: { projects: Project[] }) {
-  const [hovered, setHovered] = useState<string | null>(null)
-
   const grouped = Object.entries(
     projects.reduce<Record<string, Project[]>>((acc, p) => {
       const year = (p.period || p.updatedAt || '').slice(0, 4) || '기타'
@@ -49,26 +43,17 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   style={{ borderBottom: ai < items.length - 1 ? '1px solid var(--border)' : 'none' }}
                 >
                   <Link href={`/about/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-                    <div
-                      onMouseEnter={() => setHovered(project.slug)}
-                      onMouseLeave={() => setHovered(null)}
-                      style={{ padding: '0.8rem 0', cursor: 'pointer' }}
-                    >
-                      {/* 행: period + 내용 + 화살표 */}
+                    <div className="project-list-item" style={{ padding: '0.8rem 0', cursor: 'pointer' }}>
                       <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
                         <span style={{
                           fontSize: '0.72rem', color: 'var(--text-muted)',
-                          whiteSpace: 'nowrap', paddingTop: '3px', minWidth: '80px', flexShrink: 0,
+                          whiteSpace: 'nowrap', paddingTop: '3px', minWidth: '130px', flexShrink: 0,
                         }}>
                           {project.period}
                         </span>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.2rem' }}>
-                            <span style={{
-                              fontSize: '0.9rem', fontWeight: 600,
-                              color: hovered === project.slug ? 'var(--accent)' : 'var(--text)',
-                              transition: 'color 0.15s',
-                            }}>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}>
                               {project.name}
                             </span>
                             {project.status === '진행중' && (
@@ -94,21 +79,6 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                         </div>
                         <span style={{ color: 'var(--accent)', fontSize: '0.9rem', flexShrink: 0, paddingTop: '2px' }}>→</span>
                       </div>
-
-                      {/* 호버 시 카드 슬라이드 다운 */}
-                      {project.image && (
-                        <div style={{
-                          overflow: 'hidden',
-                          maxHeight: hovered === project.slug ? '400px' : '0',
-                          opacity: hovered === project.slug ? 1 : 0,
-                          transition: 'max-height 0.4s ease, opacity 0.3s ease',
-                          marginTop: hovered === project.slug ? '0.75rem' : '0',
-                          marginLeft: 'calc(80px + 1.25rem)',
-                          maxWidth: '500px',
-                        }}>
-                          <ProjectCard project={project} />
-                        </div>
-                      )}
                     </div>
                   </Link>
                 </div>

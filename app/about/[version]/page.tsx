@@ -4,7 +4,6 @@ import Footer from '@/components/layout/Footer'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
 import TechStackGrid from '@/components/about/TechStackGrid'
-import ProjectList from '@/components/about/ProjectList'
 import AboutToc from '@/components/about/AboutToc'
 import YearTimeline from '@/components/about/YearTimeline'
 import {
@@ -13,7 +12,6 @@ import {
   awards,
   education,
   activities,
-  projects,
 } from './data'
 
 export function generateStaticParams() {
@@ -50,10 +48,6 @@ export default function AboutVersionPage({ params }: { params: { version: string
   const versionActivities = isPM
     ? activities
     : activities.filter((a) => a.category === '개발')
-
-  const versionProjects = isPM
-    ? projects.filter((p) => p.roles.some((r) => ['기획', 'PM'].includes(r)))
-    : projects.filter((p) => p.roles.includes(version.toUpperCase() as 'FE' | 'BE'))
 
   return (
     <>
@@ -117,6 +111,27 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
           <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
 
+          {/* ── Awards ── */}
+          <section id="awards" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
+            <h2 style={sectionHeadingStyle}>Awards</h2>
+            <YearTimeline
+              items={awards}
+              getYear={(a) => a.year}
+              renderItems={(items) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {items.map((award, ai) => (
+                    <div key={ai}>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>{award.title}</p>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>{award.project}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            />
+          </section>
+
+          <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
+
           {/* ── Education ── */}
           <section id="education" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
             <h2 style={sectionHeadingStyle}>Education</h2>
@@ -165,31 +180,21 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
           <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
 
-          {/* ── Awards ── */}
-          <section id="awards" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
-            <h2 style={sectionHeadingStyle}>Awards</h2>
-            <YearTimeline
-              items={awards}
-              getYear={(a) => a.year}
-              renderItems={(items) => (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {items.map((award, ai) => (
-                    <div key={ai}>
-                      <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>{award.title}</p>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>{award.project}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            />
-          </section>
-
-          <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
-
-          {/* ── Project ── */}
-          <section id="project" style={{ scrollMarginTop: '100px' }}>
-            <h2 style={{ ...sectionHeadingStyle, marginBottom: '0.75rem' }}>Project</h2>
-            <ProjectList projects={versionProjects} />
+          {/* ── Contact ── */}
+          <section id="contact" style={{ scrollMarginTop: '100px' }}>
+            <h2 style={sectionHeadingStyle}>Contact</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <span style={{ fontSize: '1rem' }}>📱</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text)' }}>010-2221-5418</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <span style={{ fontSize: '1rem' }}>✉️</span>
+                <a href="mailto:fhddl1019@gmail.com" style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                  fhddl1019@gmail.com
+                </a>
+              </div>
+            </div>
           </section>
 
         </div>
