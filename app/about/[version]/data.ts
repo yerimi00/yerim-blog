@@ -9,19 +9,21 @@ export const education = [
 
 /* ───────── Activities ───────── */
 
-export const activities = [
-  { period: '2026.02 ~', title: 'University MakeUs Challenge 10기 PLAN 파트장' },
-  { period: '2026.03 ~', title: '(주)Ulift 인턴' },
-  { period: '2025.08 ~ 2026.02', title: 'University MakeUs Challenge 9기 WEB 파트장' },
-  { period: '2025.03 ~ 2025.12', title: 'N-CUBE 학회장' },
-  { period: '2025.02 ~ 2025.12', title: '9oormthonUNIV 4기 한국외대 대표 / 6지부 대표' },
-  { period: '2024.09 ~ 2025.07', title: 'Google Developer Groups on HUFS 6기' },
-  { period: '2024.09 ~ 2025.01', title: '9oormthonUNIV 3기 한국외대 부대표' },
-  { period: '2024.01 ~ 2024.12', title: '멋쟁이사자처럼 12기 FE 트랙 운영진' },
-  { period: '2024', title: '멋쟁이사자처럼 간지톤 운영진' },
-  { period: '2023.03 ~ 2023.12', title: '멋쟁이사자처럼 11기 FE 트랙' },
-  { period: '2023.03 ~ 2023.12', title: 'R-CUBE 학회원' },
-  { period: '2023.11', title: '멋쟁이사자처럼 간지톤(미르톤) 대학연합해커톤 참가' },
+export const activities: { period: string; title: string; category: '개발' | 'PM' }[] = [
+  { period: '2026.02 ~', title: 'University MakeUs Challenge 10기 PLAN 파트장', category: '개발' },
+  { period: '2026.03 ~', title: '(주)Ulift 인턴', category: '개발' },
+  { period: '2025', title: 'UMC X 한국외대 컴퓨터공학부 챌커톤 행사 운영', category: 'PM' },
+  { period: '2025.08 ~ 2026.02', title: 'University MakeUs Challenge 9기 WEB 파트장', category: '개발' },
+  { period: '2025.03 ~ 2025.12', title: 'N-CUBE 학회장', category: '개발' },
+  { period: '2025.02 ~ 2025.12', title: '9oormthonUNIV 4기 한국외대 대표 / 6지부 대표', category: '개발' },
+  { period: '2025', title: '구름톤 유니브 4기 데모데이 행사 운영', category: 'PM' },
+  { period: '2024.09 ~ 2025.07', title: 'Google Developer Groups on HUFS 6기', category: '개발' },
+  { period: '2024.09 ~ 2025.01', title: '9oormthonUNIV 3기 한국외대 부대표', category: '개발' },
+  { period: '2024.01 ~ 2024.12', title: '멋쟁이사자처럼 12기 FE 트랙 운영진', category: '개발' },
+  { period: '2024', title: '멋쟁이사자처럼 간지톤 행사 운영', category: '개발' },
+  { period: '2023.03 ~ 2023.12', title: '멋쟁이사자처럼 11기 FE 트랙', category: '개발' },
+  { period: '2023.03 ~ 2023.12', title: 'R-CUBE 학회원', category: '개발' },
+  { period: '2023.11', title: '멋쟁이사자처럼 간지톤(미르톤) 대학연합해커톤 참가', category: '개발' },
 ]
 
 /* ───────── Tech Stack ───────── */
@@ -140,8 +142,8 @@ export const projects: Project[] = [
     name: '리얼매치',
     slug: 'real-match',
     description: '브랜드·마이크로 인플루언서 매칭 및 협업 플랫폼',
-    status: '진행중',
-    period: '2025.09 ~ 현재',
+    status: '완료',
+    period: '2025.09 ~ 2026.02',
     updatedAt: '2026.04',
     roles: ['BE', '팀원'],
     image: '/projects/real-match.png',
@@ -150,7 +152,7 @@ export const projects: Project[] = [
     name: '루미클린',
     slug: 'lumi-clean',
     description: '[외주] 에어비앤비 청소 매칭 웹앱',
-    status: '완료',
+    status: '진행중',
     period: '',
     updatedAt: '',
     roles: ['FE', '팀원'],

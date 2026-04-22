@@ -121,7 +121,19 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>개발을 배우고, 배운 것을 기록합니다</p>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '0.75rem' }}>
+          {[
+            { label: 'FE 개발자로 만나기', href: '/about/fe' },
+            { label: 'BE 개발자로 만나기', href: '/about/be' },
+            { label: 'PM으로 만나기', href: '/about/pm' },
+          ].map(({ label, href }) => (
+            <Link key={label} href={href}
+              style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              {label} →
+            </Link>
+          ))}
+        </div>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem', display: 'flex', gap: '0.75rem' }}>
           {[
             { label: 'GitHub', href: 'https://github.com/yerimi00' },
             { label: 'Velog', href: 'https://velog.io/@yerimi00' },
