@@ -1,7 +1,7 @@
 import { getPostsBySeries } from '@/lib/notion'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import SeriesList from '@/components/blog/SeriesList'
+import SeriesView from '@/components/blog/SeriesView'
 
 export const revalidate = 86400
 export const metadata = { title: 'Series', description: '시리즈별로 묶인 글 모음' }
@@ -22,7 +22,7 @@ export default async function SeriesPage() {
             {seriesEntries.length}개의 시리즈
           </p>
         </div>
-        <SeriesList seriesEntries={seriesEntries} />
+        <SeriesView seriesEntries={seriesEntries} />
       </main>
       <Footer />
     </>
