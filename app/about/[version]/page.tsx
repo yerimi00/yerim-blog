@@ -4,13 +4,14 @@ import Footer from '@/components/layout/Footer'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
 import TechStackGrid from '@/components/about/TechStackGrid'
-import ProjectCardDeck from '@/components/about/ProjectCardDeck'
+import ProjectList from '@/components/about/ProjectList'
 import AboutToc from '@/components/about/AboutToc'
 import {
   techStackByVersion,
   interestsByVersion,
   awards,
   education,
+  activities,
   projects,
 } from './data'
 
@@ -117,9 +118,9 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
             <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
 
-            {/* ── Education & Experience ── */}
+            {/* ── Education ── */}
             <section id="education" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
-              <h2 style={sectionHeadingStyle}>Education &amp; Experience</h2>
+              <h2 style={sectionHeadingStyle}>Education</h2>
               <div>
                 {education.map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', padding: '1.1rem 0', borderBottom: i < education.length - 1 ? '1px solid var(--border)' : 'none' }}>
@@ -128,6 +129,61 @@ export default function AboutVersionPage({ params }: { params: { version: string
                   </div>
                 ))}
               </div>
+            </section>
+
+            <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
+
+            {/* ── Activities ── */}
+            <section id="activities" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
+              <h2 style={sectionHeadingStyle}>Activities</h2>
+              {(() => {
+                const grouped = Object.entries(
+                  activities.reduce<Record<string, typeof activities>>((acc, a) => {
+                    const year = a.period.slice(0, 4)
+                    ;(acc[year] ??= []).push(a)
+                    return acc
+                  }, {})
+                ).sort(([a], [b]) => Number(b) - Number(a))
+
+                return (
+                  <div>
+                    {grouped.map(([year, items], gi) => (
+                      <div key={year} style={{ display: 'grid', gridTemplateColumns: '20px 1fr', columnGap: '1rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <div style={{
+                            width: '10px', height: '10px', borderRadius: '50%',
+                            background: 'var(--accent)', border: '2px solid var(--bg)',
+                            flexShrink: 0, marginTop: '4px',
+                          }} />
+                          {gi < grouped.length - 1 && (
+                            <div style={{ width: '1px', flex: 1, background: 'var(--border)', marginTop: '4px' }} />
+                          )}
+                        </div>
+                        <div style={{ paddingBottom: gi < grouped.length - 1 ? '2rem' : 0 }}>
+                          <span style={{
+                            fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent)',
+                            fontFamily: 'JetBrains Mono, monospace', display: 'block', marginBottom: '0.75rem',
+                          }}>
+                            {year}
+                          </span>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                            {items.map((item, ai) => (
+                              <div key={ai} style={{
+                                display: 'flex', gap: '1.25rem', alignItems: 'flex-start',
+                                padding: '0.7rem 0',
+                                borderBottom: ai < items.length - 1 ? '1px solid var(--border)' : 'none',
+                              }}>
+                                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '120px' }}>{item.period}</span>
+                                <span style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 500 }}>{item.title}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })()}
             </section>
 
             <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
@@ -195,7 +251,8 @@ export default function AboutVersionPage({ params }: { params: { version: string
               <div style={{ marginBottom: '0.75rem' }}>
                 <h2 style={{ ...sectionHeadingStyle, marginBottom: 0 }}>Project</h2>
               </div>
-              <ProjectCardDeck projects={versionProjects} />
+
+              <ProjectList projects={versionProjects} />
             </section>
 
         </div>
