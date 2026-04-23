@@ -150,7 +150,7 @@ export const projects: Project[] = [
   },
   {
     name: '루미클린',
-    slug: 'lumi-clean',
+    slug: 'rumiclean',
     description: '[외주] 에어비앤비 청소 매칭 웹앱',
     status: '진행중',
     period: '',
@@ -182,10 +182,11 @@ export const projects: Project[] = [
     updatedAt: '',
     roles: ['FE', '팀원'],
     image: '/projects/startup-library.png',
+    relatedPosts: ['startup-library'],
   },
   {
     name: 'ComNCheck',
-    slug: 'comncheck',
+    slug: 'com-n-check',
     description: '한국외국어대학교 컴퓨터공학부 알리미',
     status: '완료',
     period: '',
