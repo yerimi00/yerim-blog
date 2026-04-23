@@ -144,6 +144,13 @@
     background: var(--bg) !important;
   }
 
+  .post-row {
+    transition: opacity 0.15s;
+  }
+  .post-row:hover {
+    opacity: 0.65;
+  }
+
   .series-tab-bar {
     display: flex;
     flex-wrap: wrap;
