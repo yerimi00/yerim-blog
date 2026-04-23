@@ -111,6 +111,7 @@ export const awards = [
 export type Project = {
   name: string
   slug: string
+  featured?: boolean
   description: string
   overview?: string
   status: '완료' | '진행중'
@@ -151,9 +152,10 @@ export const projects: Project[] = [
   {
     name: '루미클린',
     slug: 'rumiclean',
+    featured: true,
     description: '[외주] 에어비앤비 청소 매칭 웹앱',
     status: '진행중',
-    period: '',
+    period: '2025',
     updatedAt: '',
     roles: ['FE', '팀원'],
     image: '/projects/lumi-clean.png',
@@ -162,6 +164,7 @@ export const projects: Project[] = [
   {
     name: '넥스트 커리어',
     slug: 'next-career',
+    featured: true,
     description: '중장년층의 숨은 경험을 자산으로 바꿔 맞춤 직업과 일자리를 제안하는 서비스',
     status: '완료',
     period: '2025.03 ~ 2025.05',
@@ -178,7 +181,7 @@ export const projects: Project[] = [
     slug: 'startup-library',
     description: '창업 성공을 위한 맞춤형 도서 추천 플랫폼',
     status: '완료',
-    period: '',
+    period: '2024',
     updatedAt: '',
     roles: ['FE', '팀원'],
     image: '/projects/startup-library.png',
@@ -187,9 +190,10 @@ export const projects: Project[] = [
   {
     name: 'ComNCheck',
     slug: 'com-n-check',
+    featured: true,
     description: '한국외국어대학교 컴퓨터공학부 알리미',
     status: '완료',
-    period: '',
+    period: '2024',
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
     url: 'https://www.comncheck.com/',
@@ -212,7 +216,7 @@ export const projects: Project[] = [
     slug: 'soda',
     description: '오늘 하루 수고한 당신을 위한 AI 다이어리',
     status: '완료',
-    period: '',
+    period: '2024',
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
     image: '/projects/soda.png',
@@ -233,7 +237,7 @@ export const projects: Project[] = [
     slug: 'eating',
     description: '복학생, 신입생을 위한 학식 메이트 매칭 Platform',
     status: '완료',
-    period: '',
+    period: '2024',
     updatedAt: '',
     roles: ['FE', '기획', '디자인', '팀원'],
     image: '/projects/eating.png',
@@ -243,7 +247,7 @@ export const projects: Project[] = [
     slug: 'graduation',
     description: '외대인의 졸업학점계산 서비스',
     status: '완료',
-    period: '',
+    period: '2024',
     updatedAt: '',
     roles: ['FE', '디자인', '개발팀장'],
     image: '/projects/graduation.png',

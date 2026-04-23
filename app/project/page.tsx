@@ -15,7 +15,7 @@ export default function ProjectPage() {
             Project
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            {projects.length}개의 프로젝트
+            주요 {projects.filter((p) => p.featured).length}개 · 전체 {projects.length}개
           </p>
         </div>
         <ProjectView projects={projects} />

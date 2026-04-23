@@ -53,7 +53,7 @@ function ProjectGridCard({ project }: { project: Project }) {
 export default function ProjectView({ projects }: { projects: Project[] }) {
   const [view, setView] = useState<'list' | 'grid'>('list')
 
-  const btnStyle = (active: boolean): React.CSSProperties => ({
+  const iconBtnStyle = (active: boolean): React.CSSProperties => ({
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     width: '32px', height: '32px', borderRadius: '6px',
     border: '1px solid var(--border)',
@@ -65,10 +65,10 @@ export default function ProjectView({ projects }: { projects: Project[] }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem', marginBottom: '1.25rem' }}>
-        <button style={btnStyle(view === 'list')} onClick={() => setView('list')} title="리스트 뷰">
+        <button style={iconBtnStyle(view === 'list')} onClick={() => setView('list')} title="리스트 뷰">
           <HiBars3 />
         </button>
-        <button style={btnStyle(view === 'grid')} onClick={() => setView('grid')} title="그리드 뷰">
+        <button style={iconBtnStyle(view === 'grid')} onClick={() => setView('grid')} title="그리드 뷰">
           <HiOutlineSquares2X2 />
         </button>
       </div>
