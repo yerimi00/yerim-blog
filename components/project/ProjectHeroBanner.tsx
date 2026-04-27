@@ -69,7 +69,7 @@ export default function ProjectHeroBanner({ projects }: { projects: Project[] })
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
           {project.status === '진행중' && (
-            <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'rgba(255,255,255,0.15)', color: '#e2e8f0' }}>
+            <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'rgba(59,130,246,0.25)', color: '#93c5fd' }}>
               진행중
             </span>
           )}
