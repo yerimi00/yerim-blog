@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
 import MobileBlockModal from '@/components/MobileBlockModal'
+import GuestbookFAB from '@/components/GuestbookFAB'
 
 export const metadata: Metadata = {
   title: { default: 'yerim.dev', template: '%s | yerim.dev' },
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <MobileBlockModal />
           {children}
+          <GuestbookFAB />
         </ThemeProvider>
         <Script
           id="sw-register"

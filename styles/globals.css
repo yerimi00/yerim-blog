@@ -108,6 +108,31 @@
   .fade-in {
     animation: fadeIn 0.4s ease forwards;
   }
+
+  /* 방명록 성공 모달 팝인 */
+  @keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* 방명록 FAB 말풍선 둥실 애니메이션 */
+  @keyframes fabFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-7px); }
+  }
+
+  /* 방명록 FAB 버튼 살짝 맥동 */
+  @keyframes fabPulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(59,130,246,0.45); }
+    50% { box-shadow: 0 4px 28px rgba(59,130,246,0.7); }
+  }
+
+  /* 연필 이모지 흔들기 */
+  @keyframes fabWave {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(15deg); }
+  }
 }
 
 @layer components {
@@ -122,6 +147,40 @@
 
   .dark .tag-badge {
     background: rgba(96, 165, 250, 0.15);
+  }
+
+  /* 방명록 글라스모피즘 */
+  .gb-section {
+    background: linear-gradient(135deg, rgba(219,234,254,0.45) 0%, rgba(237,233,254,0.45) 50%, rgba(252,231,243,0.45) 100%);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .dark .gb-section {
+    background: linear-gradient(135deg, rgba(30,58,138,0.25) 0%, rgba(76,29,149,0.25) 50%, rgba(131,24,67,0.25) 100%);
+  }
+
+  .gb-card {
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .gb-card {
+    background: rgba(25, 30, 55, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .gb-form-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+  }
+  .dark .gb-form-card {
+    background: rgba(25, 30, 55, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .card-hover {
