@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: '방명록',
-  description: '방명록 - 예림이에게 메시지를 남겨주세요',
+  description: '방명록',
 }
 
 export default async function GuestbookPage() {

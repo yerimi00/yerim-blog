@@ -179,7 +179,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
           <button
             type="button"
             onClick={() => setIsPublic(prev => !prev)}
-            title={!isPublic ? '비공개 — 예림이에게만 전달됩니다' : '공개 — 모두에게 보입니다'}
+            title={!isPublic ? '비공개 — 저에게만 전달됩니다' : '공개 — 모두에게 보입니다'}
             style={{
               background: 'none',
               border: 'none',
@@ -217,7 +217,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
             ›
           </span>
           <textarea
-            placeholder="예림이에게 메시지를 남겨주세요 :)"
+            placeholder="메시지를 남겨주세요 :)"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             maxLength={500}
