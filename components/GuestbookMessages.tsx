@@ -213,8 +213,8 @@ interface Props {
 export default function GuestbookMessages({ initialEntries }: Props) {
   const [entries, setEntries] = useState<GuestbookEntry[]>(initialEntries)
 
-  function handleSuccess(entry: GuestbookEntry) {
-    setEntries((prev) => [entry, ...prev])
+  function handleSuccess(entry: { id: string; name: string; message: string; createdAt: string }) {
+    setEntries((prev) => [{ ...entry, commentCount: 0 }, ...prev])
   }
 
   return (
