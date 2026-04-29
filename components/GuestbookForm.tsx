@@ -38,54 +38,72 @@ function SuccessModal({ onClose }: { onClose: () => void }) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#fff',
-          borderRadius: '24px',
-          padding: '2.25rem 2rem 1.75rem',
-          width: '300px',
-          textAlign: 'center',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
-          animation: 'popIn 0.3s cubic-bezier(0.34,1.56,0.64,1)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.25rem',
+          gap: '1rem',
+          animation: 'popIn 0.35s cubic-bezier(0.34,1.56,0.64,1)',
         }}
       >
-        <p style={{ margin: 0, fontSize: '0.78rem', color: '#9ca3af', letterSpacing: '0.02em' }}>
-          방명록 전송 완료
-        </p>
-        <p style={{ margin: '0.25rem 0 1.5rem', fontSize: '1.2rem', fontWeight: 800, color: '#111' }}>
-          방명록을 남겼어요!
-        </p>
+        {/* 모달 위 텍스트 */}
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ margin: 0, fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', letterSpacing: '0.06em' }}>
+            방명록 작성 완료
+          </p>
+          <p style={{ margin: '0.2rem 0 0', fontSize: '1.3rem', fontWeight: 600, color: '#fff' }}>
+            방명록 남겨주셔서 감사합니당 ㅎㅎ
+          </p>
+        </div>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/projects/write.jpg"
-          alt="방명록 전송 완료"
-          style={{ width: '160px', height: '160px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem' }}
-        />
+        {/* 이미지 카드 */}
+        <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', width: '340px', boxShadow: '0 24px 80px rgba(0,0,0,0.3)' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={randomImage}
+            alt="방명록 전송 완료"
+            style={{ width: '100%', height: '420px', objectFit: 'cover', display: 'block' }}
+          />
 
-        <button
-          onClick={onClose}
-          style={{
-            width: '100%',
-            padding: '0.85rem',
-            borderRadius: '14px',
-            border: 'none',
-            background: '#3b82f6',
-            color: '#fff',
-            fontSize: '1rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            boxShadow: '0 4px 14px rgba(59,130,246,0.4)',
-            transition: 'transform 0.1s',
-          }}
-          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)' }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)' }}
-        >
-          확인
-        </button>
+          {/* 하단 그라데이션 + 확인 버튼 */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)',
+            padding: '2rem 1.75rem 1.75rem',
+          }}>
+            <button
+              onClick={onClose}
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                borderRadius: '14px',
+                border: '1.5px solid rgba(255,255,255,0.5)',
+                background: 'rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(8px)',
+                color: '#fff',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                transition: 'background 0.15s, border-color 0.15s',
+              }}
+              onMouseEnter={e => {
+                const btn = e.currentTarget as HTMLButtonElement
+                btn.style.background = 'rgba(255,255,255,0.28)'
+                btn.style.borderColor = 'rgba(255,255,255,0.8)'
+              }}
+              onMouseLeave={e => {
+                const btn = e.currentTarget as HTMLButtonElement
+                btn.style.background = 'rgba(255,255,255,0.15)'
+                btn.style.borderColor = 'rgba(255,255,255,0.5)'
+              }}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )

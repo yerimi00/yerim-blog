@@ -8,7 +8,7 @@ import GuestbookFAB from '@/components/GuestbookFAB'
 
 export const metadata: Metadata = {
   title: { default: 'yerim.dev', template: '%s | yerim.dev' },
-  description: '개발과 배움을 기록하는 공간',
+  description: '피할 수 없다면 즐..즐입니다 ~ KIN',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     siteName: 'yerim.dev',
   },
   icons: {
-    icon: '/profile.jpg',
-    apple: '/profile.jpg',
+    icon: '/logo.jpg',
+    apple: '/logo.jpg',
   },
 }
 

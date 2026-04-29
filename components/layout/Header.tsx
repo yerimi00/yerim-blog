@@ -56,18 +56,9 @@ export default function Header() {
         }}
       >
         {/* 로고 */}
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <span
-            style={{
-              fontFamily: "Pretendard, sans-serif",
-              fontWeight: 700,
-              fontSize: '1.2rem',
-              color: 'var(--text)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            yerim.dev
-          </span>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.jpg" alt="yerim.dev" style={{ height: '36px', width: 'auto', objectFit: 'contain' }} />
         </Link>
 
         {/* 데스크탑 네비게이션 */}
