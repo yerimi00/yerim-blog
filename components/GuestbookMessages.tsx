@@ -10,7 +10,14 @@ function formatDate(iso: string) {
   return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; initialCount: number; isPublic?: boolean }) {
+function CommentSection({ entryId, initialCount, isPublic, pinVerified, adminPin, onPinVerify }: {
+  entryId: string
+  initialCount: number
+  isPublic?: boolean
+  pinVerified: boolean
+  adminPin: string
+  onPinVerify: (pin: string) => void
+}) {
   const [open, setOpen] = useState(false)
   const [comments, setComments] = useState<GuestbookComment[]>([])
   const [loaded, setLoaded] = useState(false)
@@ -18,7 +25,6 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [pin, setPin] = useState('')
-  const [pinVerified, setPinVerified] = useState(false)
   const [pinError, setPinError] = useState('')
   const [pinChecking, setPinChecking] = useState(false)
 
@@ -33,7 +39,7 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
     setOpen(true)
   }
 
-  async function verifyPin(e: React.FormEvent) {
+  async function handleVerifyPin(e: React.FormEvent) {
     e.preventDefault()
     if (!pin.trim()) return
     setPinChecking(true)
@@ -44,7 +50,7 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
       body: JSON.stringify({ pin }),
     })
     if (res.ok) {
-      setPinVerified(true)
+      onPinVerify(pin)
     } else {
       setPinError('핀 번호가 올바르지 않아요.')
     }
@@ -58,7 +64,7 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
     await fetch(`/api/guestbook/${entryId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), message: message.trim(), ...(needsPin && { pin }) }),
+      body: JSON.stringify({ name: name.trim(), message: message.trim(), ...(needsPin && { pin: adminPin }) }),
     })
     setComments(prev => [...prev, {
       id: crypto.randomUUID(),
@@ -89,7 +95,7 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
 
       {open && (
         <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {comments.length === 0 && (
+          {loaded && comments.length === 0 && (
             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>아직 댓글이 없어요.</p>
           )}
           {comments.map((c) => (
@@ -104,9 +110,8 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
             </div>
           ))}
 
-          {/* 비공개 항목: PIN 미인증 시 PIN 입력 폼 */}
           {needsPin && !pinVerified ? (
-            <form onSubmit={verifyPin} style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
+            <form onSubmit={handleVerifyPin} style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
               <input
                 type="password"
                 placeholder="관리자 PIN 입력"
@@ -187,6 +192,14 @@ function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; 
 }
 
 function MessageCard({ entry }: { entry: GuestbookEntry }) {
+  const [pinVerified, setPinVerified] = useState(false)
+  const [adminPin, setAdminPin] = useState('')
+
+  function handlePinVerify(pin: string) {
+    setPinVerified(true)
+    setAdminPin(pin)
+  }
+
   return (
     <div
       style={{
@@ -220,7 +233,7 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
 
       <div style={{ height: '1px', background: 'var(--border)' }} />
 
-      {entry.isPublic === false ? (
+      {entry.isPublic === false && !pinVerified ? (
         <p style={{
           margin: 0,
           fontSize: '0.9rem',
@@ -257,7 +270,14 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
         </span>
       </div>
 
-      <CommentSection entryId={entry.id} initialCount={entry.commentCount} isPublic={entry.isPublic} />
+      <CommentSection
+        entryId={entry.id}
+        initialCount={entry.commentCount}
+        isPublic={entry.isPublic}
+        pinVerified={pinVerified}
+        adminPin={adminPin}
+        onPinVerify={handlePinVerify}
+      />
     </div>
   )
 }
