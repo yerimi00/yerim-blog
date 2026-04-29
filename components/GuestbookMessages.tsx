@@ -10,13 +10,19 @@ function formatDate(iso: string) {
   return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-function CommentSection({ entryId, initialCount }: { entryId: string; initialCount: number }) {
+function CommentSection({ entryId, initialCount, isPublic }: { entryId: string; initialCount: number; isPublic?: boolean }) {
   const [open, setOpen] = useState(false)
   const [comments, setComments] = useState<GuestbookComment[]>([])
   const [loaded, setLoaded] = useState(false)
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [pin, setPin] = useState('')
+  const [pinVerified, setPinVerified] = useState(false)
+  const [pinError, setPinError] = useState('')
+  const [pinChecking, setPinChecking] = useState(false)
+
+  const needsPin = isPublic === false
 
   async function loadComments() {
     if (loaded) { setOpen(o => !o); return }
@@ -27,6 +33,24 @@ function CommentSection({ entryId, initialCount }: { entryId: string; initialCou
     setOpen(true)
   }
 
+  async function verifyPin(e: React.FormEvent) {
+    e.preventDefault()
+    if (!pin.trim()) return
+    setPinChecking(true)
+    setPinError('')
+    const res = await fetch('/api/admin/verify-pin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin }),
+    })
+    if (res.ok) {
+      setPinVerified(true)
+    } else {
+      setPinError('핀 번호가 올바르지 않아요.')
+    }
+    setPinChecking(false)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!message.trim()) return
@@ -34,7 +58,7 @@ function CommentSection({ entryId, initialCount }: { entryId: string; initialCou
     await fetch(`/api/guestbook/${entryId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), message: message.trim() }),
+      body: JSON.stringify({ name: name.trim(), message: message.trim(), ...(needsPin && { pin }) }),
     })
     setComments(prev => [...prev, {
       id: crypto.randomUUID(),
@@ -80,30 +104,16 @@ function CommentSection({ entryId, initialCount }: { entryId: string; initialCou
             </div>
           ))}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.25rem' }}>
-            <input
-              type="text"
-              placeholder="닉네임"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              maxLength={30}
-              style={{
-                border: '1px solid var(--border)', borderRadius: '6px',
-                padding: '0.4rem 0.6rem', fontSize: '0.8rem',
-                background: 'transparent', color: 'var(--text)',
-                outline: 'none', fontFamily: 'inherit',
-              }}
-            />
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
+          {/* 비공개 항목: PIN 미인증 시 PIN 입력 폼 */}
+          {needsPin && !pinVerified ? (
+            <form onSubmit={verifyPin} style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
               <input
-                type="text"
-                placeholder="댓글을 입력하세요"
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-                maxLength={300}
-                required
+                type="password"
+                placeholder="관리자 PIN 입력"
+                value={pin}
+                onChange={e => { setPin(e.target.value); setPinError('') }}
                 style={{
-                  flex: 1, border: '1px solid var(--border)', borderRadius: '6px',
+                  flex: 1, border: `1px solid ${pinError ? '#ef4444' : 'var(--border)'}`, borderRadius: '6px',
                   padding: '0.4rem 0.6rem', fontSize: '0.8rem',
                   background: 'transparent', color: 'var(--text)',
                   outline: 'none', fontFamily: 'inherit',
@@ -111,19 +121,65 @@ function CommentSection({ entryId, initialCount }: { entryId: string; initialCou
               />
               <button
                 type="submit"
-                disabled={submitting || !message.trim()}
+                disabled={pinChecking || !pin.trim()}
                 style={{
                   padding: '0.4rem 0.75rem', borderRadius: '6px',
                   border: '1px solid var(--accent)', background: 'transparent',
                   color: 'var(--accent)', fontSize: '0.78rem', fontWeight: 600,
-                  cursor: message.trim() ? 'pointer' : 'default',
+                  cursor: pin.trim() ? 'pointer' : 'default',
                   fontFamily: 'inherit', whiteSpace: 'nowrap',
                 }}
               >
-                {submitting ? '...' : '등록'}
+                {pinChecking ? '...' : '확인'}
               </button>
-            </div>
-          </form>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.25rem' }}>
+              <input
+                type="text"
+                placeholder="닉네임"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                maxLength={30}
+                style={{
+                  border: '1px solid var(--border)', borderRadius: '6px',
+                  padding: '0.4rem 0.6rem', fontSize: '0.8rem',
+                  background: 'transparent', color: 'var(--text)',
+                  outline: 'none', fontFamily: 'inherit',
+                }}
+              />
+              <div style={{ display: 'flex', gap: '0.4rem' }}>
+                <input
+                  type="text"
+                  placeholder="댓글을 입력하세요"
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  maxLength={300}
+                  required
+                  style={{
+                    flex: 1, border: '1px solid var(--border)', borderRadius: '6px',
+                    padding: '0.4rem 0.6rem', fontSize: '0.8rem',
+                    background: 'transparent', color: 'var(--text)',
+                    outline: 'none', fontFamily: 'inherit',
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={submitting || !message.trim()}
+                  style={{
+                    padding: '0.4rem 0.75rem', borderRadius: '6px',
+                    border: '1px solid var(--accent)', background: 'transparent',
+                    color: 'var(--accent)', fontSize: '0.78rem', fontWeight: 600,
+                    cursor: message.trim() ? 'pointer' : 'default',
+                    fontFamily: 'inherit', whiteSpace: 'nowrap',
+                  }}
+                >
+                  {submitting ? '...' : '등록'}
+                </button>
+              </div>
+            </form>
+          )}
+          {pinError && <p style={{ margin: 0, fontSize: '0.75rem', color: '#ef4444' }}>{pinError}</p>}
         </div>
       )}
     </div>
@@ -201,7 +257,7 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
         </span>
       </div>
 
-      <CommentSection entryId={entry.id} initialCount={entry.commentCount} />
+      <CommentSection entryId={entry.id} initialCount={entry.commentCount} isPublic={entry.isPublic} />
     </div>
   )
 }
