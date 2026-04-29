@@ -4,9 +4,6 @@ import { RecentComment } from '@/lib/github'
 
 interface Props {
   popularPosts: Post[]
-  totalPosts: number
-  totalViews: number
-  seriesCount: number
   recentComments?: RecentComment[]
 }
 

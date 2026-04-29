@@ -56,9 +56,6 @@ export default async function HomePage() {
           <aside className="home-sidebar" style={{ position: 'sticky', top: '80px' }}>
             <Sidebar
               popularPosts={popularPosts}
-              totalPosts={allPosts.length}
-              totalViews={allPosts.reduce((s, p) => s + (p.views ?? 0), 0)}
-              seriesCount={new Set(allPosts.map((p) => p.series).filter(Boolean)).size}
               recentComments={recentComments}
             />
           </aside>
