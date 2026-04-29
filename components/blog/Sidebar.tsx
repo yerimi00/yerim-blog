@@ -86,7 +86,7 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>아직 댓글이 없습니다.</p>
         ) : (
           <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {recentComments.slice(0, 3).map((c, i) => (
+            {recentComments.slice(0, 5).map((c, i) => (
               <li key={i}>
                 <Link href={`/blog/${c.postSlug}`} style={{ textDecoration: 'none', display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
                   <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>

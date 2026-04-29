@@ -42,7 +42,7 @@ export async function getRecentComments(): Promise<RecentComment[]> {
           nodes {
             title
             url
-            comments(last: 1) {
+            comments(last: 5) {
               nodes {
                 author { login }
                 body
@@ -64,17 +64,18 @@ export async function getRecentComments(): Promise<RecentComment[]> {
 
     const comments: RecentComment[] = []
     for (const d of discussions) {
-      const c = d.comments.nodes[0]
-      if (!c) continue
       const slug = d.title.replace(/^\/?blog\//, '')
-      comments.push({
-        author: c.author?.login ?? 'anonymous',
-        body: c.body.slice(0, 60) + (c.body.length > 60 ? '…' : ''),
-        createdAt: c.createdAt,
-        postSlug: slug,
-        url: c.url,
-      })
+      for (const c of d.comments.nodes) {
+        comments.push({
+          author: c.author?.login ?? 'anonymous',
+          body: c.body.slice(0, 60) + (c.body.length > 60 ? '…' : ''),
+          createdAt: c.createdAt,
+          postSlug: slug,
+          url: c.url,
+        })
+      }
     }
+    comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     return comments.slice(0, 5)
   } catch {
     return []
