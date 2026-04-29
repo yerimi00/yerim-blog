@@ -2,10 +2,14 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { FiEdit2, FiX } from 'react-icons/fi'
 
 export default function GuestbookFAB() {
   const [showBubble, setShowBubble] = useState(true)
+  const pathname = usePathname()
+
+  if (pathname === '/guestbook') return null
 
   return (
     <div

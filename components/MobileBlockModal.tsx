@@ -1,9 +1,12 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function MobileBlockModal() {
   const [isMobile, setIsMobile] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
@@ -13,6 +16,7 @@ export default function MobileBlockModal() {
   }, [])
 
   if (!isMobile) return null
+  if (pathname === '/guestbook') return null
 
   return (
     <div style={{
@@ -46,6 +50,23 @@ export default function MobileBlockModal() {
           <br />
           PC 화면으로 확인해주세요!
         </p>
+        <Link
+          href="/guestbook"
+          style={{
+            display: 'block',
+            marginTop: '20px',
+            padding: '0.7rem 1.25rem',
+            borderRadius: '10px',
+            background: '#3b82f6',
+            color: '#fff',
+            fontSize: '0.9rem',
+            fontWeight: 600,
+            textDecoration: 'none',
+            textAlign: 'center',
+          }}
+        >
+          방명록 남기러 가기 →
+        </Link>
       </div>
     </div>
   )
