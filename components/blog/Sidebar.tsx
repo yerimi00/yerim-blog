@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { IoIosArrowForward } from 'react-icons/io'
 import { Post } from '@/types'
 import { RecentComment } from '@/lib/github'
 
@@ -126,7 +127,7 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
           ].map(({ label, href }) => (
             <Link key={label} href={href}
               style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              {label} →
+              {label} <IoIosArrowForward />
             </Link>
           ))}
         </div>
@@ -136,8 +137,8 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
             { label: 'Velog', href: 'https://velog.io/@yerimi00' },
           ].map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none' }}>
-              {label} →
+              style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+              {label} <IoIosArrowForward />
             </a>
           ))}
         </div>

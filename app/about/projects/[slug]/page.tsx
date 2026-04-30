@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { IoIosArrowForward } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { projects } from '@/app/about/[version]/data'
@@ -195,7 +196,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                           {slug}
                         </p>
                       </div>
-                      <span style={{ color: 'var(--accent)', fontSize: '1.25rem', flexShrink: 0 }}>→</span>
+                      <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '1.25rem', flexShrink: 0 }} />
                     </div>
                   </Link>
                 ))}
@@ -217,7 +218,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                   rel="noopener noreferrer"
                   style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
                 >
-                  GitHub →
+                  GitHub <IoIosArrowForward />
                 </a>
               )}
               {project.url && (
@@ -227,7 +228,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                   rel="noopener noreferrer"
                   style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
                 >
-                  서비스 바로가기 →
+                  서비스 바로가기 <IoIosArrowForward />
                 </a>
               )}
             </div>

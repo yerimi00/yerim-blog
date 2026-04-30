@@ -46,15 +46,17 @@ Key functions in `lib/notion.ts`:
 
 Key functions in `lib/guestbook.ts`:
 - `getGuestbookEntries()` — fetches all entries with comment counts (via block children)
-- `addGuestbookEntry(message, name?, isPublic?)` — creates a new Notion page in guestbook DB
+- `addGuestbookEntry(message, name?, isPublic?, password?)` — creates a new Notion page in guestbook DB; stores `Password` property for private entries
 - `getComments(pageId)` — lists block children of a page, parses `name|message` format
 - `addComment(pageId, name, message)` — appends a paragraph block in `name|message` format
+- `getGuestbookEntryPassword(pageId)` — lightweight single-page retrieve, returns password or null
+- `updateGuestbookEntryPassword(pageId, newPassword)` — updates Notion `Password` property
 
 ### Notion DB schema
 
 **Blog posts** — each page must have: `Title` (title), `Slug` (rich_text), `Description` (rich_text), `Date` (date), `Tags` (multi_select), `Published` (checkbox). Optional: `Series` (rich_text), `Views` (number).
 
-**Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox). Comments are stored as paragraph block children of the page in `name|message` format.
+**Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox), `Password` (rich_text, private entries only). Comments are stored as paragraph block children of the page in `name|message` format.
 
 ### Pages
 
@@ -70,6 +72,7 @@ Key functions in `lib/guestbook.ts`:
 | `/about/projects/[slug]` | `app/about/projects/[slug]/page.tsx` | Project detail |
 | `/project` | `app/project/page.tsx` | Project portfolio list |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed (other pages block mobile). |
+| `/notices` | `app/notices/page.tsx` | Notice board. Accordion list with 신규 badge. Client component. |
 
 ### API Routes
 
@@ -77,8 +80,10 @@ Key functions in `lib/guestbook.ts`:
 |---|---|---|
 | `/api/search` | GET | Returns all published posts as JSON for client-side search |
 | `/api/views/[slug]` | POST | Increments view count in Notion |
-| `/api/guestbook` | GET, POST | List / create guestbook entries |
-| `/api/guestbook/[id]/comments` | GET, POST | List / add comments on a guestbook entry. POST requires `ADMIN_PIN` in body for private entries. |
+| `/api/guestbook` | GET, POST | List / create guestbook entries. POST accepts `password` for private entries. |
+| `/api/guestbook/[id]/comments` | GET, POST | List / add comments. POST verifies password or admin PIN for private entries. |
+| `/api/guestbook/[id]/verify` | POST | Verifies entry password or `ADMIN_PIN`. Body: `{ password }` |
+| `/api/guestbook/[id]/password` | POST | Changes entry password after verification. Body: `{ currentPassword, newPassword }` |
 | `/api/admin/verify-pin` | POST | Verifies `ADMIN_PIN` — used client-side before showing private entry content |
 
 ### Styling

@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { IoIosArrowForward } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
@@ -102,7 +103,7 @@ export default function AboutVersionPage({ params }: { params: { version: string
                 ].map(({ label, url }) => (
                   <a key={label} href={url} target="_blank" rel="noopener noreferrer"
                     style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    {label} →
+                    {label} <IoIosArrowForward />
                   </a>
                 ))}
               </div>

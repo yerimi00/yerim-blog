@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getPostsBySeries } from '@/lib/notion'
@@ -36,7 +37,7 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
             href="/series"
             style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1.25rem' }}
           >
-            ← 시리즈 목록
+            <IoIosArrowBack /> 시리즈 목록
           </Link>
           <h1 style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.4rem' }}>
             {name}
@@ -98,7 +99,7 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                     {formatDate(post.date)}
                   </span>
-                  <span style={{ color: 'var(--accent)', fontSize: '0.9rem' }}>→</span>
+                  <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '0.9rem' }} />
                 </div>
               </div>
             </Link>

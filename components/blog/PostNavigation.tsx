@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import { Post } from '@/types'
 
 interface Props {
@@ -24,7 +25,7 @@ export default function PostNavigation({ prev, next }: Props) {
       <div>
         {prev && (
           <Link href={`/blog/${prev.slug}`} style={{ textDecoration: 'none' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>← 이전 글</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.2rem' }}><IoIosArrowBack /> 이전 글</p>
             <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 }}>
               {prev.title}
             </p>
@@ -36,7 +37,7 @@ export default function PostNavigation({ prev, next }: Props) {
       <div style={{ textAlign: 'right' }}>
         {next && (
           <Link href={`/blog/${next.slug}`} style={{ textDecoration: 'none' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>다음 글 →</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.2rem' }}>다음 글 <IoIosArrowForward /></p>
             <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 }}>
               {next.title}
             </p>

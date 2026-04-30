@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { IoIosArrowForward } from 'react-icons/io'
 
 export default function MobileBlockModal() {
   const [isMobile, setIsMobile] = useState(false)
@@ -65,7 +66,7 @@ export default function MobileBlockModal() {
             textAlign: 'center',
           }}
         >
-          방명록 남기러 가기 →
+          방명록 남기러 가기 <IoIosArrowForward />
         </Link>
       </div>
     </div>

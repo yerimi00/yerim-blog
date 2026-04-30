@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { IoIosArrowForward } from 'react-icons/io'
 import type { Project } from '@/app/about/[version]/data'
 
 export default function ProjectList({ projects }: { projects: Project[] }) {
@@ -77,7 +78,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                             )}
                           </div>
                         </div>
-                        <span style={{ color: 'var(--accent)', fontSize: '0.9rem', flexShrink: 0, paddingTop: '2px' }}>→</span>
+                        <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '0.9rem', flexShrink: 0, paddingTop: '2px' }} />
                       </div>
                     </div>
                   </Link>
