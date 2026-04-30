@@ -36,8 +36,10 @@
 ### 방명록
 
 - 공개 / 비공개 메시지 선택
-- 비공개 메시지: 내용은 관리자 PIN 인증 후에만 표시
-- 댓글 기능: 비공개 항목 댓글은 관리자 PIN 인증 후 작성 가능
+- 비공개 메시지 작성 시 열람 비밀번호 설정 (Notion `Password` 속성 저장)
+- 비공개 메시지: 비밀번호 또는 관리자 PIN 인증 후 내용 표시
+- 비밀번호 변경 기능 (인증 후 인라인 폼)
+- 댓글 기능: 비공개 항목 댓글은 비밀번호 / 관리자 PIN 인증 후 작성 가능
 - 방명록 전용 플로팅 액션 버튼(FAB)
 - [임시] 모바일에서는 방명록 페이지만 접근 허용
 
@@ -89,7 +91,10 @@ yerim-blog/
 │       ├── search/               # 검색
 │       ├── views/[slug]/         # 조회수
 │       ├── guestbook/            # 방명록 CRUD
-│       │   └── [id]/comments/   # 방명록 댓글
+│       │   └── [id]/
+│       │       ├── comments/    # 방명록 댓글
+│       │       ├── verify/      # 비밀번호 / PIN 검증
+│       │       └── password/    # 비밀번호 변경
 │       └── admin/verify-pin/    # 관리자 PIN 검증
 ├── components/
 │   ├── layout/                   # Header, Footer
@@ -144,11 +149,12 @@ npm run lint
 
 ### 방명록
 
-| 속성    | 타입      | 설명        |
-| ------- | --------- | ----------- |
-| Message | title     | 방명록 본문 |
-| Name    | rich_text | 작성자 이름 |
-| Public  | checkbox  | 공개 여부   |
+| 속성     | 타입      | 설명                              |
+| -------- | --------- | --------------------------------- |
+| Message  | title     | 방명록 본문                       |
+| Name     | rich_text | 작성자 이름                       |
+| Public   | checkbox  | 공개 여부                         |
+| Password | rich_text | 열람 비밀번호 (비공개 항목만 저장) |
 
 댓글은 해당 Notion 페이지의 블록 자식으로 저장됩니다. (`이름\|메시지` 형식)
 
@@ -160,6 +166,21 @@ npm run lint
 > 변경 유형: `Added` 새 기능 / `Changed` 변경 / `Fixed` 버그 수정 / `Removed` 제거
 
 ### [Unreleased]
+
+### [2026-04-30]
+
+#### Added
+
+- 방명록 비공개 메시지 작성 시 열람 비밀번호 설정 기능
+- 비밀번호 변경 기능 (인증 후 인라인 폼으로 제공)
+- `/api/guestbook/[id]/verify` — 비밀번호 / 관리자 PIN 검증 엔드포인트
+- `/api/guestbook/[id]/password` — 비밀번호 변경 엔드포인트
+- 방명록 페이지 상단 업데이트 공지 배너
+
+#### Changed
+
+- 비공개 방명록 인증: 관리자 PIN 전용 → 항목별 비밀번호 + 관리자 PIN(마스터 오버라이드)으로 변경
+- Notion 방명록 DB에 `Password` (rich_text) 속성 추가
 
 ### [2026-04-29]
 

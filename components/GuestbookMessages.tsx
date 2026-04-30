@@ -44,15 +44,15 @@ function CommentSection({ entryId, initialCount, isPublic, pinVerified, adminPin
     if (!pin.trim()) return
     setPinChecking(true)
     setPinError('')
-    const res = await fetch('/api/admin/verify-pin', {
+    const res = await fetch(`/api/guestbook/${entryId}/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pin }),
+      body: JSON.stringify({ password: pin }),
     })
     if (res.ok) {
       onPinVerify(pin)
     } else {
-      setPinError('핀 번호가 올바르지 않아요.')
+      setPinError('비밀번호가 올바르지 않아요.')
     }
     setPinChecking(false)
   }
@@ -64,7 +64,7 @@ function CommentSection({ entryId, initialCount, isPublic, pinVerified, adminPin
     await fetch(`/api/guestbook/${entryId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), message: message.trim(), ...(needsPin && { pin: adminPin }) }),
+      body: JSON.stringify({ name: name.trim(), message: message.trim(), ...(needsPin && { password: adminPin }) }),
     })
     setComments(prev => [...prev, {
       id: crypto.randomUUID(),
@@ -114,7 +114,7 @@ function CommentSection({ entryId, initialCount, isPublic, pinVerified, adminPin
             <form onSubmit={handleVerifyPin} style={{ display: 'flex', gap: '0.4rem', marginTop: '0.25rem' }}>
               <input
                 type="password"
-                placeholder="관리자 PIN 입력"
+                placeholder="비밀번호 입력"
                 value={pin}
                 onChange={e => { setPin(e.target.value); setPinError('') }}
                 style={{
@@ -194,10 +194,36 @@ function CommentSection({ entryId, initialCount, isPublic, pinVerified, adminPin
 function MessageCard({ entry }: { entry: GuestbookEntry }) {
   const [pinVerified, setPinVerified] = useState(false)
   const [adminPin, setAdminPin] = useState('')
+  const [showPwChange, setShowPwChange] = useState(false)
+  const [newPassword, setNewPassword] = useState('')
+  const [pwChangeStatus, setPwChangeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [pwChangeError, setPwChangeError] = useState('')
 
   function handlePinVerify(pin: string) {
     setPinVerified(true)
     setAdminPin(pin)
+  }
+
+  async function handlePasswordChange(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newPassword.trim()) return
+    setPwChangeStatus('loading')
+    setPwChangeError('')
+    const res = await fetch(`/api/guestbook/${entry.id}/password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: adminPin, newPassword: newPassword.trim() }),
+    })
+    if (res.ok) {
+      setAdminPin(newPassword.trim())
+      setNewPassword('')
+      setPwChangeStatus('success')
+      setTimeout(() => { setPwChangeStatus('idle'); setShowPwChange(false) }, 1500)
+    } else {
+      const data = await res.json()
+      setPwChangeError(data.error ?? '변경에 실패했습니다.')
+      setPwChangeStatus('error')
+    }
   }
 
   return (
@@ -259,7 +285,19 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
         </p>
       )}
 
-      <div style={{ textAlign: 'right' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.75rem' }}>
+        {entry.isPublic === false && pinVerified && (
+          <button
+            onClick={() => { setShowPwChange(o => !o); setPwChangeStatus('idle'); setPwChangeError('') }}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'inherit',
+              textDecoration: 'underline', textUnderlineOffset: '2px',
+            }}
+          >
+            비밀번호 변경
+          </button>
+        )}
         <span style={{
           fontSize: '0.75rem',
           color: 'var(--text-muted)',
@@ -269,6 +307,37 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
           From. {entry.name}
         </span>
       </div>
+
+      {entry.isPublic === false && pinVerified && showPwChange && (
+        <form onSubmit={handlePasswordChange} style={{ display: 'flex', gap: '0.4rem' }}>
+          <input
+            type="password"
+            placeholder="새 비밀번호"
+            value={newPassword}
+            onChange={e => { setNewPassword(e.target.value); setPwChangeStatus('idle'); setPwChangeError('') }}
+            maxLength={30}
+            style={{
+              flex: 1, border: `1px solid ${pwChangeStatus === 'error' ? '#ef4444' : pwChangeStatus === 'success' ? '#22c55e' : 'var(--border)'}`,
+              borderRadius: '6px', padding: '0.4rem 0.6rem', fontSize: '0.8rem',
+              background: 'transparent', color: 'var(--text)', outline: 'none', fontFamily: 'inherit',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={pwChangeStatus === 'loading' || !newPassword.trim()}
+            style={{
+              padding: '0.4rem 0.75rem', borderRadius: '6px',
+              border: '1px solid var(--accent)', background: 'transparent',
+              color: 'var(--accent)', fontSize: '0.78rem', fontWeight: 600,
+              cursor: newPassword.trim() ? 'pointer' : 'default',
+              fontFamily: 'inherit', whiteSpace: 'nowrap',
+            }}
+          >
+            {pwChangeStatus === 'loading' ? '...' : pwChangeStatus === 'success' ? '완료 ✓' : '변경'}
+          </button>
+        </form>
+      )}
+      {pwChangeError && <p style={{ margin: 0, fontSize: '0.75rem', color: '#ef4444' }}>{pwChangeError}</p>}
 
       <CommentSection
         entryId={entry.id}

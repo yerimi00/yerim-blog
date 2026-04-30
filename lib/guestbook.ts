@@ -46,21 +46,39 @@ export async function addGuestbookEntry(
   message: string,
   name?: string,
   isPublic?: boolean,
+  password?: string,
 ): Promise<void> {
-  await notion.pages.create({
-    parent: { database_id: DB_ID },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const properties: any = {
+    Message: { title: [{ text: { content: message.slice(0, 2000) } }] },
+    Name: { rich_text: [{ text: { content: (name?.trim() || '익명').slice(0, 100) } }] },
+    Public: { checkbox: isPublic ?? true },
+  }
+  if (!isPublic && password?.trim()) {
+    properties.Password = { rich_text: [{ text: { content: password.trim().slice(0, 100) } }] }
+  }
+  await notion.pages.create({ parent: { database_id: DB_ID }, properties })
+}
+
+export async function updateGuestbookEntryPassword(pageId: string, newPassword: string): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (notion.pages.update as any)({
+    page_id: pageId,
     properties: {
-      Message: {
-        title: [{ text: { content: message.slice(0, 2000) } }],
-      },
-      Name: {
-        rich_text: [{ text: { content: (name?.trim() || '익명').slice(0, 100) } }],
-      },
-      Public: {
-        checkbox: isPublic ?? true,
-      },
+      Password: { rich_text: [{ text: { content: newPassword.trim().slice(0, 100) } }] },
     },
   })
+}
+
+/** 비공개 항목의 비밀번호만 가져오는 경량 함수 (클라이언트에 노출하지 않음) */
+export async function getGuestbookEntryPassword(pageId: string): Promise<string | null> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const page = await notion.pages.retrieve({ page_id: pageId }) as any
+    return page.properties.Password?.rich_text?.[0]?.plain_text ?? null
+  } catch {
+    return null
+  }
 }
 
 export interface GuestbookComment {

@@ -113,6 +113,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [isPublic, setIsPublic] = useState(true)
+  const [password, setPassword] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -120,6 +121,11 @@ export default function GuestbookForm({ onSuccess }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!message.trim()) return
+    if (!isPublic && !password.trim()) {
+      setErrorMsg('비공개 메시지에는 비밀번호를 설정해주세요.')
+      setStatus('error')
+      return
+    }
 
     setStatus('loading')
     setErrorMsg('')
@@ -128,7 +134,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
       const res = await fetch('/api/guestbook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), message: message.trim(), isPublic }),
+        body: JSON.stringify({ name: name.trim(), message: message.trim(), isPublic, ...(!isPublic && { password: password.trim() }) }),
       })
       const data = await res.json()
 
@@ -213,6 +219,40 @@ export default function GuestbookForm({ onSuccess }: Props) {
             {!isPublic ? <FiLock size={15} /> : <FiUnlock size={15} />}
           </button>
         </div>
+
+        {/* 비공개 시 비밀번호 입력 */}
+        {!isPublic && (
+          <>
+            <div style={{ height: '1px', background: 'var(--border)', opacity: 0.5 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0' }}>
+              <span style={{
+                fontSize: '0.75rem',
+                color: '#3b82f6',
+                fontFamily: 'JetBrains Mono, monospace',
+                flexShrink: 0,
+                letterSpacing: '0.04em',
+              }}>
+                비밀번호
+              </span>
+              <input
+                type="password"
+                placeholder="열람 비밀번호 설정"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                maxLength={30}
+                style={{
+                  flex: 1,
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '0.92rem',
+                  color: 'var(--text)',
+                  fontFamily: 'inherit',
+                  background: 'transparent',
+                }}
+              />
+            </div>
+          </>
+        )}
 
         {/* 구분선 */}
         <div style={{ height: '1px', background: 'var(--border)', opacity: 0.5 }} />
