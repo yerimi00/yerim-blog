@@ -39,9 +39,10 @@ export default function Header() {
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        borderBottom: '1px solid var(--border)',
-        background: 'var(--bg)',
-        backdropFilter: 'blur(8px)',
+        borderBottom: '1px solid var(--border-subtle)',
+        background: 'color-mix(in srgb, var(--surface) 92%, transparent)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
       }}
     >
       <div
@@ -78,7 +79,7 @@ export default function Header() {
             style={{
               height: '36px',
               padding: '0 10px',
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border)',
               background: 'var(--bg-secondary)',
               cursor: 'pointer',
@@ -106,7 +107,7 @@ export default function Header() {
               style={{
                 width: '36px',
                 height: '36px',
-                borderRadius: '8px',
+                borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--border)',
                 background: 'var(--bg-secondary)',
                 cursor: 'pointer',
@@ -130,7 +131,7 @@ export default function Header() {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border)',
               background: 'var(--bg-secondary)',
               cursor: 'pointer',
@@ -151,7 +152,7 @@ export default function Header() {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--border)',
               background: 'var(--bg-secondary)',
               cursor: 'pointer',
@@ -179,11 +180,12 @@ export default function Header() {
             top: '60px',
             left: 0,
             right: 0,
-            background: 'color-mix(in srgb, var(--bg) 88%, transparent)',
+            background: 'color-mix(in srgb, var(--surface) 94%, transparent)',
             backdropFilter: 'blur(12px)',
-            borderBottom: '1px solid var(--border)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderBottom: '1px solid var(--border-subtle)',
             padding: '1rem 1.5rem 1.25rem',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+            boxShadow: 'var(--shadow-floating)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
@@ -194,7 +196,7 @@ export default function Header() {
                 style={{
                   width: '32px',
                   height: '32px',
-                  borderRadius: '8px',
+                  borderRadius: 'var(--radius-lg)',
                   border: '1px solid var(--border)',
                   background: 'var(--bg-secondary)',
                   cursor: 'pointer',

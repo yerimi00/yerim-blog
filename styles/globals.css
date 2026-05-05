@@ -3,31 +3,104 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── Insight Minimalist Design System ── */
   :root {
+    /* Surfaces */
     --bg: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --text: #111827;
+    --bg-secondary: #f3f4f6;
+    --surface: #ffffff;
+    --surface-container: #edeef0;
+    --surface-container-high: #e7e8ea;
+
+    /* Text */
+    --text: #191c1e;
+    --text-secondary: #424754;
     --text-muted: #6b7280;
+
+    /* Borders */
     --border: #e5e7eb;
+    --border-subtle: #f3f4f6;
+    --outline: #727785;
+    --outline-variant: #c2c6d6;
+
+    /* Accent / Primary */
     --accent: #3b82f6;
+    --accent-dim: #0058be;
+    --primary-container: #2170e4;
+    --on-primary: #ffffff;
+
+    /* Secondary */
+    --secondary: #575e70;
+    --secondary-container: #d9dff5;
+
+    /* Shadows */
+    --shadow-floating: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --shadow-card: none;
+
+    /* Border radii */
+    --radius-sm: 0.125rem;
+    --radius: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-full: 9999px;
   }
 
   .dark {
-    --bg: hsl(225deg 15% 8%);
-    --bg-secondary: hsl(225deg 12% 12%);
-    --text: #e5e7eb;
+    --bg: #111827;
+    --bg-secondary: #1f2937;
+    --surface: #1a1c1e;
+    --surface-container: #2d3032;
+    --surface-container-high: #353739;
+
+    --text: #f0f1f3;
+    --text-secondary: #c2c6d6;
     --text-muted: #9ca3af;
-    --border: #2d3748;
+
+    --border: #374151;
+    --border-subtle: #2d3748;
+    --outline: #8b909e;
+    --outline-variant: #4b5563;
+
     --accent: #60a5fa;
+    --accent-dim: #adc6ff;
+    --primary-container: #004395;
+    --on-primary: #001a42;
+
+    --secondary: #c0c6db;
+    --secondary-container: #404758;
+
+    --shadow-floating: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    --shadow-card: none;
   }
 
   body {
     background-color: var(--bg);
     color: var(--text);
     font-family: "Pretendard", system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
     transition:
       background-color 0.2s,
       color 0.2s;
+  }
+
+  /* ── Typography Scale ── */
+  h1 {
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-weight: 600;
+    line-height: 1.4;
   }
 
   * {
@@ -54,9 +127,9 @@
 
   /* 코드 하이라이트 */
   pre {
-    background: #f6f8fa !important;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     padding: 0.9rem 1rem !important;
     margin: 0.75rem 0;
     overflow-x: auto;
@@ -71,8 +144,8 @@
   }
 
   .dark pre {
-    background: #1e1e2e !important;
-    border-color: #2d3748;
+    background: #1a1c1e !important;
+    border-color: var(--border);
     color: #cdd6f4 !important;
   }
 
@@ -138,15 +211,18 @@
 @layer components {
   .tag-badge {
     @apply inline-flex items-center text-xs;
-    color: var(--accent);
-    background: rgba(59, 130, 246, 0.1);
-    padding: 2px 10px;
-    border-radius: 20px;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 3px 12px;
+    border-radius: var(--radius-full);
     font-weight: 500;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--border);
   }
 
   .dark .tag-badge {
-    background: rgba(96, 165, 250, 0.15);
+    background: var(--surface-container);
+    border-color: var(--border);
   }
 
   /* 방명록 글라스모피즘 */
@@ -188,15 +264,18 @@
   }
 
   .card-hover:hover {
-    background: var(--bg-secondary) !important;
-    transform: translateY(-1px);
+    background: var(--surface-container) !important;
   }
 
   .sidebar-card {
-    background: var(--bg-secondary);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
+  }
+
+  .dark .sidebar-card {
+    background: var(--surface);
   }
 
   .series-item:hover {
@@ -223,17 +302,22 @@
     background: transparent;
     color: var(--text-muted);
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
     margin-bottom: -1px;
     font-family: inherit;
+    letter-spacing: 0.01em;
   }
 
   .series-tab-btn.active {
-    border-bottom-color: var(--text);
+    border-bottom-color: var(--accent);
     color: var(--text);
     font-weight: 700;
+  }
+
+  .series-tab-btn:hover:not(.active) {
+    color: var(--text);
   }
 
   .toc-link {
@@ -262,17 +346,17 @@
   }
 
   .nav-link:hover {
-    color: var(--accent);
+    color: var(--text);
   }
 
   /* ---- Blockquote ---- */
   .prose-blockquote {
-    border-left: 3px solid var(--border);
+    border-left: 3px solid var(--outline-variant);
     background: transparent;
     border-radius: 0;
     padding: 0.5rem 1.25rem;
     margin: 1.5rem 0;
-    color: var(--text);
+    color: var(--text-secondary);
     font-style: normal;
   }
 
