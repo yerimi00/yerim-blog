@@ -89,9 +89,20 @@ Key functions in `lib/guestbook.ts`:
 ### Styling
 
 - **Tailwind CSS** with `darkMode: 'class'` (toggled by `next-themes`)
-- CSS custom properties for theming: `--bg`, `--bg-secondary`, `--text`, `--text-muted`, `--border`, `--accent` — defined in `styles/globals.css` for both light and dark modes
+- Design system: **Insight Minimalist** (`DESIGN.md`) — Corporate/Modern Minimalism, Material Design 3 color tokens
+- CSS custom properties defined in `styles/globals.css`:
+  - Surfaces: `--bg`, `--bg-secondary`, `--surface`, `--surface-container`, `--surface-container-high`
+  - Text: `--text`, `--text-secondary`, `--text-muted`
+  - Borders: `--border`, `--border-subtle`, `--outline`, `--outline-variant`
+  - Accent: `--accent`, `--accent-dim`, `--secondary`, `--secondary-container`
+  - Shadows: `--shadow-floating`, `--shadow-card`
+  - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
+- Tailwind theme extensions (`tailwind.config.js`):
+  - Colors: all CSS vars aliased + `ds.*` palette (full MD3 tokens)
+  - FontSize: `ds-h1`, `ds-h2`, `ds-h3`, `ds-body-lg`, `ds-body`, `ds-label`, `ds-caption`
+  - Spacing: `ds-xs` ~ `ds-3xl`; BoxShadow: `shadow-ds-floating`
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
-- Reusable CSS classes defined in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`
+- Reusable CSS classes defined in `globals.css` `@layer components`: `.tag-badge` (neutral pill), `.card-hover`, `.sidebar-card` (8px radius, `--surface` bg)
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
 
 ### Post rendering

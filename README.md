@@ -12,7 +12,7 @@
 | ---------- | ------------------------------------ |
 | 프레임워크 | Next.js 14 (App Router)              |
 | 언어       | TypeScript                           |
-| 스타일     | Tailwind CSS + CSS Custom Properties |
+| 스타일     | Tailwind CSS + CSS Custom Properties (Insight Minimalist Design System) |
 | CMS        | Notion API (`@notionhq/client`)      |
 | 댓글       | Giscus (GitHub Discussions)          |
 | 배포       | Vercel                               |
@@ -174,6 +174,27 @@ npm run lint
 > 변경 유형: `Added` 새 기능 / `Changed` 변경 / `Fixed` 버그 수정 / `Removed` 제거
 
 ### [Unreleased]
+
+### [2026-04-30] — Design System
+
+#### Added
+
+- **Insight Minimalist 디자인 시스템** 도입 (`DESIGN.md` 기반)
+  - CSS 커스텀 프로퍼티 전면 개편: `--surface`, `--surface-container`, `--text-secondary`, `--border-subtle`, `--outline`, `--outline-variant`, `--accent-dim`, `--secondary`, `--shadow-floating`, `--shadow-card`, `--radius-*` 토큰 추가
+  - Tailwind 확장: `ds.*` 컬러 팔레트 (MD3), `ds-h1` ~ `ds-caption` 타이포그래피 유틸, `ds-xs` ~ `ds-3xl` 스페이싱, `shadow-ds-floating`
+
+#### Changed
+
+- 라이트 모드 배경: `#ffffff`, 보조 배경 `#f3f4f6` (기존 `#f8f9fa`)
+- 다크 모드 배경: `#111827`, 보조 `#1f2937`, 텍스트 `#f0f1f3`
+- 헤딩 타이포그래피: h1 `letter-spacing: -0.02em / font-weight: 800`, h2 `-0.01em / 700`, h3 `600`
+- `.tag-badge`: 파란 accent 스타일 → 중성(neutral) 스타일 (배경 `--bg-secondary`, 텍스트 `--text-muted`)
+- `.sidebar-card`: border-radius 12px → 8px (`--radius-lg`), 배경 `--surface` (순백)
+- `.series-tab-btn.active`: 하단 선 색상 `--text` → `--accent`
+- `.nav-link:hover`: 색상 `--accent` → `--text`
+- `blockquote` 좌측 선: `--border` → `--outline-variant`
+- `pre` 배경: 하드코딩 `#f6f8fa` → `var(--bg-secondary)`
+- Header: `backdrop-filter blur(8px)` → `blur(12px)`, border `--border` → `--border-subtle`, 배경 `--surface` 기반
 
 ### [2026-04-30]
 
