@@ -2,7 +2,7 @@
 
 > 피할 수 없다면 즐..즐입니다 ~ KIN
 
-**배포 URL**: https://yerim.vercel.app
+**배포 URL**: https://yerim-blog.vercel.app
 
 ---
 
