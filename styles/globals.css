@@ -604,3 +604,21 @@
     display: flex !important;
   }
 }
+
+/* ── 관련 포스트 반응형 그리드 ── */
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.related-post-card:hover {
+  border-color: var(--outline-variant) !important;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .related-posts-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -4,10 +4,12 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
+import CopyButton from './CopyButton'
+import MermaidBlock from './MermaidBlock'
 
 export default function PostBody({ content }: { content: string }) {
   return (
-    <div style={{ maxWidth: 'none', color: 'var(--text)', lineHeight: 1.85, fontSize: '1rem' }}>
+    <div className="post-body" style={{ maxWidth: 'none', color: 'var(--text)', lineHeight: 1.85, fontSize: '1rem' }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeSlug]}
@@ -123,13 +125,19 @@ export default function PostBody({ content }: { content: string }) {
               (child) => React.isValidElement(child) && (child as React.ReactElement).type === 'code'
             ) as React.ReactElement | undefined
             const lang = codeChild?.props?.className?.replace('language-', '') ?? null
+            const codeText = String(codeChild?.props?.children ?? '').replace(/\n$/, '')
+
+            if (lang === 'mermaid') {
+              return <MermaidBlock code={codeText} />
+            }
+
             return (
               <div style={{ position: 'relative', margin: '1rem 0' }}>
                 {lang && (
                   <span style={{
                     position: 'absolute',
                     top: '0.5rem',
-                    right: '0.75rem',
+                    right: '4.5rem',
                     fontSize: '0.72rem',
                     color: '#6b7280',
                     fontFamily: 'JetBrains Mono, monospace',
@@ -139,6 +147,7 @@ export default function PostBody({ content }: { content: string }) {
                     {lang}
                   </span>
                 )}
+                <CopyButton code={codeText} />
                 <pre {...props} style={{ margin: 0 }}>{children}</pre>
               </div>
             )

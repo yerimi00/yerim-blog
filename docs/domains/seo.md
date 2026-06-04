@@ -84,6 +84,15 @@ RSS 링크 태그 (`app/layout.tsx` `<head>`):
 | `/blog/tag/[tag]` | `#태그명` | `태그명 태그가 달린 글 모음` |
 | `/series/[seriesName]` | `시리즈명 — Series` | `시리즈명 시리즈 글 모음` |
 
+## 소셜 공유 버튼 (`components/blog/SocialShare.tsx`)
+
+포스트 상세 헤더에 위치. 지원 플랫폼:
+
+| 버튼 | 동작 |
+| --- | --- |
+| LinkedIn | `https://www.linkedin.com/sharing/share-offsite/?url=...` 새 창 |
+| 링크 복사 | `navigator.clipboard.writeText(url)`, 1.5초 후 원복 |
+
 ## AdSense (`public/ads.txt`)
 
 ```
