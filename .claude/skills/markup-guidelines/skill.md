@@ -1,5 +1,5 @@
 ---
-name: hydration-safe-markup
+name: markup-guidelines
 description: Use for React/Next.js markup, responsive UI, SSR, hydration, semantic HTML, and accessibility work.
 ---
 

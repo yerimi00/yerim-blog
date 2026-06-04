@@ -21,6 +21,7 @@ Required in `.env.local`:
 - `NOTION_GUESTBOOK_DATABASE_ID` — ID of the Notion database for guestbook entries
 - `GITHUB_TOKEN` — GitHub token for GraphQL API (comment counts, recent comments)
 - `NEXT_PUBLIC_GISCUS_REPO` — GitHub repo for Giscus (`owner/repo`)
+- `NEXT_PUBLIC_GISCUS_REPO_ID` — Giscus repository ID
 - `NEXT_PUBLIC_GISCUS_CATEGORY_ID` — Giscus category ID
 - `ADMIN_PIN` — PIN for accessing private guestbook entries and their comments
 - `NEXT_PUBLIC_SITE_URL` — Full site URL for RSS and JSON-LD (e.g. `https://yerim.dev`)
@@ -193,3 +194,7 @@ Agent definitions live under `.claude/agents/`:
 
 - `notion-layer-builder.md` — Notion data layer, API routes, lib/ utilities.
 - `blog-feature-reviewer.md` — performance, CLS, side-effect, and architecture review.
+
+Saved plan files live under `.claude/plans/`. Use `/sync-plan <path>` to reconcile a plan with the actual implementation.
+
+Detailed domain documentation lives under `docs/`. See `docs/README.md` for the full index (route map, data layer, components, SEO, styling, flows, QA).

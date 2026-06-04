@@ -30,7 +30,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | `MermaidBlock.tsx` | ✅ | mermaid.js 동적 import, SVG 렌더링. |
 | `MediumZoom.tsx` | ✅ | `.post-body img` 전체에 medium-zoom 연결. |
 | `ReadingProgress.tsx` | ✅ | 상단 3px 읽기 진행 바. scroll 이벤트. |
-| `SocialShare.tsx` | ✅ | Twitter/Facebook/LinkedIn 공유 + 링크 복사. |
+| `SocialShare.tsx` | ✅ | LinkedIn 공유 + 링크 복사. |
 | `RelatedPosts.tsx` | — | 관련 포스트 3개 카드 그리드. |
 | `HeroBanner.tsx` | ✅ | 인기글 슬라이더. 4초 자동 전환. |
 | `TableOfContents.tsx` | ✅ | 포스트 목차. IntersectionObserver로 active 섹션 추적. |
