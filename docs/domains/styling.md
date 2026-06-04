@@ -64,6 +64,8 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 | `.callout`, `.callout-blue`, `.callout-yellow` 등 | Notion callout 블록 (8가지 색상) |
 | `.notion-columns`, `.notion-column` | Notion 컬럼 레이아웃 |
 | `.related-posts-grid` | 관련 포스트 3열 그리드 (모바일 1열) |
+| `.series-tab-bar` | 시리즈 탭 컨테이너. `overflow-x: auto` 가로 스크롤, 스크롤바 숨김. |
+| `.series-tab-btn` | 시리즈 탭 버튼. `white-space: nowrap`으로 텍스트 줄바꿈 방지. `flex-shrink: 0`. |
 
 ## 반응형 미디어 쿼리
 

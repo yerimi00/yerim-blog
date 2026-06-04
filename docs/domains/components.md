@@ -24,7 +24,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | 파일 | Client? | 설명 |
 | --- | --- | --- |
 | `PostCard.tsx` | ✅ | 포스트 목록 카드. article onClick + 태그 Link stopPropagation. |
-| `BlogFilter.tsx` | ✅ | 시리즈 탭 nav + 포스트 목록. usePathname으로 active 탭 판단. |
+| `BlogFilter.tsx` | ✅ | 시리즈 탭 + 포스트 목록. `useState`로 탭 클릭 시 컴포넌트 내 클라이언트 필터링. 같은 탭 재클릭 시 전체로 복귀. |
 | `PostBody.tsx` | — | Markdown 렌더러. CopyButton, MermaidBlock 포함. |
 | `CopyButton.tsx` | ✅ | 코드 블록 복사 버튼. 1.5초 후 자동 복원. |
 | `MermaidBlock.tsx` | ✅ | mermaid.js 동적 import, SVG 렌더링. |

@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { Post } from '@/types'
 import PostCard from './PostCard'
 
@@ -14,41 +13,35 @@ export default function BlogFilter({
   posts: Post[]
   commentCounts?: Record<string, number>
 }) {
-  const pathname = usePathname()
-  const isAllActive = pathname === '/' || pathname === '/blog'
+  const [selected, setSelected] = useState<string | null>(null)
+
+  const filtered = selected ? posts.filter((p) => p.series === selected) : posts
+  const allTabs = ['전체', ...series]
 
   return (
     <div>
-      {/* 시리즈 탭 — URL 기반 네비게이션 */}
       <div className="series-tab-bar">
-        <Link
-          href="/blog"
-          className={`series-tab-btn${isAllActive ? ' active' : ''}`}
-        >
-          전체
-        </Link>
-        {series.map((tab) => {
-          const isActive = pathname === `/series/${encodeURIComponent(tab)}`
+        {allTabs.map((tab) => {
+          const isActive = tab === '전체' ? !selected : selected === tab
           return (
-            <Link
+            <button
               key={tab}
-              href={`/series/${encodeURIComponent(tab)}`}
+              onClick={() => setSelected(tab === '전체' ? null : tab === selected ? null : tab)}
               className={`series-tab-btn${isActive ? ' active' : ''}`}
             >
               {tab}
-            </Link>
+            </button>
           )
         })}
       </div>
 
-      {/* 글 목록 */}
-      {posts.length === 0 ? (
+      {filtered.length === 0 ? (
         <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem 0' }}>
           글이 없어요.
         </p>
       ) : (
         <div>
-          {posts.map((post) => (
+          {filtered.map((post) => (
             <PostCard key={post.id} post={post} commentCount={commentCounts[post.slug] ?? 0} />
           ))}
         </div>
