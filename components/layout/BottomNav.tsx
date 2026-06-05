@@ -44,7 +44,7 @@ export default function BottomNav() {
               textDecoration: 'none',
               color: active ? 'var(--accent)' : 'var(--text-muted)',
               paddingTop: '8px',
-              paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))',
+              paddingBottom: '8px',
               transition: 'color 0.15s',
             }}
           >
