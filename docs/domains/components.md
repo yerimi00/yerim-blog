@@ -16,8 +16,10 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 
 | 파일 | 설명 |
 | --- | --- |
-| `Header.tsx` | sticky, blur backdrop. 검색 모달 버튼, 다크모드 토글. |
-| `Footer.tsx` | 사이트 정보, 소셜 링크. |
+| `Header.tsx` | sticky, blur backdrop. 검색 모달 버튼, 다크모드 토글. 모바일에서는 검색·테마 버튼만 표시 (햄버거 메뉴 없음). |
+| `Footer.tsx` | 사이트 정보, 소셜 링크. `className="site-footer"` — 모바일(≤480px)에서 숨김. |
+| `BottomNav.tsx` | ✅ | 모바일 전용(≤480px) 하단 고정 네비게이션 바. 5탭: Home · Blog · Series · Project · About. `usePathname()`으로 active 탭 표시. iOS safe-area 대응. |
+| `MobileFooterLinks.tsx` | — | 모바일 전용(≤480px) About 페이지 하단 푸터 링크 섹션. 공지사항·개발자에게·GitHub·Velog 2열 그리드. |
 
 ## `components/blog/`
 
@@ -38,8 +40,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | `ViewTracker.tsx` | ✅ | 마운트 시 조회수 +1 API 호출. |
 | `GiscusComments.tsx` | ✅ | GitHub Discussions 댓글 위젯. |
 | `SearchModal.tsx` | ✅ | 클라이언트 사이드 전문 검색 모달. |
-| `SeriesList.tsx` | — | 시리즈 카드 목록. |
-| `SeriesView.tsx` | — | 시리즈 포스트 뷰. |
+| `SeriesView.tsx` | — | 시리즈 포스트 뷰. 항상 그리드 표시 (리스트 토글 제거됨). |
 | `Sidebar.tsx` | — | 인기글 + 최근 댓글 + About 카드. |
 
 ## `components/about/`
@@ -60,10 +61,9 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | 파일 | Client? | 설명 |
 | --- | --- | --- |
 | `GoogleAdsense.tsx` | ✅ | AdSense `<ins>` 렌더. NEXT_PUBLIC_ADSENSE_PUBLISHER_ID 없으면 null. |
-| `GuestbookFAB.tsx` | ✅ | 방명록 플로팅 액션 버튼. |
+| `GuestbookFAB.tsx` | ✅ | 방명록 플로팅 액션 버튼. 웹: 모든 페이지 표시. 모바일(≤480px): 홈(`/`)에서만 표시, 가로 레이아웃 + 말풍선 왼쪽 표출. |
 | `GuestbookForm.tsx` | ✅ | 방명록 작성 폼. |
 | `GuestbookMessages.tsx` | ✅ | 방명록 메시지 목록. |
-| `MobileBlockModal.tsx` | ✅ | 모바일 접속 차단 모달. guestbook 제외. |
 
 ## 컴포넌트 작성 규칙
 

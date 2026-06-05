@@ -87,9 +87,9 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 | 함수 | 설명 |
 | --- | --- |
 | `getCommentCounts(slugs)` | Giscus Discussion 댓글 수 (slug 배열). |
-| `getRecentComments(limit?)` | 최근 댓글 목록. Sidebar에 사용. |
+| `getRecentComments()` | 최근 댓글 목록 최대 5개. Sidebar에 사용. fetch `revalidate: 3600` (1시간 캐시). |
 
-`GITHUB_TOKEN` 환경변수 필요.
+`GITHUB_TOKEN`, `NEXT_PUBLIC_GISCUS_REPO`, `NEXT_PUBLIC_GISCUS_CATEGORY_ID` 환경변수 필요. GraphQL 에러는 서버 로그(`[getRecentComments]`)에 출력.
 
 ## 데이터 추가 시 체크리스트
 

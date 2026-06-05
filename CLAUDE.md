@@ -125,11 +125,12 @@ Key functions in `lib/guestbook.ts`:
 
 | Path | Purpose |
 |---|---|
-| `components/layout/` | Header, Footer |
+| `components/layout/` | Header, Footer (`site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비), MobileFooterLinks (모바일 About 하단 링크) |
 | `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
 | `components/project/` | Project page UI |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
+| `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 
 ### Styling
 
