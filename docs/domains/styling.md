@@ -71,8 +71,8 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 
 | breakpoint | 적용 클래스 |
 | --- | --- |
-| `max-width: 768px` | `.home-grid` 단일 컬럼, `.home-sidebar` 숨김, `.post-grid` 단일 컬럼 |
-| `max-width: 480px` | `.header-nav` 숨김, `.mobile-header-actions` 표시 |
+| `max-width: 768px` | `.home-grid` 단일 컬럼, `.home-sidebar` 숨김, `.post-grid` 단일 컬럼, `.about-edu-row` / `.about-activity-row` 세로 스택, `.about-row-period` min-width 해제, `.related-posts-grid` 단일 컬럼, `.project-hero-banner` 높이 200px |
+| `max-width: 480px` | `.header-nav` 숨김, `.mobile-header-actions` 표시, `.bottom-nav` 표시, `.site-footer` 숨김, `.mobile-footer-links` 표시, `.guestbook-fab` 숨김 (홈만 표시), `.post-card-title` 3줄 clamp, `.post-row-date` / `.project-list-period` 숨김, `.guestbook-grid` 단일 컬럼 |
 
 ## Tailwind 확장 (`tailwind.config.js`)
 

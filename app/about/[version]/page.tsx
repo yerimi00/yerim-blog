@@ -139,8 +139,8 @@ export default function AboutVersionPage({ params }: { params: { version: string
             <h2 style={sectionHeadingStyle}>Education</h2>
             <div>
               {education.map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', padding: '1.1rem 0', borderBottom: i < education.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '130px' }}>{item.period}</span>
+                <div key={i} className="about-edu-row" style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', padding: '1.1rem 0', borderBottom: i < education.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                  <span className="about-row-period" style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '130px' }}>{item.period}</span>
                   <span style={{ fontSize: '0.925rem', color: 'var(--text)', fontWeight: 500 }}>{item.title}</span>
                 </div>
               ))}
@@ -158,12 +158,12 @@ export default function AboutVersionPage({ params }: { params: { version: string
               renderItems={(items) => (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {items.map((item, ai) => (
-                    <div key={ai} style={{
+                    <div key={ai} className="about-activity-row" style={{
                       display: 'flex', gap: '1.25rem', alignItems: 'flex-start',
                       padding: '0.7rem 0',
                       borderBottom: ai < items.length - 1 ? '1px solid var(--border)' : 'none',
                     }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '120px' }}>{item.period}</span>
+                      <span className="about-row-period" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', paddingTop: '2px', minWidth: '120px' }}>{item.period}</span>
                       <span style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 500 }}>{item.title}</span>
                     </div>
                   ))}

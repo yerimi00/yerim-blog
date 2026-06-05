@@ -749,6 +749,7 @@
   .series-folder-grid {
     grid-template-columns: repeat(3, 1fr) !important;
   }
+
 }
 
 /* ── 관련 포스트 반응형 그리드 ── */
@@ -766,5 +767,16 @@
 @media (max-width: 768px) {
   .related-posts-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* About Education / Activities 행: 세로 스택 */
+  .about-edu-row,
+  .about-activity-row {
+    flex-direction: column !important;
+    gap: 0.2rem !important;
+  }
+  .about-row-period {
+    min-width: unset !important;
+    padding-top: 0 !important;
   }
 }
