@@ -1,11 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { Post } from '@/types'
-import SeriesList from './SeriesList'
-import { HiBars3, HiOutlineSquares2X2 } from 'react-icons/hi2'
-
 
 function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post[] }) {
   return (
@@ -36,37 +32,11 @@ function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post
 }
 
 export default function SeriesView({ seriesEntries }: { seriesEntries: [string, Post[]][] }) {
-  const [view, setView] = useState<'list' | 'grid'>('grid')
-
-  const btnStyle = (active: boolean): React.CSSProperties => ({
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    width: '32px', height: '32px', borderRadius: '6px',
-    border: '1px solid var(--border)',
-    background: active ? 'var(--accent)' : 'transparent',
-    color: active ? '#fff' : 'var(--text-muted)',
-    cursor: 'pointer', transition: 'all 0.15s', fontSize: '1rem',
-  })
-
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem', marginBottom: '1.25rem' }}>
-        <button style={btnStyle(view === 'list')} onClick={() => setView('list')} title="리스트 뷰">
-          <HiBars3 />
-        </button>
-        <button style={btnStyle(view === 'grid')} onClick={() => setView('grid')} title="그리드 뷰">
-          <HiOutlineSquares2X2 />
-        </button>
-      </div>
-
-      {view === 'list' ? (
-        <SeriesList seriesEntries={seriesEntries} />
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem 0.5rem' }}>
-          {seriesEntries.map(([seriesName, posts]) => (
-            <SeriesGridCard key={seriesName} seriesName={seriesName} posts={posts} />
-          ))}
-        </div>
-      )}
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem 0.5rem' }}>
+      {seriesEntries.map(([seriesName, posts]) => (
+        <SeriesGridCard key={seriesName} seriesName={seriesName} posts={posts} />
+      ))}
     </div>
   )
 }
