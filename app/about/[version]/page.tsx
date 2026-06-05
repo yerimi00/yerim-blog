@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { IoIosArrowForward } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import MobileFooterLinks from '@/components/layout/MobileFooterLinks'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
 import TechStackGrid from '@/components/about/TechStackGrid'
@@ -199,6 +200,8 @@ export default function AboutVersionPage({ params }: { params: { version: string
           </section>
 
         </div>
+
+        <MobileFooterLinks />
 
       </main>
       <Footer />

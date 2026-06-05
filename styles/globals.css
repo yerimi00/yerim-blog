@@ -292,6 +292,11 @@
     background: var(--bg) !important;
   }
 
+  /* 모바일 About 푸터 링크: 기본 숨김, 모바일에서만 표시 */
+  .mobile-footer-links {
+    display: none;
+  }
+
   /* 바텀 네비: 기본 숨김, 모바일에서만 표시 */
   .bottom-nav {
     display: none;
@@ -663,6 +668,16 @@
   /* 바텀 네비 표시 */
   .bottom-nav {
     display: flex !important;
+  }
+
+  /* Footer 숨김 */
+  .site-footer {
+    display: none !important;
+  }
+
+  /* About 페이지 모바일 링크 섹션 표시 */
+  .mobile-footer-links {
+    display: block !important;
   }
 
   /* FAB 모바일: 기본 숨김, 홈에서만 바텀 네비 위에 표시 */

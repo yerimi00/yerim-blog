@@ -20,7 +20,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer style={{ borderTop: '1px solid var(--border)', marginTop: '4rem', padding: '1.75rem 1.5rem' }}>
+    <footer className="site-footer" style={{ borderTop: '1px solid var(--border)', marginTop: '4rem', padding: '1.75rem 1.5rem' }}>
       <div
         style={{
           maxWidth: '1100px',
