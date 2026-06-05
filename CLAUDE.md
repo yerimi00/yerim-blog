@@ -40,13 +40,15 @@ Required in `.env.local`:
 
 ## Required Work Protocol
 
-Every significant task must follow this protocol:
+모든 작업은 아래 순서를 반드시 지킨다. 단계를 건너뛰거나 순서를 바꾸지 않는다.
 
-1. Inspect the relevant files and write a short implementation plan.
-2. Wait for explicit user confirmation before making code or documentation changes.
-3. After confirmation, implement only the confirmed plan.
-4. If the plan must change mid-implementation, stop and ask for confirmation again.
-5. After completing a task, update the related section of this file if routes, API, or architecture changed.
+1. **Plan** — 관련 파일을 검토하고 구체적인 구현 플랜을 작성한다.
+2. **컨펌** — 유저의 명시적인 승인을 기다린다. 승인 전에는 코드·문서를 수정하지 않는다.
+3. **컨펌 확인** — 승인 내용이 플랜과 일치하는지 확인한다. 범위가 달라졌으면 플랜으로 돌아간다.
+4. **개발** — 승인된 플랜만 구현한다. 도중에 플랜을 변경해야 하면 즉시 멈추고 유저에게 확인을 받는다.
+5. **검수** — 구현 후 타입 체크(`npx tsc --noEmit`), 빌드(`npm run build`), 또는 `/verify`로 동작을 검증한다.
+6. **영향도 체크** — 변경이 기존 컴포넌트·페이지·API에 사이드 이펙트를 일으키는지 확인한다.
+7. **관련 문서 업데이트** — 라우트, API, 아키텍처, 컴포넌트 구조, 프로토콜 등 변경된 사항을 이 파일과 `docs/`에 반영한다.
 
 Use `/plan` for an explicit planning step. Use `/session-summary` to summarize current session changes.
 
