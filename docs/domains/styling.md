@@ -83,6 +83,18 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 - `spacing`: `ds-xs` ~ `ds-3xl`
 - `boxShadow`: `shadow-ds-floating`
 
+## PWA / Safe Area 대응
+
+`app/layout.tsx`의 `viewport`에 `viewportFit: 'cover'` 설정 — 콘텐츠가 노치·홈 인디케이터 영역까지 확장됩니다.
+
+| 적용 위치 | CSS |
+| --- | --- |
+| `.bottom-nav` | `padding-bottom: env(safe-area-inset-bottom, 0px)` |
+| `main` (≤480px) | `padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 2rem)` |
+| `.guestbook-fab--home` (≤480px) | `bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 1.25rem)` |
+
+iOS Safari PWA, Android Chrome PWA 모두 대응합니다. `viewportFit: 'cover'` 없이는 `env()` 값이 항상 0으로 반환됩니다.
+
 ## 레이아웃 패턴
 
 대부분의 페이지/컴포넌트는 Tailwind utility 클래스 대신 **inline `style` prop**을 사용합니다.

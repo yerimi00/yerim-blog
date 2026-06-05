@@ -18,7 +18,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | --- | --- |
 | `Header.tsx` | sticky, blur backdrop. 검색 모달 버튼, 다크모드 토글. 모바일에서는 검색·테마 버튼만 표시 (햄버거 메뉴 없음). |
 | `Footer.tsx` | 사이트 정보, 소셜 링크. `className="site-footer"` — 모바일(≤480px)에서 숨김. |
-| `BottomNav.tsx` | ✅ | 모바일 전용(≤480px) 하단 고정 네비게이션 바. 5탭: Home · Blog · Series · Project · About. `usePathname()`으로 active 탭 표시. iOS safe-area 대응. |
+| `BottomNav.tsx` | ✅ | 모바일 전용(≤480px) 하단 고정 네비게이션 바. 5탭: Home · Blog · Series · Project · About. `usePathname()`으로 active 탭 표시. `min-height: 56px` + `padding-bottom: env(safe-area-inset-bottom)` — iOS/AOS PWA 홈 인디케이터 영역 대응. `viewportFit: 'cover'` 필수. |
 | `MobileFooterLinks.tsx` | — | 모바일 전용(≤480px) About 페이지 하단 푸터 링크 섹션. 공지사항·개발자에게·GitHub·Velog 2열 그리드. |
 
 ## `components/blog/`
