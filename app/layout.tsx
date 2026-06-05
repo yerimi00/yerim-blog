@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
 import GuestbookFAB from '@/components/GuestbookFAB'
+import BottomNav from '@/components/layout/BottomNav'
 
 export const metadata: Metadata = {
   title: { default: 'yerim.dev', template: '%s | yerim.dev' },
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <GuestbookFAB />
+          <BottomNav />
         </ThemeProvider>
         <Script
           id="sw-register"

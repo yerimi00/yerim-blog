@@ -287,6 +287,22 @@
     background: var(--bg) !important;
   }
 
+  /* 바텀 네비: 기본 숨김, 모바일에서만 표시 */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 56px;
+    background: color-mix(in srgb, var(--surface) 95%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+  }
+
   /* Grid blowout 방지: 그리드 자식 요소가 트랙 너비를 초과하지 않도록 */
   .home-grid > *,
   .post-grid > *,
@@ -633,10 +649,20 @@
     display: flex !important;
   }
 
-  /* main 상하 패딩 축소 */
+  /* main 상하 패딩 축소 + 바텀 네비 여백 */
   main {
     padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+    padding-bottom: calc(56px + 2rem) !important;
+  }
+
+  /* 바텀 네비 표시 */
+  .bottom-nav {
+    display: flex !important;
+  }
+
+  /* FAB 바텀 네비 위로 올리기 */
+  .guestbook-fab {
+    bottom: calc(56px + 1.25rem) !important;
   }
 
   /* 페이지 타이틀 폰트 축소 */

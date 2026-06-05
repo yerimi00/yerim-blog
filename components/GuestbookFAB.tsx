@@ -13,6 +13,7 @@ export default function GuestbookFAB() {
 
   return (
     <div
+      className="guestbook-fab"
       style={{
         position: 'fixed',
         bottom: '2rem',
