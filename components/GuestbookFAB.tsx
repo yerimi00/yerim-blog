@@ -11,9 +11,11 @@ export default function GuestbookFAB() {
 
   if (pathname === '/guestbook') return null
 
+  const isHome = pathname === '/'
+
   return (
     <div
-      className="guestbook-fab"
+      className={`guestbook-fab${isHome ? ' guestbook-fab--home' : ''}`}
       style={{
         position: 'fixed',
         bottom: '2rem',
@@ -27,6 +29,7 @@ export default function GuestbookFAB() {
     >
       {/* 말풍선 */}
         <div
+          className="fab-bubble"
           style={{
             position: 'relative',
             visibility: showBubble ? 'visible' : 'hidden',
@@ -44,7 +47,7 @@ export default function GuestbookFAB() {
         >
           방명록을 남겨주세요
           {/* 말풍선 꼬리 */}
-          <div style={{
+          <div className="fab-bubble-tail" style={{
             position: 'absolute',
             bottom: '-6px',
             left: '50%',
@@ -56,6 +59,7 @@ export default function GuestbookFAB() {
             borderTop: '6px solid #3b82f6',
           }} />
           <button
+            className="fab-close-btn"
             onClick={() => setShowBubble(false)}
             aria-label="닫기"
             style={{

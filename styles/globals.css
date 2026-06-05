@@ -200,6 +200,11 @@
     50% { transform: translateY(-7px); }
   }
 
+  @keyframes fabFloatX {
+    0%, 100% { transform: translateX(0px); }
+    50% { transform: translateX(-5px); }
+  }
+
   /* 방명록 FAB 버튼 살짝 맥동 */
   @keyframes fabPulse {
     0%, 100% { box-shadow: 0 4px 20px rgba(59,130,246,0.45); }
@@ -660,9 +665,41 @@
     display: flex !important;
   }
 
-  /* FAB 바텀 네비 위로 올리기 */
+  /* FAB 모바일: 기본 숨김, 홈에서만 바텀 네비 위에 표시 */
   .guestbook-fab {
+    display: none !important;
+  }
+  .guestbook-fab--home {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
     bottom: calc(56px + 1.25rem) !important;
+    right: 1.25rem !important;
+  }
+
+  /* 말풍선: 좌우 인터렉션으로 변경 */
+  .fab-bubble {
+    animation: fabFloatX 2.4s ease-in-out infinite !important;
+    padding: 0.45rem 1.75rem 0.45rem 0.85rem !important;
+  }
+
+  /* 꼬리: 오른쪽 방향 (버튼 쪽) */
+  .fab-bubble-tail {
+    bottom: auto !important;
+    left: auto !important;
+    top: 50% !important;
+    right: -4px !important;
+    transform: translateY(-50%) !important;
+    border-left: 6px solid #3b82f6 !important;
+    border-right: none !important;
+    border-top: 6px solid transparent !important;
+    border-bottom: 6px solid transparent !important;
+  }
+
+  /* 닫기 버튼: 모바일에서도 표시 */
+  .fab-close-btn {
+    display: flex !important;
   }
 
   /* 페이지 타이틀 폰트 축소 */
