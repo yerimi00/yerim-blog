@@ -14,7 +14,7 @@ async function githubRequest(token: string, query: string, variables: object) {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 86400 },
+    next: { revalidate: 3600 },
   })
   if (!res.ok) throw new Error(`GitHub API ${res.status}: ${res.statusText}`)
   return res
@@ -59,6 +59,12 @@ export async function getRecentComments(): Promise<RecentComment[]> {
   try {
     const res = await githubRequest(token, query, { owner, name, categoryId })
     const json = await res.json()
+
+    if (json?.errors) {
+      console.error('[getRecentComments] GraphQL errors:', JSON.stringify(json.errors))
+      return []
+    }
+
     const discussions: { title: string; url: string; comments: { nodes: { author: { login: string }; body: string; createdAt: string; url: string }[] } }[] =
       json?.data?.repository?.discussions?.nodes ?? []
 
@@ -77,7 +83,8 @@ export async function getRecentComments(): Promise<RecentComment[]> {
     }
     comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     return comments.slice(0, 5)
-  } catch {
+  } catch (e) {
+    console.error('[getRecentComments]', e)
     return []
   }
 }
@@ -114,6 +121,12 @@ export async function getCommentCounts(slugs: string[]): Promise<Record<string, 
     const res = await githubRequest(token, query, { owner, name, categoryId })
 
     const json = await res.json()
+
+    if (json?.errors) {
+      console.error('[getCommentCounts] GraphQL errors:', JSON.stringify(json.errors))
+      return {}
+    }
+
     const discussions: { title: string; comments: { totalCount: number } }[] =
       json?.data?.repository?.discussions?.nodes ?? []
 
@@ -125,7 +138,8 @@ export async function getCommentCounts(slugs: string[]): Promise<Record<string, 
       counts[slug] = match?.comments.totalCount ?? 0
     }
     return counts
-  } catch {
+  } catch (e) {
+    console.error('[getCommentCounts]', e)
     return {}
   }
 }
