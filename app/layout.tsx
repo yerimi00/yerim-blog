@@ -3,7 +3,6 @@ import Script from 'next/script'
 import { ThemeProvider } from 'next-themes'
 import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
-import MobileBlockModal from '@/components/MobileBlockModal'
 import GuestbookFAB from '@/components/GuestbookFAB'
 
 export const metadata: Metadata = {
@@ -48,7 +47,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <MobileBlockModal />
           {children}
           <GuestbookFAB />
         </ThemeProvider>

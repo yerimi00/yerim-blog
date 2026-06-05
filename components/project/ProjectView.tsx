@@ -76,7 +76,7 @@ export default function ProjectView({ projects }: { projects: Project[] }) {
       {view === 'list' ? (
         <ProjectList projects={projects} />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+        <div className="project-view-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
           {projects.map((p) =>
             p.image
               ? <ProjectCard key={p.slug} project={p} />

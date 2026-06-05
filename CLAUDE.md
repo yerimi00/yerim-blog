@@ -148,6 +148,7 @@ Key functions in `lib/guestbook.ts`:
   - Spacing: `ds-xs` ~ `ds-3xl`; BoxShadow: `shadow-ds-floating`
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
+- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
 
 ### Post Rendering

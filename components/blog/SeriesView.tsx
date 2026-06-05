@@ -33,7 +33,7 @@ function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post
 
 export default function SeriesView({ seriesEntries }: { seriesEntries: [string, Post[]][] }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem 0.5rem' }}>
+    <div className="series-folder-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem 0.5rem' }}>
       {seriesEntries.map(([seriesName, posts]) => (
         <SeriesGridCard key={seriesName} seriesName={seriesName} posts={posts} />
       ))}

@@ -27,6 +27,7 @@ export default function ProjectHeroBanner({ projects }: { projects: Project[] })
 
   return (
     <div
+      className="project-hero-banner"
       style={{
         position: 'relative',
         borderRadius: '16px',
@@ -54,6 +55,7 @@ export default function ProjectHeroBanner({ projects }: { projects: Project[] })
 
       {/* 콘텐츠 */}
       <div
+        className="project-hero-banner-content"
         style={{
           position: 'relative',
           zIndex: 2,

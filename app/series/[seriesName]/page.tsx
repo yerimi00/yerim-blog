@@ -95,7 +95,7 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
                 </div>
 
                 {/* 날짜 + 화살표 */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
+                <div className="post-row-date" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                     {formatDate(post.date)}
                   </span>

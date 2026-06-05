@@ -46,7 +46,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   <Link href={`/about/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                     <div className="project-list-item" style={{ padding: '0.8rem 0', cursor: 'pointer' }}>
                       <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
-                        <span style={{
+                        <span className="project-list-period" style={{
                           fontSize: '0.72rem', color: 'var(--text-muted)',
                           whiteSpace: 'nowrap', paddingTop: '3px', minWidth: '130px', flexShrink: 0,
                         }}>

@@ -371,7 +371,7 @@ export default function GuestbookMessages({ initialEntries }: Props) {
           아직 방명록이 없어요. 첫 번째로 남겨주세요! ✨
         </p>
       ) : (
-        <div style={{
+        <div className="guestbook-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
           gap: '1.25rem',

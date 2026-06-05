@@ -18,11 +18,11 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
       }}
       onClick={() => router.push(`/blog/${post.slug}`)}
       onMouseEnter={(e) => {
-        const title = (e.currentTarget as HTMLElement).querySelector('.post-title') as HTMLElement
+        const title = (e.currentTarget as HTMLElement).querySelector('.post-card-title') as HTMLElement
         if (title) title.style.color = 'var(--accent)'
       }}
       onMouseLeave={(e) => {
-        const title = (e.currentTarget as HTMLElement).querySelector('.post-title') as HTMLElement
+        const title = (e.currentTarget as HTMLElement).querySelector('.post-card-title') as HTMLElement
         if (title) title.style.color = 'var(--text)'
       }}
     >
@@ -63,7 +63,7 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
 
       {/* 제목 */}
       <h3
-        className="post-title"
+        className="post-card-title"
         style={{
           fontSize: '1.1rem',
           fontWeight: 700,

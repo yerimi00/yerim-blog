@@ -74,6 +74,10 @@
     --shadow-card: none;
   }
 
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     background-color: var(--bg);
     color: var(--text);
@@ -83,6 +87,7 @@
     transition:
       background-color 0.2s,
       color 0.2s;
+    overflow-x: hidden;
   }
 
   /* ── Typography Scale ── */
@@ -280,6 +285,13 @@
 
   .series-item:hover {
     background: var(--bg) !important;
+  }
+
+  /* Grid blowout 방지: 그리드 자식 요소가 트랙 너비를 초과하지 않도록 */
+  .home-grid > *,
+  .post-grid > *,
+  .project-view-grid > * {
+    min-width: 0;
   }
 
   .post-row {
@@ -556,6 +568,14 @@
     justify-content: flex-start !important;
   }
 
+  /* 프로젝트 히어로 배너 모바일 */
+  .project-hero-banner {
+    height: 200px !important;
+  }
+  .project-hero-banner-content {
+    padding: 1.25rem 1.5rem !important;
+  }
+
   /* Notion 컬럼 → 모바일에서 전체 너비 */
   .notion-column {
     flex: 1 1 100% !important;
@@ -611,6 +631,45 @@
   }
   .mobile-header-actions {
     display: flex !important;
+  }
+
+  /* main 상하 패딩 축소 */
+  main {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* 페이지 타이틀 폰트 축소 */
+  main h1 {
+    font-size: 1.5rem !important;
+  }
+
+  /* 시리즈 상세 날짜·화살표 숨김 */
+  .post-row-date {
+    display: none !important;
+  }
+
+  /* ProjectList 기간 컬럼 숨김 → 프로젝트명·설명이 넓게 표시됨 */
+  .project-list-period {
+    display: none !important;
+  }
+
+  /* PostCard 제목 모바일 3줄 clamp */
+  .post-card-title {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* 방명록 카드 그리드 단일 컬럼 */
+  .guestbook-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 시리즈 폴더 그리드 컬럼 수 제한 */
+  .series-folder-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 }
 
