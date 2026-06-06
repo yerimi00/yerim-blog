@@ -13,7 +13,7 @@
 | `/series` | `app/series/page.tsx` | 86400 | 시리즈 카드 목록 |
 | `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
-| `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전 |
+| `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/about/projects/[slug]` | `app/about/projects/[slug]/page.tsx` | — | 프로젝트 상세 |
 | `/project` | `app/project/page.tsx` | — | 프로젝트 포트폴리오 |
 | `/notices` | `app/notices/page.tsx` | — | 공지사항 Accordion. Client Component. |

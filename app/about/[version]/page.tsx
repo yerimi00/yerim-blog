@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import { IoIosArrowForward } from 'react-icons/io'
+import { HiDevicePhoneMobile, HiEnvelope, HiPencilSquare } from 'react-icons/hi2'
+import { FiGithub } from 'react-icons/fi'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import MobileFooterLinks from '@/components/layout/MobileFooterLinks'
@@ -95,21 +97,47 @@ export default function AboutVersionPage({ params }: { params: { version: string
               </div>
             </section>
 
-            <section>
-              <h2 style={sectionHeadingStyle}>링크</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {[
-                  { label: 'GitHub', url: 'https://github.com/yerimi00' },
-                  { label: 'Velog', url: 'https://velog.io/@yerimi00' },
-                ].map(({ label, url }) => (
-                  <a key={label} href={url} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    {label} <IoIosArrowForward />
-                  </a>
-                ))}
-              </div>
-            </section>
           </div>
+
+          <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
+
+          {/* ── Philosophy ── */}
+          <section id="philosophy" style={{ scrollMarginTop: '100px', marginBottom: '3.5rem' }}>
+            <h2 style={sectionHeadingStyle}>Philosophy</h2>
+            <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+              WHO I AM
+            </p>
+            <p style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text)', lineHeight: 1.7, marginBottom: '2rem' }}>
+              단순히 기능을 구현하는 것을 넘어,<br />
+              사용자가 느끼는 &apos;경험&apos;을 고민합니다.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {[
+                {
+                  title: 'Detail-Oriented',
+                  desc: '작은 어긋남과 미세한 지연도 실사용 관점에서는 불편으로 이어질 수 있다고 생각하며, 디테일을 점검하는 과정을 중요하게 여깁니다.',
+                },
+                {
+                  title: 'User-Centric',
+                  desc: '개발자의 편리함보다 사용자의 불편함을 먼저 고려합니다. 예쁜 코드보다 중요한 것은, 사용자가 불편함 없이 사용할 수 있는 화면입니다.',
+                },
+                {
+                  title: 'Continuous Growth',
+                  desc: '새로운 기술을 배우는 데 열린 태도를 가지고 있으며, 문제 해결에 도움이 되는 기술을 선별해 적용합니다.',
+                },
+              ].map(({ title, desc }) => (
+                <div key={title} style={{
+                  padding: '1.1rem 1.25rem',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'var(--surface-container)',
+                  borderLeft: '3px solid var(--accent)',
+                }}>
+                  <p style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.35rem' }}>{title}</p>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
           <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
 
@@ -187,13 +215,25 @@ export default function AboutVersionPage({ params }: { params: { version: string
             <h2 style={sectionHeadingStyle}>Contact</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <span style={{ fontSize: '1rem' }}>📱</span>
+                <HiDevicePhoneMobile style={{ fontSize: '1.1rem', color: 'var(--text-muted)', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.9rem', color: 'var(--text)' }}>010-2221-5418</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <span style={{ fontSize: '1rem' }}>✉️</span>
+                <HiEnvelope style={{ fontSize: '1.1rem', color: 'var(--text-muted)', flexShrink: 0 }} />
                 <a href="mailto:fhddl1019@gmail.com" style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none' }}>
                   fhddl1019@gmail.com
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiGithub style={{ fontSize: '1.05rem', color: 'var(--text-muted)', flexShrink: 0 }} />
+                <a href="https://github.com/yerimi00" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                  github.com/yerimi00
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <HiPencilSquare style={{ fontSize: '1.1rem', color: 'var(--text-muted)', flexShrink: 0 }} />
+                <a href="https://velog.io/@yerimi00" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                  velog.io/@yerimi00
                 </a>
               </div>
             </div>

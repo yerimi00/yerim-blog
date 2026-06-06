@@ -102,7 +102,7 @@ Key functions in `lib/guestbook.ts`:
 | `/series` | `app/series/page.tsx` | Posts grouped by series |
 | `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | Posts in a specific series |
 | `/about` | `app/about/page.tsx` | Redirects to `/about/fe` |
-| `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm` |
+| `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/about/projects/[slug]` | `app/about/projects/[slug]/page.tsx` | Project detail |
 | `/project` | `app/project/page.tsx` | Project portfolio list |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |

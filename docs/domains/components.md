@@ -47,8 +47,8 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 
 | 파일 | 설명 |
 | --- | --- |
-| `AboutIntro.tsx` | 자기소개 섹션 |
-| `AboutToc.tsx` | About 페이지 내부 목차 |
+| `AboutIntro.tsx` | 자기소개 섹션 (fe·be·pm 버전별 텍스트) |
+| `AboutToc.tsx` | About 페이지 내부 목차. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact. IntersectionObserver로 active 추적. |
 | `ProjectCard.tsx` | 프로젝트 카드 UI |
 | `ProjectCardDeck.tsx` | 프로젝트 카드 덱 |
 | `ProjectList.tsx` | 프로젝트 목록 |
