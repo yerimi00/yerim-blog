@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 import type { IconType } from 'react-icons'
 import {
   SiHtml5, SiJavascript, SiTypescript, SiReact, SiNextdotjs,
@@ -26,7 +26,7 @@ const ICON_COLOR: Record<string, string> = {
   SiJavascript:       '#F7DF1E',
   SiTypescript:       '#3178C6',
   SiReact:            '#61DAFB',
-  SiNextdotjs:        'var(--text)',   // 브랜드 컬러 #000 — 다크모드 대응
+  SiNextdotjs:        'var(--text)',
   SiRecoil:           '#3578E5',
   SiReactquery:       '#FF4154',
   SiStyledcomponents: '#DB7093',
@@ -38,15 +38,15 @@ const ICON_COLOR: Record<string, string> = {
   DiVisualstudio:     '#007ACC',
   SiIntellijidea:     '#FE315D',
   SiGit:              '#F05032',
-  SiGithub:           'var(--text)',   // 브랜드 컬러 #181717 — 다크모드 대응
-  SiApple:            'var(--text)',   // 브랜드 컬러 #000 — 다크모드 대응
+  SiGithub:           'var(--text)',
+  SiApple:            'var(--text)',
   DiWindows:          '#0078D4',
   SiSpringboot:       '#6DB33F',
   DiJava:             '#ED8B00',
   SiOpenjdk:          '#ED8B00',
   SiHibernate:        '#59666C',
   SiMysql:            '#4479A1',
-  SiNotion:           'var(--text)',   // 브랜드 컬러 #000 — 다크모드 대응
+  SiNotion:           'var(--text)',
 }
 
 export type TechItem = {
@@ -69,9 +69,7 @@ function TechIcon({ icon, name, size = 28 }: { icon: string; name: string; size?
       />
     )
   }
-
   const IconComponent = ICON_MAP[icon]
-
   if (!IconComponent) {
     return (
       <span style={{
@@ -84,14 +82,78 @@ function TechIcon({ icon, name, size = 28 }: { icon: string; name: string; size?
       </span>
     )
   }
-
   const color = ICON_COLOR[icon] ?? 'var(--text-muted)'
   return <IconComponent size={size} style={{ color, display: 'block', flexShrink: 0 }} />
 }
 
+function TechPopup({ tech }: { tech: TechItem }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [leftAdjust, setLeftAdjust] = useState(0)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const overflow = rect.right - (window.innerWidth - 8)
+    if (overflow > 0) setLeftAdjust(-overflow)
+  }, [])
+
+  const tailLeft = 34 - leftAdjust
+
+  return (
+    <div ref={ref} style={{
+      position: 'absolute',
+      bottom: 'calc(100% + 10px)',
+      left: leftAdjust,
+      zIndex: 50,
+      width: '210px',
+      background: 'var(--surface-container)',
+      border: '1px solid var(--border)',
+      borderRadius: '12px',
+      padding: '0.875rem 1rem',
+      boxShadow: 'var(--shadow-floating)',
+      pointerEvents: 'none',
+    }}>
+      {/* 말풍선 꼬리 — 카드 기준 정렬, 뷰포트 보정 반영 */}
+      <div style={{
+        position: 'absolute',
+        bottom: '-5px',
+        left: `${tailLeft}px`,
+        transform: 'translateX(-50%) rotate(45deg)',
+        width: '10px',
+        height: '10px',
+        background: 'var(--surface-container)',
+        borderRight: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
+      }} />
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <TechIcon icon={tech.icon} name={tech.name} size={20} />
+        <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>{tech.name}</span>
+        <span style={{
+          marginLeft: 'auto',
+          fontSize: '0.62rem', fontWeight: 700,
+          padding: '1px 6px', borderRadius: '999px',
+          background: 'rgba(59,130,246,0.12)',
+          color: 'var(--accent)',
+          whiteSpace: 'nowrap',
+        }}>
+          {tech.level}
+        </span>
+      </div>
+      <p style={{
+        fontSize: '0.78rem', color: 'var(--text-secondary)',
+        lineHeight: 1.65, margin: 0,
+      }}>
+        {tech.desc}
+      </p>
+    </div>
+  )
+}
+
 export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) {
-  const [selected, setSelected] = useState<string | null>(null)
-  const selectedItem = techStack.find((t) => t.name === selected) ?? null
+  const [hovered, setHovered] = useState<string | null>(null)
+  const [tapped, setTapped] = useState<string | null>(null)
 
   const groups = Array.from(new Set(techStack.map((t) => t.group)))
 
@@ -108,53 +170,40 @@ export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) 
               {group}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-              {items.map((tech) => (
-                <button
-                  key={tech.name}
-                  onClick={() => setSelected(selected === tech.name ? null : tech.name)}
-                  style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem',
-                    padding: '0.75rem 0.875rem',
-                    border: `1.5px solid ${selected === tech.name ? 'var(--accent)' : 'var(--border)'}`,
-                    borderRadius: '12px',
-                    background: selected === tech.name ? 'rgba(59,130,246,0.07)' : 'var(--bg-secondary)',
-                    cursor: 'pointer', minWidth: '68px', outline: 'none',
-                    transition: 'border-color 0.15s, background 0.15s',
-                  }}
-                >
-                  <TechIcon icon={tech.icon} name={tech.name} size={28} />
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text)', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                    {tech.name}
-                  </span>
-                </button>
-              ))}
+              {items.map((tech) => {
+                const isVisible = hovered === tech.name || (tapped === tech.name && !hovered)
+                return (
+                  <div
+                    key={tech.name}
+                    style={{ position: 'relative', zIndex: isVisible ? 10 : 'auto' }}
+                    onMouseEnter={() => setHovered(tech.name)}
+                    onMouseLeave={() => setHovered(null)}
+                  >
+                    {isVisible && <TechPopup tech={tech} />}
+                    <button
+                      onClick={() => setTapped(tapped === tech.name ? null : tech.name)}
+                      style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
+                        padding: '0.75rem 0.875rem',
+                        border: `1.5px solid ${isVisible ? 'var(--accent)' : 'var(--border)'}`,
+                        borderRadius: '12px',
+                        background: isVisible ? 'rgba(59,130,246,0.07)' : 'var(--bg-secondary)',
+                        cursor: 'pointer', minWidth: '68px', outline: 'none',
+                        transition: 'border-color 0.15s, background 0.15s',
+                      }}
+                    >
+                      <TechIcon icon={tech.icon} name={tech.name} size={28} />
+                      <span style={{ fontSize: '0.65rem', color: 'var(--text)', fontWeight: 500, whiteSpace: 'nowrap' }}>
+                        {tech.name}
+                      </span>
+                    </button>
+                  </div>
+                )
+              })}
             </div>
           </div>
         )
       })}
-
-      {selectedItem && (
-        <div style={{
-          padding: '1rem 1.25rem', border: '1px solid var(--accent)', borderRadius: '10px',
-          background: 'rgba(59,130,246,0.04)', display: 'flex', alignItems: 'flex-start', gap: '1rem',
-        }}>
-          <div style={{ flexShrink: 0, marginTop: '2px' }}>
-            <TechIcon icon={selectedItem.icon} name={selectedItem.name} size={24} />
-          </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)' }}>{selectedItem.name}</span>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{selectedItem.group}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 600, padding: '1px 8px', borderRadius: '999px', background: 'rgba(59,130,246,0.1)', color: 'var(--accent)' }}>
-                {selectedItem.level}
-              </span>
-            </div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.65, margin: 0 }}>
-              {selectedItem.desc}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
