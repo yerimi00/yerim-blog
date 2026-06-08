@@ -7,7 +7,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 
   return (
     <div
-      onClick={() => router.push(`/about/projects/${project.slug}`)}
+      onClick={() => router.push(`/project/${project.slug}`)}
       style={{
         position: 'relative',
         aspectRatio: '16/9',

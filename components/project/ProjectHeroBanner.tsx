@@ -37,7 +37,7 @@ export default function ProjectHeroBanner({ projects }: { projects: Project[] })
         height: '300px',
         cursor: 'pointer',
       }}
-      onClick={() => router.push(`/about/projects/${project.slug}`)}
+      onClick={() => router.push(`/project/${project.slug}`)}
     >
       {/* 배경 이미지 */}
       {project.image && (

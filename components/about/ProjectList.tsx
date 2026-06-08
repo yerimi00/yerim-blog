@@ -43,7 +43,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   key={project.slug}
                   style={{ borderBottom: ai < items.length - 1 ? '1px solid var(--border)' : 'none' }}
                 >
-                  <Link href={`/about/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                  <Link href={`/project/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                     <div className="project-list-item" style={{ padding: '0.8rem 0', cursor: 'pointer' }}>
                       <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
                         <span className="project-list-period" style={{

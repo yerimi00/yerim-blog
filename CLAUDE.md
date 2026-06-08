@@ -103,8 +103,8 @@ Key functions in `lib/guestbook.ts`:
 | `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | Posts in a specific series |
 | `/about` | `app/about/page.tsx` | Redirects to `/about/fe` |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
-| `/about/projects/[slug]` | `app/about/projects/[slug]/page.tsx` | Project detail |
 | `/project` | `app/project/page.tsx` | Project portfolio list |
+| `/project/[slug]` | `app/project/[slug]/page.tsx` | Project detail |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
