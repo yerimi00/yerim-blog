@@ -292,6 +292,81 @@
     background: var(--bg) !important;
   }
 
+  /* 섹션 스크롤 reveal */
+  .section-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .section-reveal--visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Philosophy 항목 — 번호 + 심플 텍스트 + 스크롤 reveal */
+  .philosophy-item {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .philosophy-item:last-child {
+    border-bottom: none;
+  }
+
+  .philosophy-item--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .philosophy-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  .philosophy-item-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+    min-width: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .philosophy-item-title {
+    font-size: 0.925rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.3rem;
+  }
+
+  .philosophy-item-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin: 0;
+  }
+
   /* 모바일 About 푸터 링크: 기본 숨김, 모바일에서만 표시 */
   .mobile-footer-links {
     display: none;
