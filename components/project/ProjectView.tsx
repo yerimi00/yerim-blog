@@ -6,50 +6,6 @@ import ProjectList from '@/components/about/ProjectList'
 import ProjectCard from '@/components/about/ProjectCard'
 import type { NotionProject } from '@/lib/projects'
 
-function ProjectGridCard({ project }: { project: NotionProject }) {
-  return (
-    <div
-      style={{
-        aspectRatio: '16/9',
-        border: '1px solid var(--border)',
-        borderRadius: '12px',
-        overflow: 'hidden',
-        background: 'var(--bg-secondary)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-        <span style={{ fontSize: '1.1rem' }}>🗂️</span>
-        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-          {project.name}
-        </span>
-        {project.status === '진행중' && (
-          <span style={{ fontSize: '0.68rem', padding: '1px 8px', borderRadius: '999px', background: 'rgba(59,130,246,0.12)', color: 'var(--accent)', flexShrink: 0 }}>
-            진행중
-          </span>
-        )}
-      </div>
-      <div style={{ padding: '0.9rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.55 }}>
-          {project.description}
-        </p>
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-          {project.roles.map((r) => (
-            <span key={r} style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>#{r}</span>
-          ))}
-        </div>
-        {project.period && (
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 'auto' }}>{project.period}</span>
-        )}
-        {project.award && (
-          <span style={{ fontSize: '0.72rem', color: '#b45309' }}>🏆 {project.award}</span>
-        )}
-      </div>
-    </div>
-  )
-}
-
 export default function ProjectView({ projects }: { projects: NotionProject[] }) {
   const [view, setView] = useState<'list' | 'grid'>('list')
 
@@ -77,11 +33,7 @@ export default function ProjectView({ projects }: { projects: NotionProject[] })
         <ProjectList projects={projects} />
       ) : (
         <div className="project-view-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          {projects.map((p) =>
-            p.image
-              ? <ProjectCard key={p.slug} project={p} />
-              : <ProjectGridCard key={p.slug} project={p} />
-          )}
+          {projects.map((p) => <ProjectCard key={p.slug} project={p} />)}
         </div>
       )}
     </div>
