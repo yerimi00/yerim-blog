@@ -1,9 +1,9 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import ProjectCard from './ProjectCard'
-import type { Project } from '@/app/about/[version]/data'
+import type { NotionProject } from '@/lib/projects'
 
-export default function ProjectCardDeck({ projects }: { projects: Project[] }) {
+export default function ProjectCardDeck({ projects }: { projects: NotionProject[] }) {
   const [mounted, setMounted] = useState(false)
   const [index, setIndex] = useState(0)
   const total = projects.length

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Project } from '@/app/about/[version]/data'
+import type { NotionProject } from '@/lib/projects'
 
-export default function ProjectHeroBanner({ projects }: { projects: Project[] }) {
+export default function ProjectHeroBanner({ projects }: { projects: NotionProject[] }) {
   const router = useRouter()
   const [current, setCurrent] = useState(0)
   const [animating, setAnimating] = useState(false)

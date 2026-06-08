@@ -7,6 +7,7 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 | 파일 | 역할 |
 | --- | --- |
 | `lib/notion.ts` | Notion 블로그 포스트 DB 접근. 모든 포스트 데이터. |
+| `lib/projects.ts` | Notion Projects DB 접근. 프로젝트 목록·상세. |
 | `lib/guestbook.ts` | Notion 방명록 DB 접근. 방명록 · 댓글. |
 | `lib/github.ts` | GitHub GraphQL API. Giscus 댓글 수 · 최근 댓글. |
 | `lib/utils.ts` | 순수 유틸 함수. formatDate, calculateReadingTime, getRelatedPosts. |
@@ -28,6 +29,33 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 | `Series` | rich_text | `post.series?: string` | 선택 |
 | `Views` | number | `post.views?: number` | 선택 |
 | Cover image | Notion 페이지 커버 | `post.coverImage?: string` | 선택 |
+
+### 블로그 포스트 DB — 추가 속성
+
+| 속성명 | Notion 타입 | 설명 |
+| --- | --- | --- |
+| `Project` | rich_text | 연결 프로젝트 슬러그 (예: `next-career`). 프로젝트 상세 페이지의 관련 글 자동 조회에 사용. |
+
+### Projects DB (`NOTION_PROJECTS_DATABASE_ID`)
+
+| 속성명 | Notion 타입 | `NotionProject` 필드 | 필수 |
+| --- | --- | --- | --- |
+| `Name` | title | `project.name` | ✅ |
+| `Slug` | rich_text | `project.slug` | ✅ |
+| `Featured` | checkbox | `project.featured` | — |
+| `Description` | rich_text | `project.description` | ✅ |
+| `Overview` | rich_text | `project.overview` | — |
+| `Status` | select (완료/진행중) | `project.status` | ✅ |
+| `Period` | rich_text | `project.period` | — |
+| `UpdatedAt` | rich_text | `project.updatedAt` | — |
+| `Roles` | multi_select | `project.roles: string[]` | — |
+| `Tech` | multi_select | `project.tech: string[]` | — |
+| `Award` | rich_text | `project.award` | — |
+| `GitHub` | url | `project.github` | — |
+| `URL` | url | `project.url` | — |
+| `Image` | rich_text | `project.image` | — |
+
+담당 기능 설명은 Notion 페이지 본문(블록)에 작성.
 
 ### 방명록 DB (`NOTION_GUESTBOOK_DATABASE_ID`)
 
@@ -52,6 +80,14 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 | `getAllTags()` | `string[]` | 전체 고유 태그 목록. |
 | `getAllSeries()` | `string[]` | 전체 고유 시리즈명 목록. |
 | `incrementViews(pageId)` | `void` | Notion Views 속성 +1. |
+| `getPostsByProject(slug)` | `{ troubleshooting, retrospective, other }` | Blog Posts DB에서 `Project == slug` 필터. Tags 기준으로 `트러블슈팅` / `회고` / 기타 분류. |
+
+## `lib/projects.ts` 주요 함수
+
+| 함수 | 반환 | 설명 |
+| --- | --- | --- |
+| `getAllProjects()` | `NotionProject[]` | Projects DB 전체 조회. Period 내림차순. React `cache()` 적용. |
+| `getProjectBySlug(slug)` | `NotionProject \| null` | Slug 속성으로 단일 프로젝트 조회. |
 
 ## `lib/utils.ts` 주요 함수
 
@@ -93,6 +129,7 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 
 ## 데이터 추가 시 체크리스트
 
-- Notion DB 속성 추가 → `extractPostMeta()` 수정 → `Post` 타입 업데이트 → 이 문서 업데이트.
+- 블로그 포스트 DB 속성 추가 → `extractPostMeta()` 수정 → `Post` 타입 업데이트 → 이 문서 업데이트.
+- Projects DB 속성 추가 → `lib/projects.ts`의 `extractProject()` 수정 → `NotionProject` 타입 업데이트 → 이 문서 업데이트.
 - 새 API route → `docs/domains/route-map.md` 업데이트.
 - 새 유틸 함수 → `lib/utils.ts`에 추가. 순수 함수 유지.

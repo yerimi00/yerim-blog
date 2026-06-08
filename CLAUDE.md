@@ -27,6 +27,7 @@ Required in `.env.local`:
 - `NEXT_PUBLIC_SITE_URL` — Full site URL for RSS and JSON-LD (e.g. `https://yerim.dev`)
 - `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` — Google AdSense publisher ID (`ca-pub-*`)
 - `NEXT_PUBLIC_ADSENSE_POST_SLOT` — AdSense ad unit slot ID for post pages
+- `NOTION_PROJECTS_DATABASE_ID` — ID of the Notion Projects database
 
 ## Core Principles
 
@@ -58,8 +59,9 @@ This is a **Next.js 14 App Router** blog that uses **Notion as a CMS**.
 
 ### Data flow
 
-Three data layer files in `lib/`:
+Four data layer files in `lib/`:
 - `lib/notion.ts` — wraps `@notionhq/client` and `notion-to-md`. All blog post data.
+- `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
 - `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments.
 - `lib/utils.ts` — `formatDate`, `cn`, `calculateReadingTime`, `getRelatedPosts`.
@@ -76,6 +78,11 @@ Key functions in `lib/notion.ts`:
 - `getAllTags()` — all unique tags across published posts
 - `getAllSeries()` — all unique series names
 - `incrementViews(pageId)` — increments the `Views` property by 1
+- `getPostsByProject(projectSlug)` — Blog Posts DB에서 `Project == slug` 필터 후 `{ troubleshooting, retrospective, other }` 분류
+
+Key functions in `lib/projects.ts`:
+- `getAllProjects()` — Projects DB 전체 조회 (React cache)
+- `getProjectBySlug(slug)` — 슬러그로 단건 조회
 
 Key functions in `lib/guestbook.ts`:
 - `getGuestbookEntries()` — fetches all entries with comment counts (via block children)
@@ -87,7 +94,9 @@ Key functions in `lib/guestbook.ts`:
 
 ### Notion DB schema
 
-**Blog posts** — each page must have: `Title` (title), `Slug` (rich_text), `Description` (rich_text), `Date` (date), `Tags` (multi_select), `Published` (checkbox). Optional: `Series` (rich_text), `Views` (number).
+**Blog posts** — each page must have: `Title` (title), `Slug` (rich_text), `Description` (rich_text), `Date` (date), `Tags` (multi_select), `Published` (checkbox). Optional: `Series` (rich_text), `Views` (number), `Project` (rich_text — 연결 프로젝트 슬러그).
+
+**Projects** — `Name` (title), `Slug` (rich_text), `Featured` (checkbox), `Description` (rich_text), `Overview` (rich_text), `Status` (select: 완료/진행중), `Period` (rich_text), `UpdatedAt` (rich_text), `Roles` (multi_select), `Tech` (multi_select), `Award` (rich_text), `GitHub` (url), `URL` (url), `Image` (rich_text — 이미지 URL). 담당 기능은 Notion 페이지 본문에 기술.
 
 **Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox), `Password` (rich_text, private entries only). Comments stored as paragraph block children in `name|message` format.
 

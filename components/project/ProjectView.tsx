@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { HiBars3, HiOutlineSquares2X2 } from 'react-icons/hi2'
 import ProjectList from '@/components/about/ProjectList'
 import ProjectCard from '@/components/about/ProjectCard'
-import type { Project } from '@/app/about/[version]/data'
+import type { NotionProject } from '@/lib/projects'
 
-function ProjectGridCard({ project }: { project: Project }) {
+function ProjectGridCard({ project }: { project: NotionProject }) {
   return (
     <div
       style={{
@@ -50,7 +50,7 @@ function ProjectGridCard({ project }: { project: Project }) {
   )
 }
 
-export default function ProjectView({ projects }: { projects: Project[] }) {
+export default function ProjectView({ projects }: { projects: NotionProject[] }) {
   const [view, setView] = useState<'list' | 'grid'>('list')
 
   const iconBtnStyle = (active: boolean): React.CSSProperties => ({

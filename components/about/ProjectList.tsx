@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { IoIosArrowForward } from 'react-icons/io'
-import type { Project } from '@/app/about/[version]/data'
+import type { NotionProject } from '@/lib/projects'
 
-export default function ProjectList({ projects }: { projects: Project[] }) {
+export default function ProjectList({ projects }: { projects: NotionProject[] }) {
   const grouped = Object.entries(
-    projects.reduce<Record<string, Project[]>>((acc, p) => {
+    projects.reduce<Record<string, NotionProject[]>>((acc, p) => {
       const year = (p.period || p.updatedAt || '').slice(0, 4) || '기타'
       ;(acc[year] ??= []).push(p)
       return acc

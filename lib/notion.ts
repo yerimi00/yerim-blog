@@ -275,6 +275,34 @@ export async function getAllTags(): Promise<string[]> {
   return Array.from(tagSet)
 }
 
+// 프로젝트 연결 포스트 조회 — Tags 기준으로 트러블슈팅/회고 분류
+export async function getPostsByProject(projectSlug: string): Promise<{
+  troubleshooting: Post[]
+  retrospective: Post[]
+  other: Post[]
+}> {
+  const response = await notion.databases.query({
+    database_id: DATABASE_ID,
+    filter: {
+      and: [
+        { property: 'Project', rich_text: { equals: projectSlug } },
+        { property: 'Published', checkbox: { equals: true } },
+      ],
+    },
+    sorts: [{ property: 'Date', direction: 'descending' }],
+  })
+
+  const posts = response.results
+    .filter((page): page is PageObjectResponse => 'properties' in page)
+    .map((page) => extractPostMeta(page))
+
+  return {
+    troubleshooting: posts.filter((p) => p.tags.includes('트러블슈팅')),
+    retrospective: posts.filter((p) => p.tags.includes('회고')),
+    other: posts.filter((p) => !p.tags.includes('트러블슈팅') && !p.tags.includes('회고')),
+  }
+}
+
 // 시리즈 목록 추출
 export async function getAllSeries(): Promise<string[]> {
   const posts = await getAllPosts()

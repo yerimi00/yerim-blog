@@ -1,8 +1,8 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import type { Project } from '@/app/about/[version]/data'
+import type { NotionProject } from '@/lib/projects'
 
-export default function ProjectCard({ project }: { project: Project }) {
+export default function ProjectCard({ project }: { project: NotionProject }) {
   const router = useRouter()
 
   return (

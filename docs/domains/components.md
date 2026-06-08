@@ -49,12 +49,19 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | --- | --- |
 | `AboutIntro.tsx` | 자기소개 섹션 (fe·be·pm 버전별 텍스트) |
 | `AboutToc.tsx` | About 페이지 내부 목차. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact. IntersectionObserver로 active 추적. |
-| `ProjectCard.tsx` | 프로젝트 카드 UI |
-| `ProjectCardDeck.tsx` | 프로젝트 카드 덱 |
-| `ProjectList.tsx` | 프로젝트 목록 |
+| `ProjectCard.tsx` | 프로젝트 카드 UI. `NotionProject` 타입 사용. |
+| `ProjectCardDeck.tsx` | 프로젝트 카드 덱. `NotionProject` 타입 사용. |
+| `ProjectList.tsx` | 프로젝트 타임라인 목록. `NotionProject` 타입 사용. |
 | `TechStackGrid.tsx` | 기술 스택 그리드 |
 | `TypewriterText.tsx` | 타이프라이터 애니메이션 텍스트 |
 | `YearTimeline.tsx` | 연도별 타임라인 |
+
+## `components/project/`
+
+| 파일 | 설명 |
+| --- | --- |
+| `ProjectHeroBanner.tsx` | 주요 프로젝트 슬라이드 배너 (featured=true). 4초 자동 전환. `NotionProject` 타입 사용. |
+| `ProjectView.tsx` | 전체 프로젝트 리스트/그리드 뷰 토글. `NotionProject` 타입 사용. |
 
 ## `components/` (루트 전역)
 
