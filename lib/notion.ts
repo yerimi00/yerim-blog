@@ -297,9 +297,9 @@ export async function getPostsByProject(projectSlug: string): Promise<{
     .map((page) => extractPostMeta(page))
 
   return {
-    troubleshooting: posts.filter((p) => p.tags.includes('트러블슈팅')),
+    troubleshooting: posts.filter((p) => !p.tags.includes('회고')),
     retrospective: posts.filter((p) => p.tags.includes('회고')),
-    other: posts.filter((p) => !p.tags.includes('트러블슈팅') && !p.tags.includes('회고')),
+    other: [],
   }
 }
 

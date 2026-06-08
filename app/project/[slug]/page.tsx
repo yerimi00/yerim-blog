@@ -1,10 +1,10 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { IoIosArrowForward } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getAllProjects, getProjectBySlug } from '@/lib/projects'
 import { getPostsByProject } from '@/lib/notion'
+import PostCard from '@/components/blog/PostCard'
 import type { Post } from '@/types'
 
 export const revalidate = 3600
@@ -29,46 +29,26 @@ const sectionStyle: React.CSSProperties = {
   marginBottom: '1rem',
 }
 
-function PostCard({ post }: { post: Post }) {
-  return (
-    <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-      <div
-        className="card-hover"
-        style={{
-          padding: '1.1rem 1.5rem',
-          border: '1px solid var(--border)',
-          borderRadius: '10px',
-          background: 'var(--surface-container)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-        }}
-      >
-        <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {post.title}
-          </p>
-          {post.description && (
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {post.description}
-            </p>
-          )}
-        </div>
-        <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '1rem', flexShrink: 0 }} />
-      </div>
-    </Link>
-  )
+const groupAccent: Record<string, string> = {
+  '트러블슈팅': '#dc2626',
+  '회고': 'var(--accent)',
 }
 
 function PostGroup({ label, posts }: { label: string; posts: Post[] }) {
   if (!posts.length) return null
+  const color = groupAccent[label] ?? 'var(--accent)'
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
-      <p style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
-        {label}
-      </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+    <div style={{ marginBottom: '2rem' }}>
+      <div style={{
+        borderLeft: `3px solid ${color}`,
+        paddingLeft: '0.875rem',
+        marginBottom: '0.25rem',
+      }}>
+        <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+          {label}
+        </p>
+      </div>
+      <div>
         {posts.map((post) => <PostCard key={post.id} post={post} />)}
       </div>
     </div>
@@ -83,7 +63,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
   if (!project) notFound()
 
   const hasRelatedPosts =
-    postGroups.troubleshooting.length + postGroups.retrospective.length + postGroups.other.length > 0
+    postGroups.troubleshooting.length + postGroups.retrospective.length > 0
 
   return (
     <>
@@ -162,7 +142,6 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               <h2 style={sectionStyle}>관련 블로그 글</h2>
               <PostGroup label="트러블슈팅" posts={postGroups.troubleshooting} />
               <PostGroup label="회고" posts={postGroups.retrospective} />
-              <PostGroup label="기타" posts={postGroups.other} />
             </section>
             <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
           </>
