@@ -8,6 +8,7 @@ export const metadata = { title: 'Series', description: '시리즈별로 묶인 
 
 export default async function SeriesPage() {
   const seriesMap = await getPostsBySeries()
+  if (!seriesMap['인터랙션 모음']) seriesMap['인터랙션 모음'] = []
   const seriesEntries = Object.entries(seriesMap)
 
   return (

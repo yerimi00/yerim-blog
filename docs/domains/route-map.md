@@ -11,7 +11,8 @@
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | 86400 | 포스트 상세. generateStaticParams. |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | 3600 | 태그별 포스트 목록. generateStaticParams. |
 | `/series` | `app/series/page.tsx` | 86400 | 시리즈 카드 목록 |
-| `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
+| `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. `seriesName === "인터랙션 모음"`이면 `InteractionSeriesView` 렌더 (포스트 목록 대신 서브폴더 그리드). Notion 포스트 없어도 항상 표시. |
+| `/series/[seriesName]/[subFolder]` | `app/series/[seriesName]/[subFolder]/page.tsx` | 86400 | 인터랙션 모음 전용 서브폴더 포스트 목록. 데스크탑: flat list, 모바일(≤480px): CardStackPostList. seriesName이 "인터랙션 모음"이 아니면 404. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/project` | `app/project/page.tsx` | 3600 | 프로젝트 포트폴리오. Notion Projects DB 기반. |

@@ -40,7 +40,9 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | `ViewTracker.tsx` | ✅ | 마운트 시 조회수 +1 API 호출. |
 | `GiscusComments.tsx` | ✅ | GitHub Discussions 댓글 위젯. |
 | `SearchModal.tsx` | ✅ | 클라이언트 사이드 전문 검색 모달. |
-| `SeriesView.tsx` | — | 시리즈 포스트 뷰. 항상 그리드 표시 (리스트 토글 제거됨). |
+| `SeriesView.tsx` | ✅ | 시리즈 폴더 그리드. posts.length === 0이면 "모음집" 표시 (인터랙션 모음 대응). |
+| `InteractionSeriesView.tsx` | ✅ | "인터랙션 모음" 시리즈 전용 서브폴더 그리드. 하드코딩된 SUB_FOLDERS 배열 기반. 현재: 카드 스택 UI. |
+| `CardStackPostList.tsx` | ✅ | 모바일 전용(≤480px) 수직 카드 스택 포스트 목록. 터치 드래그(↑↓) 60px 초과 시 다음/이전 전환. translateY+scale 3장 peek 구조. CSS transition은 snap 시에만 적용. |
 | `Sidebar.tsx` | — | 인기글 + 최근 댓글 + About 카드. |
 
 ## `components/about/`

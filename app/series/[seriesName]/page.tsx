@@ -5,14 +5,17 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { getPostsBySeries } from '@/lib/notion'
 import { formatDate } from '@/lib/utils'
+import InteractionSeriesView from '@/components/blog/InteractionSeriesView'
 
 export const revalidate = 86400
 
+const INTERACTION_SERIES = '인터랙션 모음'
+
 export async function generateStaticParams() {
   const seriesMap = await getPostsBySeries()
-  return Object.keys(seriesMap).map((name) => ({
-    seriesName: encodeURIComponent(name),
-  }))
+  const names = Object.keys(seriesMap)
+  if (!names.includes(INTERACTION_SERIES)) names.push(INTERACTION_SERIES)
+  return names.map((name) => ({ seriesName: encodeURIComponent(name) }))
 }
 
 export async function generateMetadata({ params }: { params: { seriesName: string } }) {
@@ -23,7 +26,7 @@ export async function generateMetadata({ params }: { params: { seriesName: strin
 export default async function SeriesDetailPage({ params }: { params: { seriesName: string } }) {
   const name = decodeURIComponent(params.seriesName)
   const seriesMap = await getPostsBySeries()
-  const posts = seriesMap[name]
+  const posts = seriesMap[name] ?? (name === INTERACTION_SERIES ? [] : null)
   if (!posts) notFound()
 
   return (
@@ -31,7 +34,6 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
       <Header />
       <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
 
-        {/* 헤더 */}
         <div style={{ marginBottom: '2.5rem' }}>
           <Link
             href="/series"
@@ -43,68 +45,68 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
             {name}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            {posts.length}편의 글
+            {name === INTERACTION_SERIES ? 'UI 인터랙션 모음' : `${posts.length}편의 글`}
           </p>
         </div>
 
         <hr style={{ borderColor: 'var(--border)', marginBottom: '2rem' }} />
 
-        {/* 포스트 목록 */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {posts.map((post, i) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.slug}`}
-              style={{ textDecoration: 'none', display: 'block' }}
-            >
-              <div
-                className="post-row"
-                style={{
-                  display: 'flex',
-                  gap: '1.25rem',
-                  alignItems: 'flex-start',
-                  padding: '1.25rem 0',
-                  borderBottom: i < posts.length - 1 ? '1px solid var(--border)' : 'none',
-                }}
+        {name === INTERACTION_SERIES ? (
+          <InteractionSeriesView seriesName={name} />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {posts.map((post, i) => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                style={{ textDecoration: 'none', display: 'block' }}
               >
-                {/* 번호 */}
-                <span style={{
-                  fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent)',
-                  fontFamily: 'JetBrains Mono, monospace',
-                  paddingTop: '4px', flexShrink: 0, minWidth: '24px',
-                }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-
-                {/* 본문 */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{tag}</span>
-                    ))}
-                  </div>
-                  <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.25rem', lineHeight: 1.45 }}>
-                    {post.title}
-                  </p>
-                  <p style={{
-                    fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0,
-                    display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                <div
+                  className="post-row"
+                  style={{
+                    display: 'flex',
+                    gap: '1.25rem',
+                    alignItems: 'flex-start',
+                    padding: '1.25rem 0',
+                    borderBottom: i < posts.length - 1 ? '1px solid var(--border)' : 'none',
+                  }}
+                >
+                  <span style={{
+                    fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent)',
+                    fontFamily: 'JetBrains Mono, monospace',
+                    paddingTop: '4px', flexShrink: 0, minWidth: '24px',
                   }}>
-                    {post.description}
-                  </p>
-                </div>
-
-                {/* 날짜 + 화살표 */}
-                <div className="post-row-date" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                    {formatDate(post.date)}
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                  <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '0.9rem' }} />
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
+                      {post.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>#{tag}</span>
+                      ))}
+                    </div>
+                    <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.25rem', lineHeight: 1.45 }}>
+                      {post.title}
+                    </p>
+                    <p style={{
+                      fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0,
+                      display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                    }}>
+                      {post.description}
+                    </p>
+                  </div>
+
+                  <div className="post-row-date" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                      {formatDate(post.date)}
+                    </span>
+                    <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '0.9rem' }} />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
       </main>
       <Footer />

@@ -108,8 +108,9 @@ Key functions in `lib/guestbook.ts`:
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
-| `/series` | `app/series/page.tsx` | Posts grouped by series |
-| `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | Posts in a specific series |
+| `/series` | `app/series/page.tsx` | Posts grouped by series. "인터랙션 모음" 폴더 항상 표시 (Notion 포스트 없어도 hardcode 주입) |
+| `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | Posts in a specific series. `seriesName === "인터랙션 모음"`이면 `InteractionSeriesView` 렌더 |
+| `/series/[seriesName]/[subFolder]` | `app/series/[seriesName]/[subFolder]/page.tsx` | 인터랙션 모음 전용 서브폴더. 모바일: CardStackPostList, 데스크탑: flat list. `revalidate = 86400` |
 | `/about` | `app/about/page.tsx` | Redirects to `/about/fe` |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/project` | `app/project/page.tsx` | Project portfolio list |
@@ -159,7 +160,7 @@ Key functions in `lib/guestbook.ts`:
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
 - `.series-tab-bar` / `.series-tab-btn`: `touch-action: pan-x` + `user-select: none` — 모바일 수평 스크롤 중 텍스트 드래그 선택 방지
-- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택)
+- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
 
 ### Post Rendering

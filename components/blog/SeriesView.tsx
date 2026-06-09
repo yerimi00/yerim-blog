@@ -24,7 +24,7 @@ function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post
           {seriesName}
         </div>
         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-          {posts.length}편
+          {posts.length === 0 ? '모음집' : `${posts.length}편`}
         </div>
       </div>
     </Link>
