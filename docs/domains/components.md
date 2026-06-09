@@ -34,7 +34,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 | `ReadingProgress.tsx` | ✅ | 상단 3px 읽기 진행 바. scroll 이벤트. |
 | `SocialShare.tsx` | ✅ | LinkedIn 공유 + 링크 복사. |
 | `RelatedPosts.tsx` | — | 관련 포스트 3개 카드 그리드. |
-| `HeroBanner.tsx` | ✅ | 인기글 슬라이더. 4초 자동 전환. 날짜는 `position: absolute`(`.hero-banner-date`)로 카드 하단 고정 — 슬라이드별 콘텐츠 높이와 무관하게 날짜 위치 일관성 유지. |
+| `HeroBanner.tsx` | ✅ | 인기글 슬라이더. 4초 자동 전환(인스턴트). 마우스·터치 드래그로 카드를 직접 이동(CSS transition 없음). 50px 초과 드래그 시 setCurrent로 즉시 슬라이드 전환. 날짜는 `position: absolute`(`.hero-banner-date`)로 카드 하단 고정. |
 | `TableOfContents.tsx` | ✅ | 포스트 목차. IntersectionObserver로 active 섹션 추적. |
 | `PostNavigation.tsx` | — | 이전/다음 포스트 링크. |
 | `ViewTracker.tsx` | ✅ | 마운트 시 조회수 +1 API 호출. |
@@ -60,7 +60,7 @@ yerim-blog 컴포넌트는 `components/` 아래 기능별로 구성됩니다.
 
 | 파일 | 설명 |
 | --- | --- |
-| `ProjectHeroBanner.tsx` | 주요 프로젝트 슬라이드 배너 (featured=true). 4초 자동 전환. `NotionProject` 타입 사용. |
+| `ProjectHeroBanner.tsx` | 주요 프로젝트 슬라이드 배너 (featured=true). 4초 자동 전환(인스턴트). 마우스·터치 드래그로 카드를 직접 이동(CSS transition 없음). 50px 초과 드래그 시 즉시 슬라이드 전환. `NotionProject` 타입 사용. |
 | `ProjectView.tsx` | 전체 프로젝트 리스트/그리드 뷰 토글. `NotionProject` 타입 사용. |
 
 ## `components/` (루트 전역)
