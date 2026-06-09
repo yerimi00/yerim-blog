@@ -62,7 +62,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
             position: 'relative',
             zIndex: 1,
             height: '100%',
-            padding: '2.5rem 3rem',
+            padding: '2.5rem 3rem 3.5rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-end',
@@ -102,14 +102,24 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
           >
             {post.title}
           </h2>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.5rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {post.description}
           </p>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            {formatDate(post.date)}
-            {post.views !== undefined && ` · 조회 ${post.views}`}
-          </span>
         </div>
+        <span
+          className="hero-banner-date"
+          style={{
+            position: 'absolute',
+            bottom: '2rem',
+            left: '3rem',
+            zIndex: 1,
+            fontSize: '0.8rem',
+            color: 'var(--text-muted)',
+          }}
+        >
+          {formatDate(post.date)}
+          {post.views !== undefined && ` · 조회 ${post.views}`}
+        </span>
       </Link>
 
       {/* 인디케이터 */}

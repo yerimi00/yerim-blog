@@ -158,7 +158,8 @@ Key functions in `lib/guestbook.ts`:
   - Spacing: `ds-xs` ~ `ds-3xl`; BoxShadow: `shadow-ds-floating`
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
-- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택)
+- `.series-tab-bar` / `.series-tab-btn`: `touch-action: pan-x` + `user-select: none` — 모바일 수평 스크롤 중 텍스트 드래그 선택 방지
+- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택)
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
 
 ### Post Rendering

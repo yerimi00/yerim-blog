@@ -64,14 +64,16 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 | `.callout`, `.callout-blue`, `.callout-yellow` 등 | Notion callout 블록 (8가지 색상) |
 | `.notion-columns`, `.notion-column` | Notion 컬럼 레이아웃 |
 | `.related-posts-grid` | 관련 포스트 3열 그리드 (모바일 1열) |
-| `.series-tab-bar` | 시리즈 탭 컨테이너. `overflow-x: auto` 가로 스크롤, 스크롤바 숨김. |
-| `.series-tab-btn` | 시리즈 탭 버튼. `white-space: nowrap`으로 텍스트 줄바꿈 방지. `flex-shrink: 0`. |
+| `.series-tab-bar` | 시리즈 탭 컨테이너. `overflow-x: auto` 가로 스크롤, 스크롤바 숨김. `touch-action: pan-x` + `user-select: none` — 모바일 수평 스와이프 시 텍스트 드래그 선택 방지. |
+| `.series-tab-btn` | 시리즈 탭 버튼. `white-space: nowrap`으로 텍스트 줄바꿈 방지. `flex-shrink: 0`. `user-select: none` — 롱프레스 텍스트 선택 방지. |
+| `.hero-section` | 홈 히어로 배너 래퍼. 반응형 `margin` 오버라이드용 클래스. |
+| `.hero-banner-date` | HeroBanner 날짜 텍스트. `position: absolute`로 카드 하단에 고정 — 슬라이드 콘텐츠 높이와 무관하게 날짜 위치를 일관되게 유지. |
 
 ## 반응형 미디어 쿼리
 
 | breakpoint | 적용 클래스 |
 | --- | --- |
-| `max-width: 768px` | `.home-grid` 단일 컬럼, `.home-sidebar` 숨김, `.post-grid` 단일 컬럼, `.about-edu-row` / `.about-activity-row` 세로 스택, `.about-row-period` min-width 해제, `.related-posts-grid` 단일 컬럼, `.project-hero-banner` 높이 200px |
+| `max-width: 768px` | `.home-grid` 단일 컬럼, `.home-sidebar` 숨김, `.post-grid` 단일 컬럼, `.about-edu-row` / `.about-activity-row` 세로 스택, `.about-row-period` min-width 해제, `.related-posts-grid` 단일 컬럼, `.hero-section` 여백 축소(`0.5rem 0 1rem`), `.hero-banner` 높이 240px, `.hero-banner-content` padding-bottom 3rem(날짜 절대 위치 공간 확보), `.hero-banner-date` left/bottom 모바일 패딩 기준 정렬, `.project-hero-banner` 높이 200px |
 | `max-width: 480px` | `.header-nav` 숨김, `.mobile-header-actions` 표시, `.bottom-nav` 표시, `.site-footer` 숨김, `.mobile-footer-links` 표시, `.guestbook-fab` 숨김 (홈만 표시), `.post-card-title` 3줄 clamp, `.post-row-date` / `.project-list-period` 숨김, `.guestbook-grid` 단일 컬럼 |
 
 ## Tailwind 확장 (`tailwind.config.js`)

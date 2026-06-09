@@ -34,7 +34,8 @@
     --secondary-container: #d9dff5;
 
     /* Shadows */
-    --shadow-floating: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --shadow-floating:
+      0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
     --shadow-card: none;
 
     /* Border radii */
@@ -70,7 +71,8 @@
     --secondary: #c0c6db;
     --secondary-container: #404758;
 
-    --shadow-floating: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    --shadow-floating:
+      0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
     --shadow-card: none;
   }
 
@@ -189,32 +191,61 @@
 
   /* 방명록 성공 모달 팝인 */
   @keyframes popIn {
-    0% { transform: scale(0.6); opacity: 0; }
-    70% { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+    70% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   /* 방명록 FAB 말풍선 둥실 애니메이션 */
   @keyframes fabFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-7px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-7px);
+    }
   }
 
   @keyframes fabFloatX {
-    0%, 100% { transform: translateX(0px); }
-    50% { transform: translateX(-5px); }
+    0%,
+    100% {
+      transform: translateX(0px);
+    }
+    50% {
+      transform: translateX(-5px);
+    }
   }
 
   /* 방명록 FAB 버튼 살짝 맥동 */
   @keyframes fabPulse {
-    0%, 100% { box-shadow: 0 4px 20px rgba(59,130,246,0.45); }
-    50% { box-shadow: 0 4px 28px rgba(59,130,246,0.7); }
+    0%,
+    100% {
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.45);
+    }
+    50% {
+      box-shadow: 0 4px 28px rgba(59, 130, 246, 0.7);
+    }
   }
 
   /* 연필 이모지 흔들기 */
   @keyframes fabWave {
-    0%, 100% { transform: rotate(-10deg); }
-    50% { transform: rotate(15deg); }
+    0%,
+    100% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(15deg);
+    }
   }
 }
 
@@ -237,14 +268,24 @@
 
   /* 방명록 글라스모피즘 */
   .gb-section {
-    background: linear-gradient(135deg, rgba(219,234,254,0.45) 0%, rgba(237,233,254,0.45) 50%, rgba(252,231,243,0.45) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(219, 234, 254, 0.45) 0%,
+      rgba(237, 233, 254, 0.45) 50%,
+      rgba(252, 231, 243, 0.45) 100%
+    );
     border-radius: 24px;
     padding: 2.5rem 2rem;
     position: relative;
     overflow: hidden;
   }
   .dark .gb-section {
-    background: linear-gradient(135deg, rgba(30,58,138,0.25) 0%, rgba(76,29,149,0.25) 50%, rgba(131,24,67,0.25) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(30, 58, 138, 0.25) 0%,
+      rgba(76, 29, 149, 0.25) 50%,
+      rgba(131, 24, 67, 0.25) 100%
+    );
   }
 
   .gb-card {
@@ -296,8 +337,9 @@
   .section-reveal {
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .section-reveal--visible {
@@ -322,8 +364,9 @@
     border-bottom: 1px solid var(--border-subtle);
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .philosophy-item:last-child {
@@ -630,6 +673,11 @@
     overflow-wrap: break-word;
   }
 
+  /* 홈: 히어로 섹션 여백 축소 */
+  .hero-section {
+    margin: 0.5rem 0 0.5rem !important;
+  }
+
   /* 홈: 사이드바 그리드 → 단일 컬럼 */
   .home-grid {
     grid-template-columns: 1fr !important;
@@ -665,14 +713,18 @@
 
   /* 히어로 배너 모바일 */
   .hero-banner {
-    height: 200px !important;
+    height: 240px !important;
   }
   .hero-banner-tags {
     margin-bottom: 0.3rem !important;
   }
   .hero-banner-content {
-    padding: 1.25rem 1.5rem !important;
+    padding: 1.25rem 1.5rem 3rem !important;
     justify-content: flex-start !important;
+  }
+  .hero-banner-date {
+    left: 1.5rem !important;
+    bottom: 1.75rem !important;
   }
 
   /* 프로젝트 히어로 배너 모바일 */
@@ -743,7 +795,9 @@
   /* main 상하 패딩 축소 + 바텀 네비 여백 */
   main {
     padding-top: 2rem !important;
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 2rem) !important;
+    padding-bottom: calc(
+      56px + env(safe-area-inset-bottom, 0px) + 2rem
+    ) !important;
   }
 
   /* 바텀 네비 표시 */
@@ -830,7 +884,6 @@
   .series-folder-grid {
     grid-template-columns: repeat(3, 1fr) !important;
   }
-
 }
 
 /* ── 관련 포스트 반응형 그리드 ── */

@@ -21,7 +21,7 @@ export default async function HomePage() {
       <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
         {/* 인기글 배너 슬라이더 */}
-        <section style={{ margin: '2rem 0 3rem' }}>
+        <section className="hero-section" style={{ margin: '2rem 0 3rem' }}>
           <HeroBanner posts={popularPosts} />
         </section>
 
