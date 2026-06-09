@@ -9,7 +9,8 @@ import InteractionSeriesView from '@/components/blog/InteractionSeriesView'
 
 export const revalidate = 86400
 
-const INTERACTION_SERIES = '인터랙션 모음'
+const INTERACTION_SERIES = 'interactions'
+const INTERACTION_SERIES_LABEL = '인터랙션 모음'
 
 export async function generateStaticParams() {
   const seriesMap = await getPostsBySeries()
@@ -20,11 +21,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: { seriesName: string } }) {
   const name = decodeURIComponent(params.seriesName)
-  return { title: `${name} — Series`, description: `${name} 시리즈 글 모음` }
+  const displayName = name === INTERACTION_SERIES ? INTERACTION_SERIES_LABEL : name
+  return { title: `${displayName} — Series`, description: `${displayName} 시리즈 글 모음` }
 }
 
 export default async function SeriesDetailPage({ params }: { params: { seriesName: string } }) {
   const name = decodeURIComponent(params.seriesName)
+  const displayName = name === INTERACTION_SERIES ? INTERACTION_SERIES_LABEL : name
   const seriesMap = await getPostsBySeries()
   const posts = seriesMap[name] ?? (name === INTERACTION_SERIES ? [] : null)
   if (!posts) notFound()
@@ -42,7 +45,7 @@ export default async function SeriesDetailPage({ params }: { params: { seriesNam
             <IoIosArrowBack /> 시리즈 목록
           </Link>
           <h1 style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.4rem' }}>
-            {name}
+            {displayName}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
             {name === INTERACTION_SERIES ? 'UI 인터랙션 모음' : `${posts.length}편의 글`}

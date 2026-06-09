@@ -8,38 +8,39 @@ import ColorCardStackDemo from '@/components/blog/ColorCardStackDemo'
 
 export const revalidate = 86400
 
-const INTERACTION_SERIES = '인터랙션 모음'
+const INTERACTION_SERIES = 'interactions'
+const INTERACTION_SERIES_LABEL = '인터랙션 모음'
 
 const DEMOS: Record<string, { title: string; description: string }> = {
-  '카드 스택 UI': {
+  'card-stack-ui': {
     title: '카드 스택 UI',
     description: '드래그 또는 스크롤로 카드를 넘기는 수직 스택 인터랙션',
   },
-  '컬러 카드 스택': {
+  'color-card-stack': {
     title: '컬러 카드 스택',
     description: '3가지 색상 카드로 구현한 수직 스택 인터랙션',
   },
 }
 
 export async function generateStaticParams() {
-  return Object.keys(DEMOS).map(name => ({
-    seriesName: encodeURIComponent(INTERACTION_SERIES),
-    subFolder: encodeURIComponent(name),
+  return Object.keys(DEMOS).map(slug => ({
+    seriesName: INTERACTION_SERIES,
+    subFolder: slug,
   }))
 }
 
 export async function generateMetadata({ params }: { params: { subFolder: string } }) {
-  const name = decodeURIComponent(params.subFolder)
-  const demo = DEMOS[name]
+  const slug = params.subFolder
+  const demo = DEMOS[slug]
   return {
-    title: `${name} — 인터랙션 모음`,
-    description: demo?.description ?? name,
+    title: `${demo?.title ?? slug} — ${INTERACTION_SERIES_LABEL}`,
+    description: demo?.description ?? slug,
   }
 }
 
 export default function SubFolderPage({ params }: { params: { seriesName: string; subFolder: string } }) {
-  const seriesName = decodeURIComponent(params.seriesName)
-  const subFolder = decodeURIComponent(params.subFolder)
+  const seriesName = params.seriesName
+  const subFolder = params.subFolder
 
   if (seriesName !== INTERACTION_SERIES) notFound()
 
@@ -61,13 +62,13 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
           </Link>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>/</span>
           <Link
-            href={`/series/${encodeURIComponent(seriesName)}`}
+            href={`/series/${INTERACTION_SERIES}`}
             style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none' }}
           >
-            {seriesName}
+            {INTERACTION_SERIES_LABEL}
           </Link>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>/</span>
-          <span style={{ fontSize: '0.82rem', color: 'var(--text)' }}>{subFolder}</span>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text)' }}>{demo.title}</span>
         </div>
 
         {/* 제목 */}
@@ -83,7 +84,7 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
         <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
 
         {/* 데모 */}
-        {subFolder === '컬러 카드 스택' ? <ColorCardStackDemo /> : <CardStackDemo />}
+        {subFolder === 'color-card-stack' ? <ColorCardStackDemo /> : <CardStackDemo />}
 
       </main>
       <Footer />
