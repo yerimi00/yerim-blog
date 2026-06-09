@@ -37,7 +37,7 @@ export default async function HomePage() {
         >
           {/* 전체 아티클 */}
           <section>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.5rem', userSelect: 'none', WebkitUserSelect: 'none' }}>
               <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)' }}>
                 전체 아티클
               </h2>

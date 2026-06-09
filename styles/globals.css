@@ -410,6 +410,9 @@
     border-bottom: 1px solid var(--border);
     scrollbar-width: none;
     -ms-overflow-style: none;
+    touch-action: pan-x;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .series-tab-bar::-webkit-scrollbar {
@@ -431,6 +434,8 @@
     letter-spacing: 0.01em;
     white-space: nowrap;
     flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .series-tab-btn.active {
