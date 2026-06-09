@@ -7,6 +7,8 @@ import CardStackDemo from '@/components/blog/CardStackDemo'
 import ColorCardStackDemo from '@/components/blog/ColorCardStackDemo'
 import HorizontalCardSwipeDemo from '@/components/blog/HorizontalCardSwipeDemo'
 import CenteredCardSwipeDemo from '@/components/blog/CenteredCardSwipeDemo'
+import WalletCardDemo from '@/components/blog/WalletCardDemo'
+import WalletCardDemo2 from '@/components/blog/WalletCardDemo2'
 
 export const revalidate = 86400
 
@@ -29,6 +31,14 @@ const DEMOS: Record<string, { title: string; description: string }> = {
   'centered-card-swipe': {
     title: '양옆 카드 스와이프',
     description: '현재 카드를 중앙에 두고 양옆 카드가 살짝 보이는 캐러셀 인터랙션',
+  },
+  'wallet-card': {
+    title: '지갑 카드 스택',
+    description: '카드를 위로 드래그해 지갑에서 꺼내는 겹침 스택 인터랙션',
+  },
+  'wallet-card-2': {
+    title: '지갑 카드 스택 2',
+    description: '호버·클릭으로 카드가 위로 펼쳐지는 지갑 스택 인터랙션',
   },
 }
 
@@ -97,6 +107,8 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
         {subFolder === 'color-card-stack' ? <ColorCardStackDemo />
           : subFolder === 'horizontal-card-swipe' ? <HorizontalCardSwipeDemo />
           : subFolder === 'centered-card-swipe' ? <CenteredCardSwipeDemo />
+          : subFolder === 'wallet-card' ? <WalletCardDemo />
+          : subFolder === 'wallet-card-2' ? <WalletCardDemo2 />
           : <CardStackDemo />}
 
       </main>

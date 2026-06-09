@@ -7,6 +7,8 @@ const SUB_FOLDERS = [
   { slug: 'color-card-stack', label: '컬러 카드 스택' },
   { slug: 'horizontal-card-swipe', label: '좌우 카드 스와이프' },
   { slug: 'centered-card-swipe', label: '양옆 카드 스와이프' },
+  { slug: 'wallet-card', label: '지갑 카드 스택' },
+  { slug: 'wallet-card-2', label: '지갑 카드 스택 2' },
 ]
 
 export default function InteractionSeriesView({ seriesName }: { seriesName: string }) {
