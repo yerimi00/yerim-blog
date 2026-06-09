@@ -4,7 +4,6 @@ import { HiDevicePhoneMobile, HiEnvelope, HiPencilSquare } from 'react-icons/hi2
 import { FiGithub } from 'react-icons/fi'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import MobileFooterLinks from '@/components/layout/MobileFooterLinks'
 import AboutIntro, { type AboutVersion } from '@/components/about/AboutIntro'
 import TypewriterText from '@/components/about/TypewriterText'
 import TechStackGrid from '@/components/about/TechStackGrid'
@@ -265,7 +264,6 @@ export default function AboutVersionPage({ params }: { params: { version: string
 
         </div>
 
-        <MobileFooterLinks />
 
       </main>
       <Footer />
