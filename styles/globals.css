@@ -714,7 +714,8 @@
 
   /* 히어로 배너 모바일 */
   .hero-banner {
-    height: 240px !important;
+    height: 220px !important;
+    border-radius: 16px !important;
   }
   .hero-banner-tags {
     margin-bottom: 0.3rem !important;
@@ -725,7 +726,13 @@
   }
   .hero-banner-date {
     left: 1.5rem !important;
-    bottom: 1.75rem !important;
+    bottom: 1.25rem !important;
+  }
+  .hero-banner-description {
+    font-size: 0.78rem !important;
+  }
+  .hero-banner-title {
+    font-size: 1.15rem !important;
   }
 
   /* 프로젝트 히어로 배너 모바일 */
