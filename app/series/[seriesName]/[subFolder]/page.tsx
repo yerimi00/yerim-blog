@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CardStackDemo from '@/components/blog/CardStackDemo'
 import ColorCardStackDemo from '@/components/blog/ColorCardStackDemo'
+import HorizontalCardSwipeDemo from '@/components/blog/HorizontalCardSwipeDemo'
 
 export const revalidate = 86400
 
@@ -19,6 +20,10 @@ const DEMOS: Record<string, { title: string; description: string }> = {
   'color-card-stack': {
     title: '컬러 카드 스택',
     description: '3가지 색상 카드로 구현한 수직 스택 인터랙션',
+  },
+  'horizontal-card-swipe': {
+    title: '좌우 카드 스와이프',
+    description: '드래그로 카드를 좌우로 전환하는 수평 스와이프 인터랙션',
   },
 }
 
@@ -84,7 +89,9 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
         <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
 
         {/* 데모 */}
-        {subFolder === 'color-card-stack' ? <ColorCardStackDemo /> : <CardStackDemo />}
+        {subFolder === 'color-card-stack' ? <ColorCardStackDemo />
+          : subFolder === 'horizontal-card-swipe' ? <HorizontalCardSwipeDemo />
+          : <CardStackDemo />}
 
       </main>
       <Footer />

@@ -5,6 +5,7 @@ import Link from 'next/link'
 const SUB_FOLDERS = [
   { slug: 'card-stack-ui', label: '카드 스택 UI' },
   { slug: 'color-card-stack', label: '컬러 카드 스택' },
+  { slug: 'horizontal-card-swipe', label: '좌우 카드 스와이프' },
 ]
 
 export default function InteractionSeriesView({ seriesName }: { seriesName: string }) {
