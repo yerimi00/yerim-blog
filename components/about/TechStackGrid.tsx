@@ -181,7 +181,14 @@ export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) 
                   >
                     {isVisible && <TechPopup tech={tech} />}
                     <button
-                      onClick={() => setTapped(tapped === tech.name ? null : tech.name)}
+                      onClick={() => {
+                        if (tapped === tech.name) {
+                          setTapped(null)
+                          setHovered(null)
+                        } else {
+                          setTapped(tech.name)
+                        }
+                      }}
                       style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
                         padding: '0.75rem 0.875rem',

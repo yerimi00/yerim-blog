@@ -690,6 +690,7 @@
   /* About: 프로필 헤더 세로 정렬 */
   .profile-header {
     flex-direction: column !important;
+    align-items: flex-start !important;
     gap: 1.25rem !important;
   }
 
