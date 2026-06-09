@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-const SUB_FOLDERS = ['카드 스택 UI']
+const SUB_FOLDERS = ['카드 스택 UI', '컬러 카드 스택']
 
 export default function InteractionSeriesView({ seriesName }: { seriesName: string }) {
   return (

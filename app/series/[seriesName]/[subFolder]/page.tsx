@@ -4,6 +4,7 @@ import { IoIosArrowBack } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CardStackDemo from '@/components/blog/CardStackDemo'
+import ColorCardStackDemo from '@/components/blog/ColorCardStackDemo'
 
 export const revalidate = 86400
 
@@ -13,6 +14,10 @@ const DEMOS: Record<string, { title: string; description: string }> = {
   '카드 스택 UI': {
     title: '카드 스택 UI',
     description: '드래그 또는 스크롤로 카드를 넘기는 수직 스택 인터랙션',
+  },
+  '컬러 카드 스택': {
+    title: '컬러 카드 스택',
+    description: '3가지 색상 카드로 구현한 수직 스택 인터랙션',
   },
 }
 
@@ -78,7 +83,7 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
         <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
 
         {/* 데모 */}
-        <CardStackDemo />
+        {subFolder === '컬러 카드 스택' ? <ColorCardStackDemo /> : <CardStackDemo />}
 
       </main>
       <Footer />
