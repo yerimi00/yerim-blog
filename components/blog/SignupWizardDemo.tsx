@@ -17,21 +17,21 @@ function StepIndicator({ current }: { current: Step }) {
             {i > 0 && (
               <div style={{
                 position: 'absolute', left: 0, right: '50%', top: 13, height: 2,
-                background: done || active ? '#7c3aed' : 'var(--border, #e5e7eb)',
+                background: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
                 transition: 'background 0.3s',
               }} />
             )}
             {i < steps.length - 1 && (
               <div style={{
                 position: 'absolute', left: '50%', right: 0, top: 13, height: 2,
-                background: done ? '#7c3aed' : 'var(--border, #e5e7eb)',
+                background: done ? 'var(--accent)' : 'var(--border, #e5e7eb)',
                 transition: 'background 0.3s',
               }} />
             )}
             <div style={{
               position: 'relative', zIndex: 1,
               width: 28, height: 28, borderRadius: '50%',
-              background: done || active ? '#7c3aed' : 'var(--border, #e5e7eb)',
+              background: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
               color: done || active ? '#fff' : 'var(--text-muted, #9ca3af)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 12, fontWeight: 700,
@@ -39,7 +39,7 @@ function StepIndicator({ current }: { current: Step }) {
             }}>
               {done ? '✓' : n}
             </div>
-            <span style={{ fontSize: 11, marginTop: 4, color: active ? '#7c3aed' : 'var(--text-muted, #9ca3af)', fontWeight: active ? 600 : 400 }}>
+            <span style={{ fontSize: 11, marginTop: 4, color: active ? 'var(--accent)' : 'var(--text-muted, #9ca3af)', fontWeight: active ? 600 : 400 }}>
               {label}
             </span>
           </div>
@@ -66,6 +66,7 @@ export default function SignupWizardDemo() {
   const [verified, setVerified] = useState(false)
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const canNext1 = terms.t1 && terms.t2 && terms.t3
   const canNext2 = name.length >= 2 && phone.length >= 10 && (codeSent ? code.length === 6 : false)
@@ -115,13 +116,16 @@ export default function SignupWizardDemo() {
               </div>
             ))}
           </div>
-          <button
-            onClick={() => setStep(2)}
-            disabled={!canNext1}
-            style={{ ...btnStyle(!canNext1), marginTop: 20 }}
-          >
-            다음
-          </button>
+          <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+            <div style={{ flex: 1 }} />
+            <button
+              onClick={() => setStep(2)}
+              disabled={!canNext1}
+              style={{ ...btnStyle(!canNext1), flex: 1 }}
+            >
+              다음
+            </button>
+          </div>
         </div>
       )}
 
@@ -143,8 +147,8 @@ export default function SignupWizardDemo() {
               onClick={() => setCodeSent(true)}
               disabled={phone.length < 10}
               style={{
-                padding: '10px 12px', border: 'none', borderRadius: 8,
-                background: phone.length >= 10 ? '#7c3aed' : '#e5e7eb',
+                padding: '10px 12px', border: 'none', borderRadius: 'var(--radius-lg)',
+                background: phone.length >= 10 ? 'var(--accent)' : 'var(--border)',
                 color: '#fff', fontSize: 12, fontWeight: 600, cursor: phone.length >= 10 ? 'pointer' : 'default',
                 flexShrink: 0,
               }}
@@ -161,7 +165,7 @@ export default function SignupWizardDemo() {
           )}
           {verified && <div style={{ fontSize: 12, color: '#10b981', marginTop: 4 }}>✓ 인증 완료</div>}
           <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-            <button onClick={() => setStep(1)} style={{ ...btnStyle(false), background: 'var(--surface, #f3f4f6)', color: 'var(--text, #374151)' }}>이전</button>
+            <button onClick={() => setStep(1)} style={{ ...btnStyle(false), background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>이전</button>
             <button onClick={() => setStep(3)} disabled={!canNext2} style={btnStyle(!canNext2)}>다음</button>
           </div>
         </div>
@@ -176,8 +180,54 @@ export default function SignupWizardDemo() {
             <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>비밀번호는 8자 이상이어야 합니다</div>
           )}
           <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-            <button onClick={() => setStep(2)} style={{ ...btnStyle(false), background: 'var(--surface, #f3f4f6)', color: 'var(--text, #374151)' }}>이전</button>
-            <button onClick={() => alert('가입 완료! 🎉')} disabled={!canSubmit} style={btnStyle(!canSubmit)}>가입 완료</button>
+            <button onClick={() => setStep(2)} style={{ ...btnStyle(false), background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>이전</button>
+            <button onClick={() => setShowModal(true)} disabled={!canSubmit} style={btnStyle(!canSubmit)}>가입 완료</button>
+          </div>
+        </div>
+      )}
+
+      {showModal && (
+        <div style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.45)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 9999,
+        }}>
+          <div style={{
+            background: 'var(--surface, #fff)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '32px 28px',
+            width: 240,
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-floating)',
+          }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: '50%',
+              background: 'var(--accent)', margin: '0 auto 16px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <polyline points="4,13 9,18 20,6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>
+              가입 완료!
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.5 }}>
+              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{email}</span>으로<br />
+              가입이 완료되었습니다.
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                width: '100%', padding: '11px', border: 'none',
+                borderRadius: 'var(--radius-xl)',
+                background: 'var(--accent)', color: '#fff',
+                fontSize: 14, fontWeight: 600, cursor: 'pointer',
+              }}
+            >
+              확인
+            </button>
           </div>
         </div>
       )}
@@ -188,9 +238,9 @@ export default function SignupWizardDemo() {
 function CheckBox({ checked }: { checked: boolean }) {
   return (
     <div style={{
-      width: 20, height: 20, borderRadius: 5, flexShrink: 0,
-      border: `2px solid ${checked ? '#7c3aed' : '#d1d5db'}`,
-      background: checked ? '#7c3aed' : 'transparent',
+      width: 20, height: 20, borderRadius: 'var(--radius-md)', flexShrink: 0,
+      border: `2px solid ${checked ? 'var(--accent)' : 'var(--border)'}`,
+      background: checked ? 'var(--accent)' : 'transparent',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       transition: 'all 0.15s',
     }}>
@@ -200,7 +250,7 @@ function CheckBox({ checked }: { checked: boolean }) {
 }
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 12px', borderRadius: 8,
+  width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-lg)',
   border: '1.5px solid var(--border, #e5e7eb)',
   background: 'var(--surface, #fff)',
   fontSize: 13, color: 'var(--text, #111)',
@@ -208,9 +258,9 @@ const inputStyle: React.CSSProperties = {
 }
 
 const btnStyle = (disabled: boolean): React.CSSProperties => ({
-  flex: 1, padding: '12px', border: 'none', borderRadius: 10,
-  background: disabled ? '#e5e7eb' : '#7c3aed',
-  color: disabled ? '#9ca3af' : '#fff',
+  flex: 1, padding: '12px', border: 'none', borderRadius: 'var(--radius-xl)',
+  background: disabled ? 'var(--border)' : 'var(--accent)',
+  color: disabled ? 'var(--text-muted)' : '#fff',
   fontSize: 14, fontWeight: 600,
   cursor: disabled ? 'default' : 'pointer',
   marginTop: 0,

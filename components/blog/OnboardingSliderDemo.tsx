@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import type { IconType } from 'react-icons'
+import { FiCalendar, FiBarChart2, FiSun } from 'react-icons/fi'
 
-const SLIDES = [
-  { emoji: '📅', title: '스마트 플래너', desc: '나만의 일정을\n스마트하게 계획하세요', bg: 'linear-gradient(135deg, #fce7f3, #fbcfe8)' },
-  { emoji: '📊', title: '한눈에 비교', desc: '다양한 옵션을\n한눈에 비교해요', bg: 'linear-gradient(135deg, #ede9fe, #ddd6fe)' },
-  { emoji: '✨', title: '완벽한 하루', desc: '소중한 순간을 더\n특별하게 만들어요', bg: 'linear-gradient(135deg, #fef3c7, #fde68a)' },
+const SLIDES: { Icon: IconType; title: string; desc: string; bg: string }[] = [
+  { Icon: FiCalendar,  title: '스마트 플래너', desc: '나만의 일정을\n스마트하게 계획하세요', bg: 'linear-gradient(135deg, #fce7f3, #fbcfe8)' },
+  { Icon: FiBarChart2, title: '한눈에 비교',   desc: '다양한 옵션을\n한눈에 비교해요',       bg: 'linear-gradient(135deg, #ede9fe, #ddd6fe)' },
+  { Icon: FiSun,       title: '완벽한 하루',   desc: '소중한 순간을 더\n특별하게 만들어요',   bg: 'linear-gradient(135deg, #fef3c7, #fde68a)' },
 ]
 
 const ANIM_MS = 380
@@ -67,13 +69,13 @@ export default function OnboardingSliderDemo() {
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        <div style={{ fontSize: 72, marginBottom: 20, transition: `transform ${ANIM_MS}ms ease` }}>
-          {slide.emoji}
+        <div style={{ marginBottom: 20, transition: `transform ${ANIM_MS}ms ease` }}>
+          <slide.Icon size={64} color="rgba(0,0,0,0.5)" />
         </div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#1f2937', marginBottom: 10 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 10 }}>
           {slide.title}
         </div>
-        <div style={{ fontSize: 14, color: '#6b7280', textAlign: 'center', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
+        <div style={{ fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
           {slide.desc}
         </div>
       </div>
@@ -86,8 +88,8 @@ export default function OnboardingSliderDemo() {
             onClick={() => { go(i); resetTimer() }}
             style={{
               width: i === idx ? 24 : 8, height: 8,
-              borderRadius: 4, border: 'none', cursor: 'pointer',
-              background: i === idx ? '#a855f7' : '#d1d5db',
+              borderRadius: 'var(--radius)', border: 'none', cursor: 'pointer',
+              background: i === idx ? 'var(--accent)' : 'var(--border)',
               transition: 'all 0.25s ease', padding: 0,
             }}
           />
@@ -100,8 +102,8 @@ export default function OnboardingSliderDemo() {
           onClick={() => { go(idx - 1); resetTimer() }}
           disabled={idx === 0}
           style={{
-            padding: '10px 20px', borderRadius: 10,
-            border: '1.5px solid #e5e7eb',
+            padding: '10px 20px', borderRadius: 'var(--radius-xl)',
+            border: '1.5px solid var(--border)',
             background: 'var(--surface, #fff)',
             color: 'var(--text-muted, #9ca3af)',
             cursor: idx === 0 ? 'default' : 'pointer',
@@ -115,9 +117,9 @@ export default function OnboardingSliderDemo() {
           onClick={() => { go(idx + 1); resetTimer() }}
           disabled={idx === SLIDES.length - 1}
           style={{
-            padding: '10px 20px', borderRadius: 10,
+            padding: '10px 20px', borderRadius: 'var(--radius-xl)',
             border: 'none',
-            background: idx === SLIDES.length - 1 ? '#e5e7eb' : '#a855f7',
+            background: idx === SLIDES.length - 1 ? 'var(--border)' : 'var(--accent)',
             color: '#fff',
             cursor: idx === SLIDES.length - 1 ? 'default' : 'pointer',
             fontSize: 13, fontWeight: 600,

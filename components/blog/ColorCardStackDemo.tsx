@@ -10,9 +10,9 @@ const ANIM_MS = 360
 const MAX_SHRINK_Y = 120
 
 const CARDS = [
-  { color: '#FF6B6B', label: '첫 번째', sub: 'CARD 01' },
-  { color: '#4ECDC4', label: '두 번째', sub: 'CARD 02' },
-  { color: '#6C63FF', label: '세 번째', sub: 'CARD 03' },
+  { color: '#3b82f6', label: '첫 번째', sub: 'CARD 01' },
+  { color: '#2170e4', label: '두 번째', sub: 'CARD 02' },
+  { color: '#575e70', label: '세 번째', sub: 'CARD 03' },
 ]
 
 const getScaleFromTy = (ty: number): number => {

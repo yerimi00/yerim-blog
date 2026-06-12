@@ -62,7 +62,7 @@ export default function PriceRangeSliderDemo() {
           position: 'absolute', top: '50%', left: 0,
           height: 6, borderRadius: 3,
           width: `${pct}%`,
-          background: '#7c3aed',
+          background: 'var(--accent)',
           transform: 'translateY(-50%)',
           transition: 'width 0.1s',
         }} />
@@ -74,9 +74,9 @@ export default function PriceRangeSliderDemo() {
             bottom: '100%',
             left: bubbleLeft,
             transform: 'translateX(-50%)',
-            background: '#7c3aed', color: '#fff',
+            background: 'var(--accent)', color: '#fff',
             fontSize: 12, fontWeight: 700,
-            padding: '4px 8px', borderRadius: 6,
+            padding: '4px 8px', borderRadius: 'var(--radius-md)',
             whiteSpace: 'nowrap',
             marginBottom: 4,
             pointerEvents: 'none',
@@ -107,8 +107,8 @@ export default function PriceRangeSliderDemo() {
           left: `calc(${pct}% - ${THUMB_W / 2}px)`,
           width: THUMB_W, height: THUMB_W,
           borderRadius: '50%',
-          background: selected ? '#7c3aed' : '#d1d5db',
-          border: '3px solid #fff',
+          background: selected ? 'var(--accent)' : 'var(--border)',
+          border: '3px solid var(--surface)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
           transform: 'translateY(-50%)',
           transition: 'background 0.2s, left 0.05s',
@@ -125,11 +125,11 @@ export default function PriceRangeSliderDemo() {
         marginTop: 16, padding: '12px 14px',
         background: 'var(--surface, #f9fafb)',
         border: '1px solid var(--border, #e5e7eb)',
-        borderRadius: 10,
+        borderRadius: 'var(--radius-xl)',
         fontSize: 14, color: 'var(--text, #111)',
       }}>
         {selected
-          ? <><strong style={{ color: '#7c3aed' }}>{formatPrice(MARKS[markIdx])}</strong> 이하 업체 검색</>
+          ? <><strong style={{ color: 'var(--accent)' }}>{formatPrice(MARKS[markIdx])}</strong> 이하 업체 검색</>
           : <span style={{ color: 'var(--text-muted, #6b7280)' }}>슬라이더를 움직여 가격을 설정하세요</span>}
       </div>
     </div>

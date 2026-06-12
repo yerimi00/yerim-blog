@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import type { IconType } from 'react-icons'
+import { FiCalendar, FiStar, FiBookmark } from 'react-icons/fi'
 
 type Tab = 'reserve' | 'review' | 'saved'
 
@@ -10,10 +12,10 @@ const TABS: { key: Tab; label: string }[] = [
   { key: 'saved', label: '저장' },
 ]
 
-const CONTENT: Record<Tab, { emoji: string; items: string[] }> = {
-  reserve: { emoji: '📋', items: ['레스토랑 예약 (D-3)', '미술관 예약 (D-7)', '공연 예약 (D-14)'] },
-  review: { emoji: '⭐', items: ['한강뷰 카페 — ★★★★★', '이탈리안 레스토랑 — ★★★★☆', '서촌 갤러리 — ★★★★★'] },
-  saved: { emoji: '🔖', items: ['모던 브런치 카페 (즐겨찾기)', '팝업 전시회 (저장됨)'] },
+const CONTENT: Record<Tab, { Icon: IconType; items: string[] }> = {
+  reserve: { Icon: FiCalendar, items: ['레스토랑 예약 (D-3)', '미술관 예약 (D-7)', '공연 예약 (D-14)'] },
+  review:  { Icon: FiStar,     items: ['한강뷰 카페 — ★★★★★', '이탈리안 레스토랑 — ★★★★☆', '서촌 갤러리 — ★★★★★'] },
+  saved:   { Icon: FiBookmark, items: ['모던 브런치 카페 (즐겨찾기)', '팝업 전시회 (저장됨)'] },
 }
 
 export default function MyTabsDemo() {
@@ -46,8 +48,8 @@ export default function MyTabsDemo() {
             {tab === t.key && (
               <div style={{
                 position: 'absolute', bottom: -2, left: 0, right: 0, height: 2,
-                background: '#7c3aed',
-                borderRadius: '2px 2px 0 0',
+                background: 'var(--accent)',
+                borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0',
               }} />
             )}
           </button>
@@ -64,10 +66,10 @@ export default function MyTabsDemo() {
               padding: '13px 14px',
               background: 'var(--surface, #fff)',
               border: '1px solid var(--border, #e5e7eb)',
-              borderRadius: 12,
+              borderRadius: 'var(--radius-xl)',
             }}
           >
-            <span style={{ fontSize: 22 }}>{content.emoji}</span>
+            <content.Icon size={20} color="var(--accent)" />
             <span style={{ fontSize: 14, color: 'var(--text, #111)' }}>{item}</span>
           </div>
         ))}

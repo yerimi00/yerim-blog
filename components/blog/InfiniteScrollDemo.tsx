@@ -1,9 +1,18 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import type { IconType } from 'react-icons'
+import { FiCoffee, FiHeart, FiShoppingBag, FiImage } from 'react-icons/fi'
 
 const CATEGORIES = ['카페', '음식점', '쇼핑', '전시'] as const
 type Category = typeof CATEGORIES[number]
+
+const CATEGORY_ICONS: Record<Category, IconType> = {
+  '카페':  FiCoffee,
+  '음식점': FiHeart,
+  '쇼핑':  FiShoppingBag,
+  '전시':  FiImage,
+}
 
 const CAFE_DATA = ['블루보틀 성수', '프릳츠 도화', '어니언 미아', '테라로사 경복궁', '나무사이로 서교', '커피리브레 연남', '센터커피 한남', '브루어스 이태원', '커피한약방 익선', '스페셜티 합정']
 const FOOD_DATA = ['이태원 모노끼', '을지로 감자국', '삼청 파스타', '홍대 타코', '청담 스시', '합정 피자', '성수 브런치', '연남 라멘', '마포 냉면', '한남 비스트로']
@@ -73,9 +82,9 @@ export default function InfiniteScrollDemo() {
             onClick={() => switchCategory(c)}
             style={{
               padding: '7px 14px', borderRadius: 100, flexShrink: 0,
-              border: `1.5px solid ${category === c ? '#7c3aed' : 'var(--border, #e5e7eb)'}`,
-              background: category === c ? '#ede9fe' : 'var(--surface, #fff)',
-              color: category === c ? '#7c3aed' : 'var(--text, #374151)',
+              border: `1.5px solid ${category === c ? 'var(--accent)' : 'var(--border, #e5e7eb)'}`,
+              background: category === c ? 'var(--accent)' : 'var(--surface, #fff)',
+              color: category === c ? '#fff' : 'var(--text, #374151)',
               fontSize: 13, fontWeight: category === c ? 600 : 400,
               cursor: 'pointer',
             }}
@@ -95,16 +104,16 @@ export default function InfiniteScrollDemo() {
               padding: '12px 14px',
               background: 'var(--surface, #fff)',
               border: '1px solid var(--border, #e5e7eb)',
-              borderRadius: 12,
+              borderRadius: 'var(--radius-xl)',
             }}
           >
             <div style={{
-              width: 44, height: 44, borderRadius: 10,
-              background: 'linear-gradient(135deg, #ede9fe, #ddd6fe)',
+              width: 44, height: 44, borderRadius: 'var(--radius-xl)',
+              background: 'var(--surface-container)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 20, flexShrink: 0,
+              flexShrink: 0,
             }}>
-              {{'카페':'☕','음식점':'🍽️','쇼핑':'🛍️','전시':'🎨'}[category]}
+              {(() => { const Icon = CATEGORY_ICONS[category]; return <Icon size={20} color="var(--accent)" /> })()}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text, #111)', marginBottom: 2 }}>

@@ -16,10 +16,10 @@ const PEEK_OPEN  = 62   // 열린 상태: 카드 62px씩 노출
 const ANIM_MS    = 380
 
 const CARDS = [
-  { bg: '#5667f5', textColor: '#fff',    label: '카드 1' },
-  { bg: '#f5f5f5', textColor: '#222',    label: '카드 2' },
-  { bg: '#f59e0b', textColor: '#fff',    label: '카드 3' },
-  { bg: '#0f172a', textColor: '#e2e8f0', label: '카드 4' },
+  { bg: '#3b82f6', textColor: '#fff',    label: '카드 1' },
+  { bg: '#d9dff5', textColor: '#0058be', label: '카드 2' },
+  { bg: '#0058be', textColor: '#fff',    label: '카드 3' },
+  { bg: '#575e70', textColor: '#fff',    label: '카드 4' },
 ]
 
 export default function WalletCardDemo() {

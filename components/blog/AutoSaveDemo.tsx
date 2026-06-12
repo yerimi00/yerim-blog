@@ -86,7 +86,7 @@ export default function AutoSaveDemo() {
       <div style={{
         background: 'var(--surface, #fff)',
         border: '1px solid var(--border, #e5e7eb)',
-        borderRadius: 16, padding: 20,
+        borderRadius: 'var(--radius-xl)', padding: 20,
       }}>
         {/* Status bar */}
         <div style={{
@@ -96,7 +96,7 @@ export default function AutoSaveDemo() {
         }}>
           <div style={{
             width: 7, height: 7, borderRadius: '50%',
-            background: status === 'saved' ? '#10b981' : status === 'saving' ? '#f59e0b' : status === 'conflict' ? '#f59e0b' : '#d1d5db',
+            background: status === 'saved' ? '#10b981' : status === 'saving' ? '#f59e0b' : status === 'conflict' ? '#f59e0b' : 'var(--border)',
           }} />
           {status === 'saving' && '저장 중...'}
           {status === 'saved' && `저장됨 ${lastSaved?.toLocaleTimeString()}`}
@@ -134,7 +134,7 @@ export default function AutoSaveDemo() {
             style={{
               flex: 1, padding: '10px', border: '1px solid var(--border, #e5e7eb)',
               background: 'var(--surface, #fff)',
-              borderRadius: 8, cursor: 'pointer',
+              borderRadius: 'var(--radius-lg)', cursor: 'pointer',
               fontSize: 13, color: 'var(--text-muted, #6b7280)',
             }}
           >
@@ -142,8 +142,8 @@ export default function AutoSaveDemo() {
           </button>
           <div style={{
             flex: 2, padding: '10px',
-            background: '#ede9fe', borderRadius: 8,
-            fontSize: 12, color: '#7c3aed', textAlign: 'center',
+            background: 'var(--surface-container)', borderRadius: 'var(--radius-lg)',
+            fontSize: 12, color: 'var(--accent)', textAlign: 'center',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             500ms 디바운스 + pagehide flush
@@ -159,7 +159,7 @@ const labelStyle: React.CSSProperties = {
   color: 'var(--text-muted, #6b7280)', marginBottom: 6,
 }
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '9px 12px', borderRadius: 8,
+  width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-lg)',
   border: '1.5px solid var(--border, #e5e7eb)',
   background: 'var(--surface, #fff)',
   fontSize: 13, color: 'var(--text, #111)',

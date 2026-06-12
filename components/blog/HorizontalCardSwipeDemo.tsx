@@ -10,10 +10,10 @@ const THRESHOLD = 60
 const ANIM_MS = 320
 
 const CARDS = [
-  { bg: '#6366f1', label: '카드 1' },
-  { bg: '#ec4899', label: '카드 2' },
-  { bg: '#f59e0b', label: '카드 3' },
-  { bg: '#10b981', label: '카드 4' },
+  { bg: '#3b82f6', label: '카드 1' },
+  { bg: '#2170e4', label: '카드 2' },
+  { bg: '#0058be', label: '카드 3' },
+  { bg: '#575e70', label: '카드 4' },
 ]
 
 const getScaleFromTx = (tx: number): number => {

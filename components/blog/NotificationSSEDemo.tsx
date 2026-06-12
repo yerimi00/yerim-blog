@@ -80,7 +80,7 @@ export default function NotificationSSEDemo() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{
             width: 10, height: 10, borderRadius: '50%',
-            background: connected ? '#10b981' : '#d1d5db',
+            background: connected ? '#10b981' : 'var(--border)',
             boxShadow: connected ? '0 0 0 3px rgba(16,185,129,0.2)' : 'none',
             transition: 'all 0.3s',
           }} />
@@ -100,8 +100,8 @@ export default function NotificationSSEDemo() {
         <button
           onClick={connected ? disconnect : connect}
           style={{
-            padding: '6px 14px', borderRadius: 8, border: 'none',
-            background: connected ? '#fee2e2' : '#7c3aed',
+            padding: '6px 14px', borderRadius: 'var(--radius-lg)', border: 'none',
+            background: connected ? '#fee2e2' : 'var(--accent)',
             color: connected ? '#ef4444' : '#fff',
             fontSize: 12, fontWeight: 600, cursor: 'pointer',
           }}
@@ -116,7 +116,7 @@ export default function NotificationSSEDemo() {
         marginBottom: 12,
         padding: '8px 10px',
         background: 'var(--surface, #f9fafb)',
-        borderRadius: 8,
+        borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border, #e5e7eb)',
       }}>
         실제 구현: fetch + ReadableStream으로 Bearer 토큰 SSE 구독, 최대 5회 자동 재연결
@@ -134,9 +134,9 @@ export default function NotificationSSEDemo() {
             key={n.id}
             style={{
               display: 'flex', gap: 10, alignItems: 'flex-start',
-              padding: '10px 12px', borderRadius: 10,
-              background: n.read ? 'var(--surface, #f9fafb)' : '#f5f3ff',
-              border: `1px solid ${n.read ? 'var(--border, #e5e7eb)' : '#c4b5fd'}`,
+              padding: '10px 12px', borderRadius: 'var(--radius-xl)',
+              background: n.read ? 'var(--surface)' : 'var(--surface-container)',
+              border: `1px solid ${n.read ? 'var(--border)' : 'var(--accent)'}`,
               transition: 'all 0.2s',
             }}
             onClick={() => setNotifications(prev =>
@@ -146,7 +146,7 @@ export default function NotificationSSEDemo() {
             <span style={{
               fontSize: 10, fontWeight: 700,
               background: TYPE_COLOR[n.type],
-              color: '#fff', padding: '2px 6px', borderRadius: 4,
+              color: '#fff', padding: '2px 6px', borderRadius: 'var(--radius)',
               flexShrink: 0, marginTop: 1,
             }}>
               {TYPE_LABEL[n.type]}
@@ -160,7 +160,7 @@ export default function NotificationSSEDemo() {
               </div>
             </div>
             {!n.read && (
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c3aed', flexShrink: 0, marginTop: 5 }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0, marginTop: 5 }} />
             )}
           </div>
         ))}
@@ -173,7 +173,7 @@ export default function NotificationSSEDemo() {
             width: '100%', marginTop: 10, padding: '9px',
             border: '1px solid var(--border, #e5e7eb)',
             background: 'var(--surface, #fff)',
-            borderRadius: 8, cursor: 'pointer',
+            borderRadius: 'var(--radius-lg)', cursor: 'pointer',
             fontSize: 12, color: 'var(--text-muted, #6b7280)', fontWeight: 600,
           }}
         >

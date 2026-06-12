@@ -14,7 +14,7 @@ function CapsuleToggle({
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center',
-      background: '#f3f4f6', borderRadius: 100,
+      background: 'var(--bg-secondary)', borderRadius: 100,
       padding: 3, position: 'relative', userSelect: 'none',
     }}>
       {/* sliding capsule */}
@@ -25,7 +25,7 @@ function CapsuleToggle({
         width: 'calc(50% - 4px)',
         bottom: 3,
         borderRadius: 100,
-        background: '#7c3aed',
+        background: 'var(--accent)',
         transition: 'left 0.2s ease-out',
         zIndex: 0,
       }} />
@@ -39,7 +39,7 @@ function CapsuleToggle({
             border: 'none', background: 'none',
             borderRadius: 100, cursor: 'pointer',
             fontSize: 13, fontWeight: 600,
-            color: value === v ? '#fff' : '#6b7280',
+            color: value === v ? '#fff' : 'var(--text-secondary)',
             transition: 'color 0.2s',
             minWidth: 80,
           }}
@@ -83,14 +83,14 @@ export default function ViewToggleDemo() {
               padding: '14px 16px',
               background: 'var(--surface, #fff)',
               border: '1px solid var(--border, #e5e7eb)',
-              borderRadius: 12,
+              borderRadius: 'var(--radius-xl)',
             }}
           >
             <div style={{
-              width: 40, height: 40, borderRadius: 10,
-              background: '#ede9fe',
+              width: 40, height: 40, borderRadius: 'var(--radius-xl)',
+              background: 'var(--surface-container)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12, fontWeight: 700, color: '#7c3aed',
+              fontSize: 12, fontWeight: 700, color: 'var(--accent)',
               flexShrink: 0,
             }}>
               {item.date}

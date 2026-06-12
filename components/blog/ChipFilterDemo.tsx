@@ -16,9 +16,9 @@ function Chip({
       onClick={onClick}
       style={{
         padding: '7px 14px', borderRadius: 100,
-        border: `1.5px solid ${active ? '#7c3aed' : 'var(--border, #e5e7eb)'}`,
-        background: active ? '#ede9fe' : 'var(--surface, #fff)',
-        color: active ? '#7c3aed' : 'var(--text, #374151)',
+        border: `1.5px solid ${active ? 'var(--accent)' : 'var(--border, #e5e7eb)'}`,
+        background: active ? 'var(--accent)' : 'var(--surface, #fff)',
+        color: active ? '#fff' : 'var(--text, #374151)',
         fontSize: 13, fontWeight: active ? 600 : 400,
         cursor: 'pointer',
         transition: 'all 0.15s ease',
@@ -81,7 +81,7 @@ export default function ChipFilterDemo() {
         marginTop: 16, padding: '12px 14px',
         background: 'var(--surface, #f9fafb)',
         border: '1px solid var(--border, #e5e7eb)',
-        borderRadius: 10, fontSize: 13,
+        borderRadius: 'var(--radius-xl)', fontSize: 13,
         color: totalSelected > 0 ? 'var(--text, #111)' : 'var(--text-muted, #9ca3af)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
@@ -95,7 +95,7 @@ export default function ChipFilterDemo() {
             onClick={() => { setSelectedArea(null); setSelectedStyles([]); setSelectedCap(null) }}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: 12, color: '#7c3aed', fontWeight: 600,
+              fontSize: 12, color: 'var(--accent)', fontWeight: 600,
             }}
           >
             초기화

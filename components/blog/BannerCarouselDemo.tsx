@@ -1,15 +1,17 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import type { IconType } from 'react-icons'
+import { FiTrendingUp, FiLayers, FiCamera, FiFileText } from 'react-icons/fi'
 
-const BANNERS = [
-  { bg: 'linear-gradient(135deg, #7c3aed, #a855f7)', title: '2025 트렌드 리포트', sub: '올해 인기 인터랙션을 확인하세요', emoji: '✨' },
-  { bg: 'linear-gradient(135deg, #ec4899, #f43f5e)', title: '신규 컴포넌트 출시', sub: '새로운 UI 컴포넌트를 만나보세요', emoji: '🚀' },
-  { bg: 'linear-gradient(135deg, #0ea5e9, #6366f1)', title: '포트폴리오 갤러리', sub: '다양한 프로젝트를 한눈에 확인하세요', emoji: '📸' },
-  { bg: 'linear-gradient(135deg, #f59e0b, #f97316)', title: '이번 주 인기 아티클', sub: '놓치지 말아야 할 콘텐츠 모음', emoji: '📰' },
+const BANNERS: { bg: string; title: string; sub: string; Icon: IconType }[] = [
+  { bg: '#3b82f6', title: '2025 트렌드 리포트', sub: '올해 인기 인터랙션을 확인하세요', Icon: FiTrendingUp },
+  { bg: '#2170e4', title: '신규 컴포넌트 출시', sub: '새로운 UI 컴포넌트를 만나보세요', Icon: FiLayers },
+  { bg: '#0058be', title: '포트폴리오 갤러리', sub: '다양한 프로젝트를 한눈에 확인하세요', Icon: FiCamera },
+  { bg: '#575e70', title: '이번 주 인기 아티클', sub: '놓치지 말아야 할 콘텐츠 모음', Icon: FiFileText },
 ]
 
-const AUTO_DELAY = 4000
+const AUTO_DELAY = 7000
 
 export default function BannerCarouselDemo() {
   const [idx, setIdx] = useState(0)
@@ -65,7 +67,7 @@ export default function BannerCarouselDemo() {
       >
         {/* GPU hint */}
         <div style={{ willChange: 'transform', transform: 'translateZ(0)', textAlign: 'center' }}>
-          <div style={{ fontSize: 42, marginBottom: 8 }}>{banner.emoji}</div>
+          <banner.Icon size={42} color="rgba(255,255,255,0.92)" style={{ marginBottom: 8 }} />
           <div style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>{banner.title}</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', marginTop: 4 }}>{banner.sub}</div>
         </div>
@@ -76,7 +78,7 @@ export default function BannerCarouselDemo() {
             key={idx}
             style={{
               height: '100%', background: 'rgba(255,255,255,0.8)',
-              borderRadius: 2,
+              borderRadius: 'var(--radius-sm)',
               animation: `banner-progress ${AUTO_DELAY}ms linear forwards`,
             }}
           />
@@ -97,9 +99,9 @@ export default function BannerCarouselDemo() {
             key={i}
             onClick={() => go(i)}
             style={{
-              width: i === idx ? 20 : 7, height: 7, borderRadius: 4,
+              width: i === idx ? 20 : 7, height: 7, borderRadius: 'var(--radius)',
               border: 'none', padding: 0, cursor: 'pointer',
-              background: i === idx ? '#7c3aed' : '#d1d5db',
+              background: i === idx ? 'var(--accent)' : 'var(--border)',
               transition: 'all 0.25s',
             }}
           />

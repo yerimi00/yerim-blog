@@ -63,9 +63,9 @@ export default function DressFittingDemo() {
       <button
         disabled={!canSave}
         style={{
-          width: '100%', padding: '12px', border: 'none', borderRadius: 10,
-          background: canSave ? '#7c3aed' : '#e5e7eb',
-          color: canSave ? '#fff' : '#9ca3af',
+          width: '100%', padding: '12px', border: 'none', borderRadius: 'var(--radius-xl)',
+          background: canSave ? 'var(--accent)' : 'var(--border)',
+          color: canSave ? '#fff' : 'var(--text-muted)',
           fontSize: 14, fontWeight: 600,
           cursor: canSave ? 'pointer' : 'default',
           transition: 'all 0.2s',
@@ -90,9 +90,9 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
       onClick={onClick}
       style={{
         padding: '7px 14px', borderRadius: 100,
-        border: `1.5px solid ${active ? '#7c3aed' : 'var(--border, #e5e7eb)'}`,
-        background: active ? '#ede9fe' : 'var(--surface, #fff)',
-        color: active ? '#7c3aed' : 'var(--text, #374151)',
+        border: `1.5px solid ${active ? 'var(--accent)' : 'var(--border, #e5e7eb)'}`,
+        background: active ? 'var(--accent)' : 'var(--surface, #fff)',
+        color: active ? '#fff' : 'var(--text, #374151)',
         fontSize: 13, fontWeight: active ? 600 : 400,
         cursor: 'pointer',
         transition: 'all 0.15s ease',

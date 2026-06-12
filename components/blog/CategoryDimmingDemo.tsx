@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import type { IconType } from 'react-icons'
+import { FiCoffee, FiHeart, FiShoppingBag, FiImage } from 'react-icons/fi'
 
-const CATEGORIES = [
-  { key: 'cafe',    label: '카페', emoji: '☕' },
-  { key: 'food',    label: '음식점', emoji: '🍽️' },
-  { key: 'shopping', label: '쇼핑', emoji: '🛍️' },
-  { key: 'exhibit', label: '전시', emoji: '🎨' },
+const CATEGORIES: { key: string; label: string; Icon: IconType }[] = [
+  { key: 'cafe',     label: '카페',   Icon: FiCoffee },
+  { key: 'food',     label: '음식점', Icon: FiHeart },
+  { key: 'shopping', label: '쇼핑',   Icon: FiShoppingBag },
+  { key: 'exhibit',  label: '전시',   Icon: FiImage },
 ]
 
 export default function CategoryDimmingDemo() {
@@ -30,21 +32,23 @@ export default function CategoryDimmingDemo() {
                 flex: 1,
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
                 padding: '16px 8px',
-                borderRadius: 14,
-                border: `2px solid ${active ? '#7c3aed' : 'var(--border, #e5e7eb)'}`,
-                background: active ? '#ede9fe' : 'var(--surface, #fff)',
+                borderRadius: 'var(--radius-xl)',
+                border: `2px solid ${active ? 'var(--accent)' : 'var(--border, #e5e7eb)'}`,
+                background: active ? 'var(--accent)' : 'var(--surface, #fff)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 opacity: dim ? 0.45 : 1,
                 filter: dim ? 'grayscale(70%)' : 'none',
               }}
             >
-              <span style={{ fontSize: 28, transition: 'filter 0.2s' }}>
-                {c.emoji}
-              </span>
+              <c.Icon
+                size={26}
+                color={active ? '#fff' : dim ? 'var(--border)' : 'var(--text-muted, #9ca3af)'}
+                style={{ transition: 'color 0.2s' }}
+              />
               <span style={{
                 fontSize: 12, fontWeight: active ? 700 : 500,
-                color: active ? '#7c3aed' : dim ? '#9ca3af' : 'var(--text, #374151)',
+                color: active ? '#fff' : dim ? 'var(--text-muted)' : 'var(--text, #374151)',
                 transition: 'color 0.2s',
               }}>
                 {c.label}
@@ -57,10 +61,10 @@ export default function CategoryDimmingDemo() {
       {selected && (
         <div style={{
           marginTop: 16, padding: '14px',
-          background: '#ede9fe',
-          border: '1px solid #c4b5fd',
-          borderRadius: 10, fontSize: 14,
-          color: '#5b21b6', textAlign: 'center',
+          background: 'var(--surface-container)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-xl)', fontSize: 14,
+          color: 'var(--text)', textAlign: 'center',
         }}>
           <strong>{CATEGORIES.find(c => c.key === selected)?.label}</strong> 업체를 검색합니다
         </div>

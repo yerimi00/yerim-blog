@@ -7,6 +7,38 @@
 
 ---
 
+## 공통 디자인 시스템
+
+### 아이콘
+모든 데모는 `react-icons/fi` (Feather Icons)를 사용한다. 이모지 문자는 사용하지 않는다.
+
+### 카드 컬러 팔레트
+컬러 카드가 있는 모든 데모는 DS 토큰 값을 그대로 사용한다.
+
+| 역할 | 값 | DS 변수 |
+|---|---|---|
+| 메인 | `#3b82f6` | `--accent` |
+| 미디엄 | `#2170e4` | `--primary-container` |
+| 다크 | `#0058be` | `--accent-dim` |
+| 서브 | `#575e70` | `--secondary` |
+| 라이트 | `#d9dff5` | `--secondary-container` (밝은 카드용) |
+
+### 아이콘 팔레트 (물리 데모)
+DropHeartStackDemo / PhysicsHeartDemo에서 사용하는 rgba 기반 원형 배경 + 아이콘 색상 조합:
+
+```ts
+{ bg: 'rgba(59,130,246,0.13)',  iconColor: '#3b82f6' }  // blue
+{ bg: 'rgba(99,102,241,0.13)',  iconColor: '#6366f1' }  // indigo
+{ bg: 'rgba(168,85,247,0.13)', iconColor: '#a855f7' }  // purple
+{ bg: 'rgba(236,72,153,0.13)', iconColor: '#ec4899' }  // pink
+{ bg: 'rgba(16,185,129,0.13)', iconColor: '#10b981' }  // emerald
+{ bg: 'rgba(245,158,11,0.13)', iconColor: '#f59e0b' }  // amber
+{ bg: 'rgba(239,68,68,0.13)',  iconColor: '#ef4444' }  // red
+{ bg: 'rgba(6,182,212,0.13)',  iconColor: '#06b6d4' }  // cyan
+```
+
+---
+
 ## 공통 구현 패턴
 
 ### 카드 스택 계열 (CardStack / HorizontalSwipe / CenteredSwipe / ColorCardStack)
@@ -62,6 +94,7 @@
   - `CARD_H = 460`, `PEEK = 20`
   - `THRESHOLD = 70px`, `ANIM_MS = 360ms`
 - **비고** CardStackDemo의 단순화 버전. 카드 내부 콘텐츠 없이 단색 배경 3장. 경계 snap 시 반드시 원위치로 돌아옴 (범위 초과 go() 대신 원위치 snap)
+- **카드 색상** `#3b82f6` / `#2170e4` / `#575e70` (DS 토큰)
 
 ---
 
@@ -136,12 +169,14 @@
 - **컴포넌트** `PhysicsHeartDemo.tsx`
 - **입력** 할일 체크 클릭 / 바텀시트 드래그 (포인터 이벤트)
 - **물리 엔진** `requestAnimationFrame` 루프. 매 프레임 `vy += 0.2` (중력), opacity < 0이거나 y > 420이면 제거
+- **플로팅 아이콘** `FLOAT_ICONS = [FiHeart, FiStar, FiZap, FiSun, FiSmile, FiCloud, FiMoon]` 랜덤 선택. `FLOAT_COLORS` 7가지 색상 독립 랜덤
 - **바텀시트**
   - `sheetY` state (0 = 완전 열림, `SHEET_FULL = 340` = 닫힘)
   - `dragging` state + `pointermove/pointerup` window 이벤트
   - snap 기준: 드래그 거리 > 60px 또는 최종 위치 < `SHEET_FULL/2`이면 열림
   - transition: `dragging ? 'none' : '0.35s cubic-bezier(0.34, 1.4, 0.64, 1)'`
-- **하트 생성** 체크 완료 시 `spawnHeart()`, 체크 해제 시 `removeHeart()`
+- **아이콘 생성** 체크 완료 시 `spawnHeart()`, 체크 해제 시 `removeHeart()`
+- **배경** `linear-gradient(var(--surface-container), var(--bg-secondary))` — DS 토큰 기반
 
 ---
 
@@ -151,7 +186,8 @@
 - **컴포넌트** `OnboardingSliderDemo.tsx`
 - **입력** 스와이프 (포인터 이벤트, threshold 50px) / 인디케이터 클릭 / 이전·다음 버튼
 - **자동재생** `setTimeout` 3500ms. 인터랙션마다 `resetTimer()`로 재시작
-- **슬라이드 전환** CSS `transition: background Xms ease`로 배경 그라디언트만 전환. 텍스트는 즉시 교체
+- **슬라이드 전환** CSS `transition: background Xms ease`로 배경색만 전환. 텍스트는 즉시 교체
+- **슬라이드 아이콘** FiCalendar / FiBarChart2 / FiSun (size 64, `rgba(0,0,0,0.5)`)
 - **슬라이드** 3장 (스마트 플래너 / 한눈에 비교 / 완벽한 하루)
 
 ---
@@ -197,7 +233,7 @@
 - **입력** 카테고리 버튼 클릭 (토글)
 - **상태** `selected: string | null`
 - **Dimming 효과** 선택된 것 외 카드에 `opacity: 0.45` + `filter: grayscale(70%)`. CSS transition `all 0.2s`
-- **카테고리** 카페 ☕ / 음식점 🍽️ / 쇼핑 🛍️ / 전시 🎨
+- **카테고리 아이콘** FiCoffee / FiHeart / FiShoppingBag / FiImage
 
 ---
 
@@ -222,6 +258,7 @@
 - **Step 1** 전체 동의 + 개별 동의. `canNext1 = t1 && t2 && t3` (선택 항목 mkt 제외)
 - **Step 2** 이름 2자 이상 + 전화번호 10자리 + 인증번호 6자리 모두 충족 시 통과. 인증번호 6자리 입력 시 자동으로 `verified = true`
 - **Step 3** 이메일 `@` 포함 + 비밀번호 8자 이상
+- **가입 완료 모달** `position: fixed, inset: 0, zIndex: 9999` 전체 뷰포트 오버레이. 체크 아이콘(SVG) + 이메일 표시 + 확인 버튼으로 닫힘
 
 ---
 
@@ -258,7 +295,7 @@
 - **입력** pill 버튼 클릭
 - **상태** 컬러(다중) `colors: string[]` / 스타일(단일) `style: string | null` / 핏(단일) `fit: string | null`
 - **저장 가능 조건** `style !== null && fit !== null`
-- **pill 스타일** active: `border #7c3aed + bg #ede9fe + color #7c3aed`. inactive: var(--border) + var(--surface)
+- **pill 스타일** active: `border var(--accent) + bg var(--accent) + color #fff`. inactive: `var(--border) + var(--surface)`
 
 ---
 
@@ -267,7 +304,8 @@
 - **slug** `search-bar-badge`
 - **컴포넌트** `SearchBarBadgeDemo.tsx`
 - **상태** `notifications: { id, text, read }[]` / `unread` (useEffect 연산)
-- **배지** `unread > 0`이면 종 아이콘이 filled 보라색으로 교체 + 숫자 배지
+- **배지** `unread > 0`이면 종 아이콘이 `var(--accent)` filled로 교체 + 숫자 배지
+- **미읽음 항목** 배경 `var(--surface-container)`, 테두리 `var(--accent)` (이전 `#f5f3ff / #c4b5fd` 교체)
 - **패널** 종 클릭으로 토글. 항목 클릭 시 read 처리. '모두 읽기' 버튼 제공
 - **알림 추가** 버튼으로 동적 추가 가능
 
@@ -278,8 +316,10 @@
 - **slug** `banner-carousel`
 - **컴포넌트** `BannerCarouselDemo.tsx`
 - **입력** 스와이프 (포인터 이벤트, threshold 50px) / 도트 클릭 / ← → 버튼
-- **자동재생** `setTimeout 4000ms`. `resetTimer()`로 인터랙션마다 재시작
-- **전환 효과** CSS `transition: background 0.5s ease`로 배경 그라디언트 전환
+- **자동재생** `setTimeout 7000ms`. `resetTimer()`로 인터랙션마다 재시작
+- **전환 효과** CSS `transition: background 0.5s ease`로 배경색 전환 (그라디언트 없음, 플랫 컬러)
+- **배경 컬러** `#3b82f6` / `#2170e4` / `#0058be` / `#575e70` (DS 토큰 값)
+- **배너 아이콘** FiTrendingUp / FiLayers / FiCamera / FiFileText (size 42, `rgba(255,255,255,0.92)`)
 - **진행 바** `@keyframes banner-progress`로 `width: 0% → 100%` 애니메이션. `key={idx}`로 슬라이드 전환마다 재시작
 - **GPU 가속** `willChange: 'transform'` + `transform: 'translateZ(0)'`
 - **배너** 트렌드 리포트 / 신규 컴포넌트 / 포트폴리오 갤러리 / 인기 아티클
@@ -291,26 +331,31 @@
 - **slug** `my-tabs`
 - **컴포넌트** `MyTabsDemo.tsx`
 - **상태** `tab: 'reserve' | 'review' | 'saved'`
-- **강조선** 활성 탭에 절대 위치 `bottom: -2, height: 2, background: #7c3aed` div
+- **강조선** 활성 탭에 절대 위치 `bottom: -2, height: 2, background: var(--accent)` div
+- **탭 아이콘** FiCalendar / FiStar / FiBookmark (size 20, `var(--accent)`)
 - **탭 데이터**
   - reserve: 레스토랑 / 미술관 / 공연 예약
   - review: 카페·레스토랑·갤러리 별점
   - saved: 즐겨찾기 / 저장 항목
 
-### 22. 하트 쌓기
+### 22. 아이콘 쌓기 (구 하트 쌓기)
 
 - **slug** `drop-heart-stack`
 - **컴포넌트** `DropHeartStackDemo.tsx`
 - **물리 엔진** 커스텀 impulse 기반 (Matter.js 미사용)
 - **주요 상수**
-  - `R = 22` (반지름), `G = 0.5` (중력), `RESTITUTION = 0.28` (반발계수)
-  - `DAMPING = 0.985` (공기저항), `FLOOR_MU = 0.30` (바닥 마찰)
-  - `SLOP = 0.6` (침투 허용 깊이 — jitter 방지), `CORR_PCT = 0.40` (위치 보정 강도)
-  - `ITERATIONS = 6` (반복 solver 횟수), `SLEEP_V = 0.08`, `SLEEP_FRAMES = 28`
+  - `RADII = [14,18,22,26,30]` (랜덤 반지름 5단계), `G = 0.5`, `RESTITUTION = 0.40`
+  - `DAMPING = 0.975`, `FLOOR_MU = 0.12`
+  - `SLOP = 0.5`, `CORR_PCT = 0.60`, `ITERATIONS = 10`
+  - `SLEEP_V = 0.35`, `SLEEP_FRAMES = 10`, `WAKE_IMPULSE = 1.0`
+- **모드** `single` (하나씩) / `burst` (20개 한번에, 왼쪽 1/3 영역에서 낙하)
+- **아이콘** `ICONS = [FiHeart, FiStar, FiZap, FiSun, FiMoon, FiSmile, FiCloud, FiCoffee]` 랜덤. 배경/아이콘 색상 독립 랜덤 (공통 팔레트 참조)
 - **상태 관리** `itemsRef` (Ref 직접 변이) + `setRenderKey(k => k+1)` (리렌더 트리거)
-- **Sleep 패턴** 속도 < SLEEP_V 가 SLEEP_FRAMES 프레임 연속 → `sleeping = true` (정적 바디, inv_mass=0)
+- **Sleep/Wake** 속도 < `SLEEP_V` × `SLEEP_FRAMES` 프레임 → sleep. 충돌 impulse > `WAKE_IMPULSE` → wake
 - **충돌 해석** `solveCollisions()` — 바닥·벽 경계 + 원-원 impulse + positional correction
-- **제한** MAX_ITEMS = 500, 초기화 버튼, 정착 진행 바 표시
+- **씬 너비** `ResizeObserver` → `wRef`로 동적 감지 (리렌더 없음)
+- **회전** `angle += (vx / r) * (180 / Math.PI)` 굴림 시뮬레이션
+- **제한** `MAX_ITEMS = 60`, 초기화 버튼, 정착 진행 바 표시
 
 ---
 

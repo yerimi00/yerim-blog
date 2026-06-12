@@ -32,7 +32,7 @@ export default function SearchBarBadgeDemo() {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '12px 16px',
-        background: '#fff', borderRadius: 14,
+        background: 'var(--surface)', borderRadius: 'var(--radius-xl)',
         border: '1px solid var(--border, #e5e7eb)',
         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         marginBottom: 12,
@@ -40,14 +40,14 @@ export default function SearchBarBadgeDemo() {
         {/* Search (fake button) */}
         <div style={{
           flex: 1, height: 40, borderRadius: 100,
-          background: 'var(--surface, #f3f4f6)',
+          background: 'var(--bg-secondary)',
           display: 'flex', alignItems: 'center',
           padding: '0 14px', gap: 8, cursor: 'pointer',
         }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          <span style={{ fontSize: 13, color: '#9ca3af' }}>업체 검색</span>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>업체 검색</span>
         </div>
 
         {/* Bell with badge */}
@@ -59,12 +59,12 @@ export default function SearchBarBadgeDemo() {
           }}
         >
           {unread > 0 ? (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#7c3aed" stroke="none">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)" stroke="none">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           ) : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
@@ -72,7 +72,7 @@ export default function SearchBarBadgeDemo() {
           {unread > 0 && (
             <span style={{
               position: 'absolute', top: 2, right: 2,
-              minWidth: 16, height: 16, borderRadius: 8,
+              minWidth: 16, height: 16, borderRadius: 'var(--radius-lg)',
               background: '#ef4444', color: '#fff',
               fontSize: 10, fontWeight: 700,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -87,15 +87,15 @@ export default function SearchBarBadgeDemo() {
       {/* Notification panel */}
       {showPanel && (
         <div ref={panelRef} style={{
-          background: '#fff',
+          background: 'var(--surface)',
           border: '1px solid var(--border, #e5e7eb)',
-          borderRadius: 12, overflow: 'hidden',
+          borderRadius: 'var(--radius-xl)', overflow: 'hidden',
           boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
           marginBottom: 12,
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderBottom: '1px solid var(--border, #e5e7eb)' }}>
             <span style={{ fontSize: 13, fontWeight: 700 }}>알림</span>
-            <button onClick={() => setNotifications(prev => prev.map(n => ({ ...n, read: true })))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#7c3aed', fontWeight: 600 }}>모두 읽기</button>
+            <button onClick={() => setNotifications(prev => prev.map(n => ({ ...n, read: true })))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--accent)', fontWeight: 600 }}>모두 읽기</button>
           </div>
           {notifications.map(n => (
             <div
@@ -104,11 +104,11 @@ export default function SearchBarBadgeDemo() {
               style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '11px 14px', cursor: 'pointer',
-                background: n.read ? 'transparent' : '#f5f3ff',
+                background: n.read ? 'transparent' : 'var(--surface-container)',
                 borderBottom: '1px solid var(--border, #f3f4f6)',
               }}
             >
-              {!n.read && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c3aed', flexShrink: 0 }} />}
+              {!n.read && <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />}
               {n.read && <div style={{ width: 7, height: 7, flexShrink: 0 }} />}
               <span style={{ fontSize: 13, color: 'var(--text, #111)' }}>{n.text}</span>
             </div>
@@ -119,8 +119,8 @@ export default function SearchBarBadgeDemo() {
       <button
         onClick={addNotif}
         style={{
-          width: '100%', padding: '10px', border: 'none', borderRadius: 10,
-          background: '#7c3aed', color: '#fff',
+          width: '100%', padding: '10px', border: 'none', borderRadius: 'var(--radius-xl)',
+          background: 'var(--accent)', color: '#fff',
           fontSize: 13, fontWeight: 600, cursor: 'pointer',
         }}
       >
