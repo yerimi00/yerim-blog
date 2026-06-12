@@ -14,6 +14,7 @@
 4개 컴포넌트가 동일한 아키텍처를 공유한다.
 
 **핵심 구조**
+
 - `offsetRef` — 현재 누적 이동량(px). React state가 아닌 ref로 관리해 렌더를 일으키지 않음
 - `snapIdxRef` — 현재 snap된 카드 인덱스
 - `cardRefs` — `Map<pi, HTMLDivElement>`. DOM을 직접 조작해 `style.transform`을 업데이트
@@ -22,11 +23,13 @@
 - `getCardRef(pi)` — stable ref 콜백 캐시. inline arrow를 쓰면 매 렌더에 새 함수가 생겨 `null→el` 재호출이 transition을 캔슬함
 
 **이벤트 등록 방식**
+
 - `useEffect`에서 native listener로 직접 등록 (React synthetic event 사용 안 함)
 - `touchmove`는 `passive: false`로 등록해 `e.preventDefault()`로 페이지 스크롤 차단
 - `mousemove` / `mouseup`은 `window`에 등록해 요소 밖 드래그도 추적
 
 **경계 감쇠**
+
 - 첫 카드 위 / 마지막 카드 아래로 드래그 시 `delta *= 0.2` 적용
 
 ---
@@ -34,6 +37,7 @@
 ## 인터랙션 목록
 
 ### 1. 카드 스택 UI
+
 - **slug** `card-stack-ui`
 - **컴포넌트** `CardStackDemo.tsx`
 - **방향** 수직 (Y축)
@@ -49,6 +53,7 @@
 ---
 
 ### 2. 컬러 카드 스택
+
 - **slug** `color-card-stack`
 - **컴포넌트** `ColorCardStackDemo.tsx`
 - **방향** 수직 (Y축)
@@ -61,6 +66,7 @@
 ---
 
 ### 3. 좌우 카드 스와이프
+
 - **slug** `horizontal-card-swipe`
 - **컴포넌트** `HorizontalCardSwipeDemo.tsx`
 - **방향** 수평 (X축)
@@ -74,6 +80,7 @@
 ---
 
 ### 4. 양옆 카드 스와이프
+
 - **slug** `centered-card-swipe`
 - **컴포넌트** `CenteredCardSwipeDemo.tsx`
 - **방향** 수평 (X축)
@@ -89,6 +96,7 @@
 ---
 
 ### 5. 지갑 카드 스택
+
 - **slug** `wallet-card`
 - **컴포넌트** `WalletCardDemo.tsx`
 - **입력** 마우스 호버 / 클릭(pinned 토글)
@@ -101,6 +109,7 @@
 ---
 
 ### 6. 지갑 카드 스택 2
+
 - **slug** `wallet-card-2`
 - **컴포넌트** `WalletCardDemo2.tsx`
 - **입력** 개별 카드 마우스 호버
@@ -114,6 +123,7 @@
 ---
 
 ### 7. 마이크로 인터랙션
+
 - **slug** `micro-interaction`
 - **컴포넌트** `MicroInteractionDemo.tsx`
 - **현황** 현재 빈 컴포넌트 (`return <div />`) — 미구현 상태
@@ -121,6 +131,7 @@
 ---
 
 ### 8. 물리 하트 + 바텀시트
+
 - **slug** `physics-heart`
 - **컴포넌트** `PhysicsHeartDemo.tsx`
 - **입력** 할일 체크 클릭 / 바텀시트 드래그 (포인터 이벤트)
@@ -135,6 +146,7 @@
 ---
 
 ### 9. 온보딩 슬라이더
+
 - **slug** `onboarding-slider`
 - **컴포넌트** `OnboardingSliderDemo.tsx`
 - **입력** 스와이프 (포인터 이벤트, threshold 50px) / 인디케이터 클릭 / 이전·다음 버튼
@@ -145,6 +157,7 @@
 ---
 
 ### 10. 뷰 토글
+
 - **slug** `view-toggle`
 - **컴포넌트** `ViewToggleDemo.tsx`
 - **입력** 캡슐 토글 버튼 클릭
@@ -155,6 +168,7 @@
 ---
 
 ### 11. 가격 범위 슬라이더
+
 - **slug** `price-range-slider`
 - **컴포넌트** `PriceRangeSliderDemo.tsx`
 - **입력** `<input type="range">` (네이티브)
@@ -166,6 +180,7 @@
 ---
 
 ### 12. 칩 필터
+
 - **slug** `chip-filter`
 - **컴포넌트** `ChipFilterDemo.tsx`
 - **입력** 칩 버튼 클릭
@@ -176,6 +191,7 @@
 ---
 
 ### 13. 카테고리 Dimming
+
 - **slug** `category-dimming`
 - **컴포넌트** `CategoryDimmingDemo.tsx`
 - **입력** 카테고리 버튼 클릭 (토글)
@@ -186,6 +202,7 @@
 ---
 
 ### 14. 실시간 알림 SSE
+
 - **slug** `notification-sse`
 - **컴포넌트** `NotificationSSEDemo.tsx`
 - **시뮬레이션** `setInterval` 2500ms마다 `MOCK_MESSAGES` 순환 push. 최대 10개 유지
@@ -197,6 +214,7 @@
 ---
 
 ### 15. 회원가입 Wizard
+
 - **slug** `signup-wizard`
 - **컴포넌트** `SignupWizardDemo.tsx`
 - **단계** Step 1 약관 동의 → Step 2 본인확인 → Step 3 추가정보
@@ -208,6 +226,7 @@
 ---
 
 ### 16. 무한 스크롤
+
 - **slug** `infinite-scroll`
 - **컴포넌트** `InfiniteScrollDemo.tsx`
 - **트리거** `IntersectionObserver` — sentinel div(`height: 1px`)가 viewport에 진입 시 `loadMore()` 호출
@@ -220,6 +239,7 @@
 ---
 
 ### 17. 자동저장 (이중 레이어)
+
 - **slug** `auto-save`
 - **컴포넌트** `AutoSaveDemo.tsx`
 - **Layer 1** `500ms debounce` — 입력 후 500ms 뒤 `localStorage.setItem`
@@ -232,6 +252,7 @@
 ---
 
 ### 18. 필터 선택 UI
+
 - **slug** `dress-fitting`
 - **컴포넌트** `DressFittingDemo.tsx`
 - **입력** pill 버튼 클릭
@@ -242,6 +263,7 @@
 ---
 
 ### 19. 검색바 + 알림 배지
+
 - **slug** `search-bar-badge`
 - **컴포넌트** `SearchBarBadgeDemo.tsx`
 - **상태** `notifications: { id, text, read }[]` / `unread` (useEffect 연산)
@@ -252,6 +274,7 @@
 ---
 
 ### 20. 배너 캐러셀
+
 - **slug** `banner-carousel`
 - **컴포넌트** `BannerCarouselDemo.tsx`
 - **입력** 스와이프 (포인터 이벤트, threshold 50px) / 도트 클릭 / ← → 버튼
@@ -264,6 +287,7 @@
 ---
 
 ### 21. 마이페이지 탭
+
 - **slug** `my-tabs`
 - **컴포넌트** `MyTabsDemo.tsx`
 - **상태** `tab: 'reserve' | 'review' | 'saved'`
@@ -273,30 +297,46 @@
   - review: 카페·레스토랑·갤러리 별점
   - saved: 즐겨찾기 / 저장 항목
 
+### 22. 하트 쌓기
+
+- **slug** `drop-heart-stack`
+- **컴포넌트** `DropHeartStackDemo.tsx`
+- **물리 엔진** 커스텀 impulse 기반 (Matter.js 미사용)
+- **주요 상수**
+  - `R = 22` (반지름), `G = 0.5` (중력), `RESTITUTION = 0.28` (반발계수)
+  - `DAMPING = 0.985` (공기저항), `FLOOR_MU = 0.30` (바닥 마찰)
+  - `SLOP = 0.6` (침투 허용 깊이 — jitter 방지), `CORR_PCT = 0.40` (위치 보정 강도)
+  - `ITERATIONS = 6` (반복 solver 횟수), `SLEEP_V = 0.08`, `SLEEP_FRAMES = 28`
+- **상태 관리** `itemsRef` (Ref 직접 변이) + `setRenderKey(k => k+1)` (리렌더 트리거)
+- **Sleep 패턴** 속도 < SLEEP_V 가 SLEEP_FRAMES 프레임 연속 → `sleeping = true` (정적 바디, inv_mass=0)
+- **충돌 해석** `solveCollisions()` — 바닥·벽 경계 + 원-원 impulse + positional correction
+- **제한** MAX_ITEMS = 500, 초기화 버튼, 정착 진행 바 표시
+
 ---
 
 ## 파일 경로 정리
 
-| 컴포넌트 파일 | slug | 상태 |
-|---|---|---|
-| `CardStackDemo.tsx` | `card-stack-ui` | 완성 |
-| `ColorCardStackDemo.tsx` | `color-card-stack` | 완성 |
-| `HorizontalCardSwipeDemo.tsx` | `horizontal-card-swipe` | 완성 |
-| `CenteredCardSwipeDemo.tsx` | `centered-card-swipe` | 완성 |
-| `WalletCardDemo.tsx` | `wallet-card` | 완성 |
-| `WalletCardDemo2.tsx` | `wallet-card-2` | 완성 |
-| `MicroInteractionDemo.tsx` | `micro-interaction` | **미구현** (빈 컴포넌트) |
-| `PhysicsHeartDemo.tsx` | `physics-heart` | 완성 |
-| `OnboardingSliderDemo.tsx` | `onboarding-slider` | 완성 |
-| `ViewToggleDemo.tsx` | `view-toggle` | 완성 |
-| `PriceRangeSliderDemo.tsx` | `price-range-slider` | 완성 |
-| `ChipFilterDemo.tsx` | `chip-filter` | 완성 |
-| `CategoryDimmingDemo.tsx` | `category-dimming` | 완성 |
-| `NotificationSSEDemo.tsx` | `notification-sse` | 완성 |
-| `SignupWizardDemo.tsx` | `signup-wizard` | 완성 |
-| `InfiniteScrollDemo.tsx` | `infinite-scroll` | 완성 |
-| `AutoSaveDemo.tsx` | `auto-save` | 완성 |
-| `DressFittingDemo.tsx` | `dress-fitting` | 완성 |
-| `SearchBarBadgeDemo.tsx` | `search-bar-badge` | 완성 |
-| `BannerCarouselDemo.tsx` | `banner-carousel` | 완성 |
-| `MyTabsDemo.tsx` | `my-tabs` | 완성 |
+| 컴포넌트 파일                 | slug                    | 상태                     |
+| ----------------------------- | ----------------------- | ------------------------ |
+| `CardStackDemo.tsx`           | `card-stack-ui`         | 완성                     |
+| `ColorCardStackDemo.tsx`      | `color-card-stack`      | 완성                     |
+| `HorizontalCardSwipeDemo.tsx` | `horizontal-card-swipe` | 완성                     |
+| `CenteredCardSwipeDemo.tsx`   | `centered-card-swipe`   | 완성                     |
+| `WalletCardDemo.tsx`          | `wallet-card`           | 완성                     |
+| `WalletCardDemo2.tsx`         | `wallet-card-2`         | 완성                     |
+| `MicroInteractionDemo.tsx`    | `micro-interaction`     | **미구현** (빈 컴포넌트) |
+| `PhysicsHeartDemo.tsx`        | `physics-heart`         | 완성                     |
+| `OnboardingSliderDemo.tsx`    | `onboarding-slider`     | 완성                     |
+| `ViewToggleDemo.tsx`          | `view-toggle`           | 완성                     |
+| `PriceRangeSliderDemo.tsx`    | `price-range-slider`    | 완성                     |
+| `ChipFilterDemo.tsx`          | `chip-filter`           | 완성                     |
+| `CategoryDimmingDemo.tsx`     | `category-dimming`      | 완성                     |
+| `NotificationSSEDemo.tsx`     | `notification-sse`      | 완성                     |
+| `SignupWizardDemo.tsx`        | `signup-wizard`         | 완성                     |
+| `InfiniteScrollDemo.tsx`      | `infinite-scroll`       | 완성                     |
+| `AutoSaveDemo.tsx`            | `auto-save`             | 완성                     |
+| `DressFittingDemo.tsx`        | `dress-fitting`         | 완성                     |
+| `SearchBarBadgeDemo.tsx`      | `search-bar-badge`      | 완성                     |
+| `BannerCarouselDemo.tsx`      | `banner-carousel`       | 완성                     |
+| `MyTabsDemo.tsx`              | `my-tabs`               | 완성                     |
+| `DropHeartStackDemo.tsx`      | `drop-heart-stack`      | 완성                     |

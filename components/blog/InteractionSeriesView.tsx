@@ -24,6 +24,7 @@ const SUB_FOLDERS = [
   { slug: 'search-bar-badge', label: '검색바 + 알림 배지' },
   { slug: 'banner-carousel', label: '배너 캐러셀' },
   { slug: 'my-tabs', label: '마이페이지 탭' },
+  { slug: 'drop-heart-stack', label: '하트 쌓기' },
 ]
 
 export default function InteractionSeriesView({ seriesName }: { seriesName: string }) {
