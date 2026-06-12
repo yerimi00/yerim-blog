@@ -216,21 +216,6 @@ export default function PhysicsHeartDemo() {
         </div>
       </div>
 
-      {/* Toggle sheet button */}
-      <button
-        onClick={() => setSheetY(s => s === 0 ? SHEET_FULL : 0)}
-        style={{
-          position: 'absolute', bottom: 16, right: 16,
-          width: 44, height: 44, borderRadius: '50%',
-          background: 'var(--accent)', color: '#fff',
-          border: 'none', cursor: 'pointer',
-          fontSize: 20, zIndex: 20,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: 'var(--shadow-floating)',
-        }}
-      >
-        {sheetY === 0 ? '↓' : '↑'}
-      </button>
     </div>
   )
 }

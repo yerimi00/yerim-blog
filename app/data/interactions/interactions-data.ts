@@ -5,7 +5,6 @@ import HorizontalCardSwipeDemo from '@/components/blog/HorizontalCardSwipeDemo'
 import CenteredCardSwipeDemo from '@/components/blog/CenteredCardSwipeDemo'
 import WalletCardDemo from '@/components/blog/WalletCardDemo'
 import WalletCardDemo2 from '@/components/blog/WalletCardDemo2'
-import MicroInteractionDemo from '@/components/blog/MicroInteractionDemo'
 import PhysicsHeartDemo from '@/components/blog/PhysicsHeartDemo'
 import OnboardingSliderDemo from '@/components/blog/OnboardingSliderDemo'
 import ViewToggleDemo from '@/components/blog/ViewToggleDemo'
@@ -33,7 +32,6 @@ export const DEMOS: Record<string, DemoMeta> = {
   'centered-card-swipe':  { title: '양옆 카드 스와이프',    description: '현재 카드를 중앙에 두고 양옆 카드가 살짝 보이는 캐러셀 인터랙션' },
   'wallet-card':          { title: '지갑 카드 스택',        description: '카드를 위로 드래그해 지갑에서 꺼내는 겹침 스택 인터랙션' },
   'wallet-card-2':        { title: '지갑 카드 스택 2',      description: '호버·클릭으로 카드가 위로 펼쳐지는 지갑 스택 인터랙션' },
-  'micro-interaction':    { title: '마이크로 인터랙션',     description: '좋아요·토글·복사·제출·알림·체크박스 등 소형 UI 인터랙션 모음' },
   'physics-heart':        { title: '물리 하트 + 바텀시트',  description: '할일 완료 시 물리 엔진 기반 하트가 떨어지는 인터랙션 + 드래그 바텀시트' },
   'onboarding-slider':    { title: '온보딩 슬라이더',       description: '3단계 온보딩 슬라이더. 3.5초 자동재생, 스와이프·인디케이터 클릭 연동' },
   'view-toggle':          { title: '뷰 토글',               description: '슬라이딩 캡슐 토글로 두 뷰를 전환하는 Controlled/Uncontrolled 패턴' },
@@ -43,7 +41,7 @@ export const DEMOS: Record<string, DemoMeta> = {
   'notification-sse':     { title: '실시간 알림 (SSE)',     description: 'fetch + ReadableStream으로 구현한 SSE 실시간 알림. 자동 재연결 내장' },
   'signup-wizard':        { title: '회원가입 Wizard',       description: '약관 동의 → 본인확인 → 추가정보 3단계 멀티스텝 폼' },
   'infinite-scroll':      { title: '무한 스크롤',           description: 'IntersectionObserver 기반 무한 스크롤. 카테고리별 분기 + 페이지네이션' },
-  'auto-save':            { title: '자동저장 (이중 레이어)',description: '500ms 디바운스 + pagehide flush 이중 자동저장. localStorage 드래프트 복원' },
+  'auto-save':            { title: '자동저장 (이중 레이어)',description: '10s 디바운스 + pagehide flush 이중 자동저장. 카운트다운 바로 디바운스 상태 시각화' },
   'dress-fitting':        { title: '필터 선택 UI',          description: '다중 선택 + 단일 선택 pill 인터랙션' },
   'search-bar-badge':     { title: '검색바 + 알림 배지',    description: '알림 미확인 수에 따라 아이콘이 바뀌는 검색바 + 알림 패널' },
   'banner-carousel':      { title: '배너 캐러셀',           description: '7초 자동재생 배너. 진행 바 애니메이션, 스와이프 지원, GPU 가속' },
@@ -60,7 +58,6 @@ export const DEMO_COMPONENTS: Record<string, ComponentType> = {
   'centered-card-swipe':   CenteredCardSwipeDemo,
   'wallet-card':           WalletCardDemo,
   'wallet-card-2':         WalletCardDemo2,
-  'micro-interaction':     MicroInteractionDemo,
   'physics-heart':         PhysicsHeartDemo,
   'onboarding-slider':     OnboardingSliderDemo,
   'view-toggle':           ViewToggleDemo,
