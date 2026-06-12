@@ -44,15 +44,15 @@ const labelStyle: CSSProperties = {
 }
 
 interface Props {
-  pi:         number
-  isActive:   boolean
-  getCardRef: (pi: number) => (el: HTMLDivElement | null) => void
+  pi:      number
+  isActive: boolean
+  elRef:   (el: HTMLDivElement | null) => void
 }
 
-export default function CardStackCard({ pi, isActive, getCardRef }: Props) {
+export default function CardStackCard({ pi, isActive, elRef }: Props) {
   return (
     <div
-      ref={getCardRef(pi)}
+      ref={elRef}
       style={{ ...cardWrapperBase, pointerEvents: isActive ? 'auto' : 'none' }}
     >
       <div style={handleStyle}>

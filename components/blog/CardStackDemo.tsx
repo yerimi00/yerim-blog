@@ -48,34 +48,15 @@ export default function CardStackDemo() {
   const offsetRef   = useRef(0)
   const dragRef     = useRef({ live: false, startY: 0, startOffset: 0 })
   const isAnimating = useRef(false)
-  const cardRefs       = useRef(new Map<number, HTMLDivElement>())
-  // pi별 stable ref 콜백 캐시 — inline arrow는 매 렌더에 새 함수가 생겨
-  // React가 null→el 재호출하면서 applyTransforms(true)의 transition을 캔슬함
-  const cardRefCbs     = useRef(new Map<number, (el: HTMLDivElement | null) => void>())
-  const rafIdRef       = useRef(0)
-  const stackRef       = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const rafIdRef = useRef(0)
+  const stackRef = useRef<HTMLDivElement>(null)
   const n = N_CARDS
-
-  const getCardRef = useCallback((pi: number) => {
-    if (!cardRefCbs.current.has(pi)) {
-      cardRefCbs.current.set(pi, (el: HTMLDivElement | null) => {
-        if (el) {
-          cardRefs.current.set(pi, el)
-          const ty = offsetRef.current + pi * CARD_H
-          el.style.transition = 'none'
-          el.style.transform = `translateY(${ty}px) scale(${getScaleFromTy(ty)})`
-        } else {
-          cardRefs.current.delete(pi)
-          cardRefCbs.current.delete(pi)
-        }
-      })
-    }
-    return cardRefCbs.current.get(pi)!
-  }, [])
 
   const applyTransforms = useCallback((withTransition: boolean) => {
     const offset = offsetRef.current
     cardRefs.current.forEach((el, pi) => {
+      if (!el) return
       const ty = offset + pi * CARD_H
       el.style.transition = withTransition
         ? `transform ${ANIM_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
@@ -88,9 +69,15 @@ export default function CardStackDemo() {
   // 애니메이션을 건너뛰는 현상 방지 — offsetHeight 참조로 강제 reflow 유발
   // 어느 한 요소만 읽어도 global layout이 발생하므로 첫 번째 요소만 사용
   const forceReflow = useCallback(() => {
-    const first = cardRefs.current.values().next().value
+    const first = cardRefs.current.find(el => el != null)
     if (first) void first.offsetHeight
   }, [])
+
+  const snapToCurrent = useCallback(() => {
+    offsetRef.current = -snapIdxRef.current * CARD_H
+    forceReflow()
+    applyTransforms(true)
+  }, [applyTransforms, forceReflow])
 
   const go = useCallback((dir: 1 | -1) => {
     if (isAnimating.current) return
@@ -107,7 +94,7 @@ export default function CardStackDemo() {
 
     // transitionend로 정확히 해제 — 카드 ref가 없으면 ANIM_MS fallback
     const release = () => { isAnimating.current = false }
-    const el = cardRefs.current.get(next)
+    const el = cardRefs.current[next]
     if (el) {
       el.addEventListener('transitionend',    release, { once: true })
       el.addEventListener('transitioncancel', release, { once: true })
@@ -162,10 +149,7 @@ export default function CardStackDemo() {
         go(dir)
         return
       }
-      // 임계값 미달이거나 경계(첫·마지막 카드) — 원래 위치로 snap-back
-      offsetRef.current = -snapIdxRef.current * CARD_H
-      forceReflow()
-      applyTransforms(true)
+      snapToCurrent()
     }
 
     // Pointer Events (touch + mouse 통합)
@@ -204,7 +188,7 @@ export default function CardStackDemo() {
       el.removeEventListener('wheel',         onWheel)
       cancelAnimationFrame(rafIdRef.current)
     }
-  }, [go, applyTransforms, forceReflow, n])
+  }, [go, applyTransforms, forceReflow, snapToCurrent, n])
 
   const pis = [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2]
     .filter(pi => pi >= 0 && pi < n)
@@ -217,7 +201,7 @@ export default function CardStackDemo() {
             key={pi}
             pi={pi}
             isActive={pi === renderIdx}
-            getCardRef={getCardRef}
+            elRef={(el) => { cardRefs.current[pi] = el }}
           />
         ))}
       </div>

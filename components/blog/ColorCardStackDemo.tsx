@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import type { CSSProperties } from 'react'
 
 const CARD_H = 460
 const PEEK = 20
@@ -15,6 +16,59 @@ const CARDS = [
   { color: '#575e70', label: '세 번째', sub: 'CARD 03' },
 ]
 
+// ── styles ───────────────────────────────────────────────────────────────────
+
+const outerStyle: CSSProperties = {
+  maxWidth: '360px',
+  margin: '0 auto',
+  overflow: 'hidden',
+  height: STACK_H,
+  fontFamily: 'Pretendard, sans-serif',
+}
+
+const stackStyle: CSSProperties = {
+  position: 'relative',
+  height: STACK_H,
+  overflow: 'hidden',
+  transform: 'translateZ(0)',
+  touchAction: 'none',
+  userSelect: 'none',
+  cursor: 'grab',
+}
+
+const cardWrapperBase: CSSProperties = {
+  position: 'absolute',
+  top: 0, left: 0, right: 0,
+  height: CARD_H,
+  willChange: 'transform',
+  paddingBottom: 8,
+  boxSizing: 'border-box',
+}
+
+const cardInnerBase: CSSProperties = {
+  height: '100%',
+  borderRadius: '20px',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+}
+
+const handlePillStyle: CSSProperties = {
+  position: 'absolute', top: 12,
+  width: 36, height: 4,
+  borderRadius: 9999,
+  background: 'rgba(255,255,255,0.45)',
+}
+
+const textContainerStyle: CSSProperties = { textAlign: 'center', color: '#fff' }
+const subTextStyle:       CSSProperties = { fontSize: 12, opacity: 0.65, letterSpacing: '0.14em', marginBottom: 10 }
+const labelStyle:         CSSProperties = { fontSize: 40, fontWeight: 800, lineHeight: 1 }
+const counterStyle:       CSSProperties = { marginTop: 14, fontSize: 13, opacity: 0.55 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const getScaleFromTy = (ty: number): number => {
   if (ty >= 0) return 1
   const progress = Math.min(-ty / MAX_SHRINK_Y, 1)
@@ -24,38 +78,21 @@ const getScaleFromTy = (ty: number): number => {
 export default function ColorCardStackDemo() {
   const [renderIdx, setRenderIdx] = useState(0)
 
-  const snapIdxRef     = useRef(0)
-  const offsetRef      = useRef(0)
+  const snapIdxRef  = useRef(0)
+  const offsetRef   = useRef(0)
   const startOffsetRef = useRef(0)
   const startYRef      = useRef(0)
   const liveRef        = useRef(false)
-  const isAnimating    = useRef(false)
-  const cardRefs       = useRef(new Map<number, HTMLDivElement>())
-  const cardRefCbs     = useRef(new Map<number, (el: HTMLDivElement | null) => void>())
-  const rafIdRef       = useRef(0)
-  const stackRef       = useRef<HTMLDivElement>(null)
+  const isAnimating = useRef(false)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const rafIdRef = useRef(0)
+  const stackRef = useRef<HTMLDivElement>(null)
   const n = CARDS.length
-
-  const getCardRef = useCallback((pi: number) => {
-    if (!cardRefCbs.current.has(pi)) {
-      cardRefCbs.current.set(pi, (el: HTMLDivElement | null) => {
-        if (el) {
-          cardRefs.current.set(pi, el)
-          const ty = offsetRef.current + pi * CARD_H
-          el.style.transition = 'none'
-          el.style.transform = `translateY(${ty}px) scale(${getScaleFromTy(ty)})`
-        } else {
-          cardRefs.current.delete(pi)
-          cardRefCbs.current.delete(pi)
-        }
-      })
-    }
-    return cardRefCbs.current.get(pi)!
-  }, [])
 
   const applyTransforms = useCallback((withTransition: boolean) => {
     const offset = offsetRef.current
     cardRefs.current.forEach((el, pi) => {
+      if (!el) return
       const ty = offset + pi * CARD_H
       el.style.transition = withTransition
         ? `transform ${ANIM_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
@@ -65,8 +102,15 @@ export default function ColorCardStackDemo() {
   }, [])
 
   const forceReflow = useCallback(() => {
-    cardRefs.current.forEach(el => { void el.offsetHeight })
+    const first = cardRefs.current.find(el => el != null)
+    if (first) void first.offsetHeight
   }, [])
+
+  const snapToCurrent = useCallback(() => {
+    offsetRef.current = -snapIdxRef.current * CARD_H
+    forceReflow()
+    applyTransforms(true)
+  }, [applyTransforms, forceReflow])
 
   const go = useCallback((dir: 1 | -1) => {
     if (isAnimating.current) return
@@ -80,7 +124,15 @@ export default function ColorCardStackDemo() {
     forceReflow()
     applyTransforms(true)
     setRenderIdx(next)
-    setTimeout(() => { isAnimating.current = false }, 500)
+
+    const release = () => { isAnimating.current = false }
+    const card = cardRefs.current[next]
+    if (card) {
+      card.addEventListener('transitionend',    release, { once: true })
+      card.addEventListener('transitioncancel', release, { once: true })
+    } else {
+      setTimeout(release, ANIM_MS)
+    }
   }, [n, applyTransforms, forceReflow])
 
   useEffect(() => {
@@ -110,123 +162,69 @@ export default function ColorCardStackDemo() {
       liveRef.current = false
       el.style.cursor = 'grab'
       const delta = y - startYRef.current
-      if (Math.abs(delta) > THRESHOLD) {
-        const dir = delta < 0 ? 1 : -1
-        const next = snapIdxRef.current + dir
-        if (next >= 0 && next < n) {
-          go(dir)
-        } else {
-          offsetRef.current = -snapIdxRef.current * CARD_H
-          forceReflow()
-          applyTransforms(true)
-        }
-      } else {
-        offsetRef.current = -snapIdxRef.current * CARD_H
-        forceReflow()
-        applyTransforms(true)
+      const dir = delta < 0 ? 1 : -1
+      const nextIdx = snapIdxRef.current + dir
+      if (Math.abs(delta) > THRESHOLD && nextIdx >= 0 && nextIdx < n) {
+        go(dir)
+        return
       }
+      snapToCurrent()
     }
 
-    const onTouchStart = (e: TouchEvent) => handleStart(e.touches[0].clientY)
-    const onTouchMove  = (e: TouchEvent) => { e.preventDefault(); handleMove(e.touches[0].clientY) }
-    const onTouchEnd   = (e: TouchEvent) => handleEnd(e.changedTouches[0].clientY)
-    const onMouseDown  = (e: MouseEvent) => handleStart(e.clientY)
-    const onMouseMove  = (e: MouseEvent) => { if (liveRef.current) handleMove(e.clientY) }
-    const onMouseUp    = (e: MouseEvent) => { if (liveRef.current) handleEnd(e.clientY) }
-    const onWheel      = (e: WheelEvent) => {
+    // Pointer Events (touch + mouse 통합) — setPointerCapture로 요소 밖 드래그도 추적
+    const onPointerDown = (e: PointerEvent) => {
+      handleStart(e.clientY)
+      el.setPointerCapture(e.pointerId)
+    }
+    const onPointerMove   = (e: PointerEvent) => {
+      if (!liveRef.current) return
+      e.preventDefault()
+      handleMove(e.clientY)
+    }
+    const onPointerUp     = (e: PointerEvent) => handleEnd(e.clientY)
+    const onPointerCancel = (e: PointerEvent) => { if (liveRef.current) handleEnd(e.clientY) }
+    const onWheel         = (e: WheelEvent) => {
       e.preventDefault()
       cancelAnimationFrame(rafIdRef.current)
       rafIdRef.current = requestAnimationFrame(() => go(e.deltaY > 0 ? 1 : -1))
     }
 
-    el.addEventListener('touchstart',  onTouchStart, { passive: true })
-    el.addEventListener('touchmove',   onTouchMove,  { passive: false })
-    el.addEventListener('touchend',    onTouchEnd,   { passive: true })
-    el.addEventListener('touchcancel', onTouchEnd,   { passive: true })
-    el.addEventListener('mousedown',   onMouseDown)
-    el.addEventListener('wheel',       onWheel,      { passive: false })
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('mouseup',   onMouseUp)
+    el.addEventListener('pointerdown',   onPointerDown)
+    el.addEventListener('pointermove',   onPointerMove,   { passive: false })
+    el.addEventListener('pointerup',     onPointerUp)
+    el.addEventListener('pointercancel', onPointerCancel)
+    el.addEventListener('wheel',         onWheel,         { passive: false })
 
     return () => {
-      el.removeEventListener('touchstart',  onTouchStart)
-      el.removeEventListener('touchmove',   onTouchMove)
-      el.removeEventListener('touchend',    onTouchEnd)
-      el.removeEventListener('touchcancel', onTouchEnd)
-      el.removeEventListener('mousedown',   onMouseDown)
-      el.removeEventListener('wheel',       onWheel)
-      window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('mouseup',   onMouseUp)
+      el.removeEventListener('pointerdown',   onPointerDown)
+      el.removeEventListener('pointermove',   onPointerMove)
+      el.removeEventListener('pointerup',     onPointerUp)
+      el.removeEventListener('pointercancel', onPointerCancel)
+      el.removeEventListener('wheel',         onWheel)
       cancelAnimationFrame(rafIdRef.current)
     }
-  }, [go, applyTransforms, forceReflow, n])
+  }, [go, applyTransforms, forceReflow, snapToCurrent, n])
 
   const pis = [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2]
     .filter(pi => pi >= 0 && pi < n)
 
   return (
-    <div style={{
-      maxWidth: '360px',
-      margin: '0 auto',
-      overflow: 'hidden',
-      height: STACK_H,
-      fontFamily: 'Pretendard, sans-serif',
-    }}>
-      <div
-        ref={stackRef}
-        style={{
-          position: 'relative',
-          height: STACK_H,
-          overflow: 'hidden',
-          transform: 'translateZ(0)',
-          touchAction: 'none',
-          userSelect: 'none',
-          cursor: 'grab',
-        }}
-      >
+    <div style={outerStyle}>
+      <div ref={stackRef} style={stackStyle}>
         {pis.map(pi => {
           const card = CARDS[pi]
           return (
             <div
               key={pi}
-              ref={getCardRef(pi)}
-              style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0,
-                height: CARD_H,
-                willChange: 'transform',
-                pointerEvents: pi === renderIdx ? 'auto' : 'none',
-                paddingBottom: 8,
-                boxSizing: 'border-box',
-              }}
+              ref={(el) => { cardRefs.current[pi] = el }}
+              style={{ ...cardWrapperBase, pointerEvents: pi === renderIdx ? 'auto' : 'none' }}
             >
-              <div style={{
-                height: '100%',
-                background: card.color,
-                borderRadius: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-              }}>
-                <div style={{
-                  position: 'absolute', top: 12,
-                  width: 36, height: 4,
-                  borderRadius: 9999,
-                  background: 'rgba(255,255,255,0.45)',
-                }} />
-
-                <div style={{ textAlign: 'center', color: '#fff' }}>
-                  <div style={{ fontSize: 12, opacity: 0.65, letterSpacing: '0.14em', marginBottom: 10 }}>
-                    {card.sub}
-                  </div>
-                  <div style={{ fontSize: 40, fontWeight: 800, lineHeight: 1 }}>
-                    {card.label}
-                  </div>
-                  <div style={{ marginTop: 14, fontSize: 13, opacity: 0.55 }}>
-                    {pi + 1} / {n}
-                  </div>
+              <div style={{ ...cardInnerBase, background: card.color }}>
+                <div style={handlePillStyle} />
+                <div style={textContainerStyle}>
+                  <div style={subTextStyle}>{card.sub}</div>
+                  <div style={labelStyle}>{card.label}</div>
+                  <div style={counterStyle}>{pi + 1} / {n}</div>
                 </div>
               </div>
             </div>
