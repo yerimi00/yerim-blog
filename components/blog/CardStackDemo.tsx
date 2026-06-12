@@ -1,20 +1,37 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import CardStackCard from './CardStackCard'
 
 const DARK = '#16181f'
 const HANDLE_H = 20
-const HEADER_H = 54
-const PROGRESS_H = 40
-const DARK_H = HANDLE_H + HEADER_H + PROGRESS_H  // 114
-const WHITE_H = 400
-export const CARD_H = DARK_H + WHITE_H   // 514
-const PEEK = HANDLE_H             // 20 — 다음 카드 핸들만 노출
+export const CARD_H = 514
+const PEEK = HANDLE_H
 const STACK_H = CARD_H + PEEK     // 534
 const THRESHOLD = 70
 const ANIM_MS = 360
 const MAX_SHRINK_Y = 120
+
+const outerStyle: CSSProperties = {
+  maxWidth: '400px',
+  margin: '0 auto',
+  background: DARK,
+  borderRadius: '20px',
+  overflow: 'hidden',
+  height: STACK_H,
+  fontFamily: 'Pretendard, sans-serif',
+}
+
+const stackStyle: CSSProperties = {
+  position: 'relative',
+  height: STACK_H,
+  overflow: 'hidden',
+  transform: 'translateZ(0)',
+  touchAction: 'none',
+  userSelect: 'none',
+  cursor: 'grab',
+}
 
 const getScaleFromTy = (ty: number): number => {
   if (ty >= 0) return 1
@@ -22,79 +39,22 @@ const getScaleFromTy = (ty: number): number => {
   return 1 - 0.2 * progress
 }
 
-export type CardItem = { color: string; letter: string; name: string; score: string }
-export type CardData = {
-  id: number
-  title: string
-  metricLabel: string
-  metricValue: string
-  metricColor: string
-  metricDesc: string
-  listTitle: string
-  list: CardItem[]
-}
-
-const CARDS: CardData[] = [
-  {
-    id: 1,
-    title: '카드를 위아래로\n드래그해보세요',
-    metricLabel: '인터랙션',
-    metricValue: '3가지 방식',
-    metricColor: '#4b94ff',
-    metricDesc: '터치, 마우스, 휠 모두 지원해요',
-    listTitle: '지원 방식',
-    list: [
-      { color: '#ef4444', letter: 'T', name: '터치 드래그', score: '최우선' },
-      { color: '#3b82f6', letter: 'M', name: '마우스 드래그', score: '지원' },
-      { color: '#8b5cf6', letter: 'W', name: '마우스 휠', score: '지원' },
-    ],
-  },
-  {
-    id: 2,
-    title: '70px 초과 드래그하면\n카드가 전환돼요',
-    metricLabel: '드래그 임계값',
-    metricValue: '70px',
-    metricColor: '#4b94ff',
-    metricDesc: '미달 시 원래 위치로 snap돼요',
-    listTitle: '임계값 동작',
-    list: [
-      { color: '#10b981', letter: '↑', name: '위로 70px+', score: '다음 카드' },
-      { color: '#f59e0b', letter: '↓', name: '아래로 70px+', score: '이전 카드' },
-      { color: '#6b7280', letter: '~', name: '미달 드래그', score: '원위치' },
-    ],
-  },
-  {
-    id: 3,
-    title: '경계에서는\n저항감이 생겨요',
-    metricLabel: '감쇠 계수',
-    metricValue: '× 0.2',
-    metricColor: '#4b94ff',
-    metricDesc: '첫·마지막 카드 경계에서 드래그가 감쇠돼요',
-    listTitle: '저항 적용 구간',
-    list: [
-      { color: '#ef4444', letter: '1', name: '첫 카드 위 드래그', score: '× 0.2' },
-      { color: '#ef4444', letter: 'N', name: '마지막 카드 아래', score: '× 0.2' },
-      { color: '#22c55e', letter: '∞', name: '일반 구간', score: '× 1.0' },
-    ],
-  },
-]
+const N_CARDS = 3
 
 export default function CardStackDemo() {
   const [renderIdx, setRenderIdx] = useState(0)
 
-  const snapIdxRef     = useRef(0)
-  const offsetRef      = useRef(0)
-  const startOffsetRef = useRef(0)
-  const startYRef      = useRef(0)
-  const liveRef        = useRef(false)
-  const isAnimating    = useRef(false)
+  const snapIdxRef  = useRef(0)
+  const offsetRef   = useRef(0)
+  const dragRef     = useRef({ live: false, startY: 0, startOffset: 0 })
+  const isAnimating = useRef(false)
   const cardRefs       = useRef(new Map<number, HTMLDivElement>())
   // pi별 stable ref 콜백 캐시 — inline arrow는 매 렌더에 새 함수가 생겨
   // React가 null→el 재호출하면서 applyTransforms(true)의 transition을 캔슬함
   const cardRefCbs     = useRef(new Map<number, (el: HTMLDivElement | null) => void>())
   const rafIdRef       = useRef(0)
   const stackRef       = useRef<HTMLDivElement>(null)
-  const n = CARDS.length
+  const n = N_CARDS
 
   const getCardRef = useCallback((pi: number) => {
     if (!cardRefCbs.current.has(pi)) {
@@ -126,8 +86,10 @@ export default function CardStackDemo() {
 
   // transition:none → transition:Xms 전환 시 브라우저가 같은 프레임으로 인식해
   // 애니메이션을 건너뛰는 현상 방지 — offsetHeight 참조로 강제 reflow 유발
+  // 어느 한 요소만 읽어도 global layout이 발생하므로 첫 번째 요소만 사용
   const forceReflow = useCallback(() => {
-    cardRefs.current.forEach(el => { void el.offsetHeight })
+    const first = cardRefs.current.values().next().value
+    if (first) void first.offsetHeight
   }, [])
 
   const go = useCallback((dir: 1 | -1) => {
@@ -142,59 +104,82 @@ export default function CardStackDemo() {
     forceReflow()
     applyTransforms(true)
     setRenderIdx(next)
-    setTimeout(() => { isAnimating.current = false }, 500)
+
+    // transitionend로 정확히 해제 — 카드 ref가 없으면 ANIM_MS fallback
+    const release = () => { isAnimating.current = false }
+    const el = cardRefs.current.get(next)
+    if (el) {
+      el.addEventListener('transitionend',    release, { once: true })
+      el.addEventListener('transitioncancel', release, { once: true })
+    } else {
+      setTimeout(release, ANIM_MS)
+    }
   }, [n, applyTransforms, forceReflow])
 
-  // 모든 포인터/터치/휠 이벤트를 native listener로 — React synthetic은
-  // touchmove를 passive 등록해 모바일 스크롤이 우선권을 가져 onTouchEnd 누락 발생
+  // Pointer Events로 touch/mouse 통합 — setPointerCapture로 요소 밖 드래그도 추적
   useEffect(() => {
     const el = stackRef.current
     if (!el) return
 
     const handleStart = (y: number) => {
       if (isAnimating.current) return
-      startYRef.current = y
-      startOffsetRef.current = offsetRef.current
-      liveRef.current = true
+      dragRef.current.startY      = y
+      dragRef.current.startOffset = offsetRef.current
+      dragRef.current.live        = true
       el.style.cursor = 'grabbing'
     }
 
     const handleMove = (y: number) => {
-      if (!liveRef.current) return
-      let delta = y - startYRef.current
+      if (!dragRef.current.live) return
+      let delta = y - dragRef.current.startY
       const idx = snapIdxRef.current
       if (delta < 0 && idx >= n - 1) delta *= 0.2
       if (delta > 0 && idx <= 0) delta *= 0.2
-      offsetRef.current = startOffsetRef.current + delta
-      applyTransforms(false)
-    }
-
-    const handleEnd = (y: number) => {
-      if (!liveRef.current) return
-      liveRef.current = false
-      el.style.cursor = 'grab'
-      const delta = y - startYRef.current
-      if (Math.abs(delta) > THRESHOLD) {
-        go(delta < 0 ? 1 : -1)
-      } else {
-        offsetRef.current = -snapIdxRef.current * CARD_H
-        forceReflow()
-        applyTransforms(true)
+      offsetRef.current = dragRef.current.startOffset + delta
+      // 프레임당 DOM write 최대 1회 — pointermove는 1프레임에 여러 번 올 수 있음
+      if (!rafIdRef.current) {
+        rafIdRef.current = requestAnimationFrame(() => {
+          rafIdRef.current = 0
+          applyTransforms(false)
+        })
       }
     }
 
-    // Touch
-    const onTouchStart = (e: TouchEvent) => handleStart(e.touches[0].clientY)
-    const onTouchMove  = (e: TouchEvent) => {
-      e.preventDefault()  // passive:false 필수 — 페이지 스크롤 차단
-      handleMove(e.touches[0].clientY)
+    const handleEnd = (y: number) => {
+      if (!dragRef.current.live) return
+      dragRef.current.live = false
+      el.style.cursor = 'grab'
+      // pending drag rAF를 flush — 마지막 offset이 반영된 뒤 snap 판단
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = 0
+        applyTransforms(false)
+      }
+      const rawDelta = y - dragRef.current.startY
+      const dir = rawDelta < 0 ? 1 : -1
+      const nextIdx = snapIdxRef.current + dir
+      if (Math.abs(rawDelta) > THRESHOLD && nextIdx >= 0 && nextIdx < n) {
+        go(dir)
+        return
+      }
+      // 임계값 미달이거나 경계(첫·마지막 카드) — 원래 위치로 snap-back
+      offsetRef.current = -snapIdxRef.current * CARD_H
+      forceReflow()
+      applyTransforms(true)
     }
-    const onTouchEnd   = (e: TouchEvent) => handleEnd(e.changedTouches[0].clientY)
 
-    // Mouse (mousemove/mouseup은 window에 — 요소 밖으로 드래그해도 추적)
-    const onMouseDown  = (e: MouseEvent) => handleStart(e.clientY)
-    const onMouseMove  = (e: MouseEvent) => { if (liveRef.current) handleMove(e.clientY) }
-    const onMouseUp    = (e: MouseEvent) => { if (liveRef.current) handleEnd(e.clientY) }
+    // Pointer Events (touch + mouse 통합)
+    const onPointerDown = (e: PointerEvent) => {
+      handleStart(e.clientY)
+      el.setPointerCapture(e.pointerId)  // 요소 밖으로 나가도 move/up 계속 수신
+    }
+    const onPointerMove = (e: PointerEvent) => {
+      if (!dragRef.current.live) return
+      e.preventDefault()  // touch-action:none과 함께 페이지 스크롤 차단
+      handleMove(e.clientY)
+    }
+    const onPointerUp     = (e: PointerEvent) => handleEnd(e.clientY)
+    const onPointerCancel = (e: PointerEvent) => { if (dragRef.current.live) handleEnd(e.clientY) }
 
     // Wheel with rAF debounce
     const onWheel = (e: WheelEvent) => {
@@ -205,24 +190,18 @@ export default function CardStackDemo() {
       })
     }
 
-    el.addEventListener('touchstart',  onTouchStart, { passive: true })
-    el.addEventListener('touchmove',   onTouchMove,  { passive: false })
-    el.addEventListener('touchend',    onTouchEnd,   { passive: true })
-    el.addEventListener('touchcancel', onTouchEnd,   { passive: true })
-    el.addEventListener('mousedown',   onMouseDown)
-    el.addEventListener('wheel',       onWheel,      { passive: false })
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('mouseup',   onMouseUp)
+    el.addEventListener('pointerdown',   onPointerDown)
+    el.addEventListener('pointermove',   onPointerMove,   { passive: false })
+    el.addEventListener('pointerup',     onPointerUp)
+    el.addEventListener('pointercancel', onPointerCancel)
+    el.addEventListener('wheel',         onWheel,         { passive: false })
 
     return () => {
-      el.removeEventListener('touchstart',  onTouchStart)
-      el.removeEventListener('touchmove',   onTouchMove)
-      el.removeEventListener('touchend',    onTouchEnd)
-      el.removeEventListener('touchcancel', onTouchEnd)
-      el.removeEventListener('mousedown',   onMouseDown)
-      el.removeEventListener('wheel',       onWheel)
-      window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('mouseup',   onMouseUp)
+      el.removeEventListener('pointerdown',   onPointerDown)
+      el.removeEventListener('pointermove',   onPointerMove)
+      el.removeEventListener('pointerup',     onPointerUp)
+      el.removeEventListener('pointercancel', onPointerCancel)
+      el.removeEventListener('wheel',         onWheel)
       cancelAnimationFrame(rafIdRef.current)
     }
   }, [go, applyTransforms, forceReflow, n])
@@ -231,33 +210,12 @@ export default function CardStackDemo() {
     .filter(pi => pi >= 0 && pi < n)
 
   return (
-    <div style={{
-      maxWidth: '400px',
-      margin: '0 auto',
-      background: DARK,
-      borderRadius: '20px',
-      overflow: 'hidden',
-      height: STACK_H,
-      fontFamily: 'Pretendard, sans-serif',
-    }}>
-      <div
-        ref={stackRef}
-        style={{
-          position: 'relative',
-          height: STACK_H,
-          overflow: 'hidden',
-          transform: 'translateZ(0)',
-          touchAction: 'none',
-          userSelect: 'none',
-          cursor: 'grab',
-        }}
-      >
+    <div style={outerStyle}>
+      <div ref={stackRef} style={stackStyle}>
         {pis.map(pi => (
           <CardStackCard
             key={pi}
-            card={CARDS[pi]}
             pi={pi}
-            n={n}
             isActive={pi === renderIdx}
             getCardRef={getCardRef}
           />
