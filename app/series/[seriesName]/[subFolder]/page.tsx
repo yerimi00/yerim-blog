@@ -9,6 +9,21 @@ import HorizontalCardSwipeDemo from '@/components/blog/HorizontalCardSwipeDemo'
 import CenteredCardSwipeDemo from '@/components/blog/CenteredCardSwipeDemo'
 import WalletCardDemo from '@/components/blog/WalletCardDemo'
 import WalletCardDemo2 from '@/components/blog/WalletCardDemo2'
+import MicroInteractionDemo from '@/components/blog/MicroInteractionDemo'
+import PhysicsHeartDemo from '@/components/blog/PhysicsHeartDemo'
+import OnboardingSliderDemo from '@/components/blog/OnboardingSliderDemo'
+import ViewToggleDemo from '@/components/blog/ViewToggleDemo'
+import PriceRangeSliderDemo from '@/components/blog/PriceRangeSliderDemo'
+import ChipFilterDemo from '@/components/blog/ChipFilterDemo'
+import CategoryDimmingDemo from '@/components/blog/CategoryDimmingDemo'
+import NotificationSSEDemo from '@/components/blog/NotificationSSEDemo'
+import SignupWizardDemo from '@/components/blog/SignupWizardDemo'
+import InfiniteScrollDemo from '@/components/blog/InfiniteScrollDemo'
+import AutoSaveDemo from '@/components/blog/AutoSaveDemo'
+import DressFittingDemo from '@/components/blog/DressFittingDemo'
+import SearchBarBadgeDemo from '@/components/blog/SearchBarBadgeDemo'
+import BannerCarouselDemo from '@/components/blog/BannerCarouselDemo'
+import MyTabsDemo from '@/components/blog/MyTabsDemo'
 
 export const revalidate = 86400
 
@@ -39,6 +54,66 @@ const DEMOS: Record<string, { title: string; description: string }> = {
   'wallet-card-2': {
     title: '지갑 카드 스택 2',
     description: '호버·클릭으로 카드가 위로 펼쳐지는 지갑 스택 인터랙션',
+  },
+  'micro-interaction': {
+    title: '마이크로 인터랙션',
+    description: '좋아요·토글·복사·제출·알림·체크박스 등 소형 UI 인터랙션 모음',
+  },
+  'physics-heart': {
+    title: '물리 하트 + 바텀시트',
+    description: '할일 완료 시 물리 엔진 기반 하트가 떨어지는 인터랙션 + 드래그 바텀시트',
+  },
+  'onboarding-slider': {
+    title: '온보딩 슬라이더',
+    description: '3단계 온보딩 슬라이더. 3.5초 자동재생, 스와이프·인디케이터 클릭 연동',
+  },
+  'view-toggle': {
+    title: '뷰 토글',
+    description: '슬라이딩 캡슐 토글로 두 뷰를 전환하는 Controlled/Uncontrolled 패턴',
+  },
+  'price-range-slider': {
+    title: '가격 범위 슬라이더',
+    description: '10~1000만원 로그 스케일 19단계 슬라이더. 말풍선 위치 동적 계산 + ResizeObserver',
+  },
+  'chip-filter': {
+    title: '칩 필터',
+    description: '단일 선택과 다중 선택을 지원하는 검색 필터 칩 그룹',
+  },
+  'category-dimming': {
+    title: '카테고리 Dimming',
+    description: '카테고리 선택 시 나머지를 grayscale + opacity로 흐리게 처리하는 인터랙션',
+  },
+  'notification-sse': {
+    title: '실시간 알림 (SSE)',
+    description: 'fetch + ReadableStream으로 구현한 SSE 실시간 알림. 자동 재연결 내장',
+  },
+  'signup-wizard': {
+    title: '회원가입 Wizard',
+    description: '약관 동의 → 본인확인 → 추가정보 3단계 멀티스텝 폼',
+  },
+  'infinite-scroll': {
+    title: '무한 스크롤',
+    description: 'IntersectionObserver 기반 무한 스크롤. 카테고리별 분기 + 페이지네이션',
+  },
+  'auto-save': {
+    title: '자동저장 (이중 레이어)',
+    description: '500ms 디바운스 + pagehide flush 이중 자동저장. localStorage 드래프트 복원',
+  },
+  'dress-fitting': {
+    title: '필터 선택 UI',
+    description: '다중 선택 + 단일 선택 pill 인터랙션',
+  },
+  'search-bar-badge': {
+    title: '검색바 + 알림 배지',
+    description: '알림 미확인 수에 따라 아이콘이 바뀌는 검색바 + 알림 패널',
+  },
+  'banner-carousel': {
+    title: '배너 캐러셀',
+    description: '4초 자동재생 배너. 진행 바 애니메이션, 스와이프 지원, GPU 가속',
+  },
+  'my-tabs': {
+    title: '마이페이지 탭',
+    description: '하단 강조선이 애니메이션되는 탭 전환 UI',
   },
 }
 
@@ -109,6 +184,21 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
           : subFolder === 'centered-card-swipe' ? <CenteredCardSwipeDemo />
           : subFolder === 'wallet-card' ? <WalletCardDemo />
           : subFolder === 'wallet-card-2' ? <WalletCardDemo2 />
+          : subFolder === 'micro-interaction' ? <MicroInteractionDemo />
+          : subFolder === 'physics-heart' ? <PhysicsHeartDemo />
+          : subFolder === 'onboarding-slider' ? <OnboardingSliderDemo />
+          : subFolder === 'view-toggle' ? <ViewToggleDemo />
+          : subFolder === 'price-range-slider' ? <PriceRangeSliderDemo />
+          : subFolder === 'chip-filter' ? <ChipFilterDemo />
+          : subFolder === 'category-dimming' ? <CategoryDimmingDemo />
+          : subFolder === 'notification-sse' ? <NotificationSSEDemo />
+          : subFolder === 'signup-wizard' ? <SignupWizardDemo />
+          : subFolder === 'infinite-scroll' ? <InfiniteScrollDemo />
+          : subFolder === 'auto-save' ? <AutoSaveDemo />
+          : subFolder === 'dress-fitting' ? <DressFittingDemo />
+          : subFolder === 'search-bar-badge' ? <SearchBarBadgeDemo />
+          : subFolder === 'banner-carousel' ? <BannerCarouselDemo />
+          : subFolder === 'my-tabs' ? <MyTabsDemo />
           : <CardStackDemo />}
 
       </main>
