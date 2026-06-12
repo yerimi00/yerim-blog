@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import type { CSSProperties } from 'react'
 
 const CARD_H = 460
@@ -80,13 +80,11 @@ export default function ColorCardStackDemo() {
 
   const snapIdxRef  = useRef(0)
   const offsetRef   = useRef(0)
-  const startOffsetRef = useRef(0)
-  const startYRef      = useRef(0)
-  const liveRef        = useRef(false)
+  const dragRef     = useRef({ live: false, startY: 0, startOffset: 0 })
   const isAnimating = useRef(false)
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const rafIdRef = useRef(0)
-  const stackRef = useRef<HTMLDivElement>(null)
+  const cardRefs    = useRef<(HTMLDivElement | null)[]>([])
+  const rafIdRef    = useRef(0)
+  const stackRef    = useRef<HTMLDivElement>(null)
   const n = CARDS.length
 
   const applyTransforms = useCallback((withTransition: boolean) => {
@@ -101,16 +99,10 @@ export default function ColorCardStackDemo() {
     })
   }, [])
 
-  const forceReflow = useCallback(() => {
-    const first = cardRefs.current.find(el => el != null)
-    if (first) void first.offsetHeight
-  }, [])
-
   const snapToCurrent = useCallback(() => {
     offsetRef.current = -snapIdxRef.current * CARD_H
-    forceReflow()
     applyTransforms(true)
-  }, [applyTransforms, forceReflow])
+  }, [applyTransforms])
 
   const go = useCallback((dir: 1 | -1) => {
     if (isAnimating.current) return
@@ -121,7 +113,6 @@ export default function ColorCardStackDemo() {
     snapIdxRef.current = next
     offsetRef.current = -next * CARD_H
 
-    forceReflow()
     applyTransforms(true)
     setRenderIdx(next)
 
@@ -133,7 +124,7 @@ export default function ColorCardStackDemo() {
     } else {
       setTimeout(release, ANIM_MS)
     }
-  }, [n, applyTransforms, forceReflow])
+  }, [n, applyTransforms])
 
   useEffect(() => {
     const el = stackRef.current
@@ -141,27 +132,27 @@ export default function ColorCardStackDemo() {
 
     const handleStart = (y: number) => {
       if (isAnimating.current) return
-      startYRef.current = y
-      startOffsetRef.current = offsetRef.current
-      liveRef.current = true
+      dragRef.current.startY      = y
+      dragRef.current.startOffset = offsetRef.current
+      dragRef.current.live        = true
       el.style.cursor = 'grabbing'
     }
 
     const handleMove = (y: number) => {
-      if (!liveRef.current) return
-      let delta = y - startYRef.current
+      if (!dragRef.current.live) return
+      let delta = y - dragRef.current.startY
       const idx = snapIdxRef.current
       if (delta < 0 && idx >= n - 1) delta *= 0.2
       if (delta > 0 && idx <= 0)     delta *= 0.2
-      offsetRef.current = startOffsetRef.current + delta
+      offsetRef.current = dragRef.current.startOffset + delta
       applyTransforms(false)
     }
 
     const handleEnd = (y: number) => {
-      if (!liveRef.current) return
-      liveRef.current = false
+      if (!dragRef.current.live) return
+      dragRef.current.live = false
       el.style.cursor = 'grab'
-      const delta = y - startYRef.current
+      const delta = y - dragRef.current.startY
       const dir = delta < 0 ? 1 : -1
       const nextIdx = snapIdxRef.current + dir
       if (Math.abs(delta) > THRESHOLD && nextIdx >= 0 && nextIdx < n) {
@@ -177,12 +168,12 @@ export default function ColorCardStackDemo() {
       el.setPointerCapture(e.pointerId)
     }
     const onPointerMove   = (e: PointerEvent) => {
-      if (!liveRef.current) return
+      if (!dragRef.current.live) return
       e.preventDefault()
       handleMove(e.clientY)
     }
     const onPointerUp     = (e: PointerEvent) => handleEnd(e.clientY)
-    const onPointerCancel = (e: PointerEvent) => { if (liveRef.current) handleEnd(e.clientY) }
+    const onPointerCancel = (e: PointerEvent) => { if (dragRef.current.live) handleEnd(e.clientY) }
     const onWheel         = (e: WheelEvent) => {
       e.preventDefault()
       cancelAnimationFrame(rafIdRef.current)
@@ -203,10 +194,12 @@ export default function ColorCardStackDemo() {
       el.removeEventListener('wheel',         onWheel)
       cancelAnimationFrame(rafIdRef.current)
     }
-  }, [go, applyTransforms, forceReflow, snapToCurrent, n])
+  }, [go, applyTransforms, snapToCurrent, n])
 
-  const pis = [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2]
-    .filter(pi => pi >= 0 && pi < n)
+  const pis = useMemo(
+    () => [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2].filter(pi => pi >= 0 && pi < n),
+    [renderIdx, n],
+  )
 
   return (
     <div style={outerStyle}>

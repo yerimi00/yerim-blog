@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import type { CSSProperties } from 'react'
 import CardStackCard from './CardStackCard'
 
@@ -190,8 +190,10 @@ export default function CardStackDemo() {
     }
   }, [go, applyTransforms, forceReflow, snapToCurrent, n])
 
-  const pis = [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2]
-    .filter(pi => pi >= 0 && pi < n)
+  const pis = useMemo(
+    () => [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2].filter(pi => pi >= 0 && pi < n),
+    [renderIdx, n],
+  )
 
   return (
     <div style={outerStyle}>
