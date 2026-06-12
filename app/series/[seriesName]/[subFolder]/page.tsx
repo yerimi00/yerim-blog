@@ -25,6 +25,7 @@ import SearchBarBadgeDemo from '@/components/blog/SearchBarBadgeDemo'
 import BannerCarouselDemo from '@/components/blog/BannerCarouselDemo'
 import MyTabsDemo from '@/components/blog/MyTabsDemo'
 import DropHeartStackDemo from '@/components/blog/DropHeartStackDemo'
+import MagneticButtonDemo from '@/components/blog/MagneticButtonDemo'
 
 export const revalidate = 86400
 
@@ -120,6 +121,10 @@ const DEMOS: Record<string, { title: string; description: string }> = {
     title: '하트 쌓기',
     description: '버튼을 누르면 하트 원형 아이템이 떨어져 물리 기반으로 쌓이는 인터랙션',
   },
+  'magnetic-button': {
+    title: '마그네틱 버튼',
+    description: '마우스가 가까워지면 버튼이 반대 방향으로 도망치는 인터랙션',
+  },
 }
 
 export async function generateStaticParams() {
@@ -205,6 +210,7 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
           : subFolder === 'banner-carousel' ? <BannerCarouselDemo />
           : subFolder === 'my-tabs' ? <MyTabsDemo />
           : subFolder === 'drop-heart-stack' ? <DropHeartStackDemo />
+          : subFolder === 'magnetic-button' ? <MagneticButtonDemo />
           : <CardStackDemo />}
 
       </main>
