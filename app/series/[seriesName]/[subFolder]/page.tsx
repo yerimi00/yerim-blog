@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { IoIosArrowBack } from 'react-icons/io'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import PostBody from '@/components/blog/PostBody'
+import { getPostBySlug, getPostContent } from '@/lib/notion'
 import { DEMOS, DEMO_COMPONENTS } from '@/app/data/interactions/interactions-data'
 
 export const revalidate = 86400
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: { params: { subFolder: string
   }
 }
 
-export default function SubFolderPage({ params }: { params: { seriesName: string; subFolder: string } }) {
+export default async function SubFolderPage({ params }: { params: { seriesName: string; subFolder: string } }) {
   const { seriesName, subFolder } = params
 
   if (seriesName !== INTERACTION_SERIES) notFound()
@@ -34,6 +36,9 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
   if (!demo) notFound()
 
   const Demo = DEMO_COMPONENTS[subFolder]
+
+  const post = await getPostBySlug(subFolder)
+  const postContent = post ? await getPostContent(post.id) : null
 
   return (
     <>
@@ -73,6 +78,14 @@ export default function SubFolderPage({ params }: { params: { seriesName: string
 
         {/* 데모 */}
         <Demo />
+
+        {/* 블로그 본문 */}
+        {postContent && (
+          <>
+            <hr style={{ borderColor: 'var(--border)', margin: '3rem 0 2.5rem' }} />
+            <PostBody content={postContent} />
+          </>
+        )}
 
       </main>
       <Footer />
