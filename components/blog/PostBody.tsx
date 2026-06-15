@@ -1,5 +1,12 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
+
+function extractText(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(extractText).join('')
+  if (React.isValidElement(node)) return extractText((node as React.ReactElement<{ children?: React.ReactNode }>).props.children)
+  return ''
+}
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeHighlight from 'rehype-highlight'
@@ -125,7 +132,7 @@ export default function PostBody({ content }: { content: string }) {
               (child) => React.isValidElement(child) && (child as React.ReactElement).type === 'code'
             ) as React.ReactElement | undefined
             const lang = codeChild?.props?.className?.replace('language-', '') ?? null
-            const codeText = String(codeChild?.props?.children ?? '').replace(/\n$/, '')
+            const codeText = extractText(codeChild?.props?.children).replace(/\n$/, '')
 
             if (lang === 'mermaid') {
               return <MermaidBlock code={codeText} />
