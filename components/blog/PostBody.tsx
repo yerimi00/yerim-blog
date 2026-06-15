@@ -1,5 +1,11 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
+import CodeBlock from './CodeBlock'
+import MermaidBlock from './MermaidBlock'
 
 function extractText(node: React.ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') return String(node)
@@ -7,12 +13,6 @@ function extractText(node: React.ReactNode): string {
   if (React.isValidElement(node)) return extractText((node as React.ReactElement<{ children?: React.ReactNode }>).props.children)
   return ''
 }
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeSlug from 'rehype-slug'
-import CopyButton from './CopyButton'
-import MermaidBlock from './MermaidBlock'
 
 export default function PostBody({ content }: { content: string }) {
   return (
@@ -127,37 +127,19 @@ export default function PostBody({ content }: { content: string }) {
           em: ({ children }) => (
             <em style={{ fontStyle: 'italic', color: 'inherit' }}>{children}</em>
           ),
-          pre: ({ children, ...props }) => {
+          pre: ({ children }) => {
             const codeChild = React.Children.toArray(children).find(
               (child) => React.isValidElement(child) && (child as React.ReactElement).type === 'code'
             ) as React.ReactElement | undefined
-            const lang = codeChild?.props?.className?.replace('language-', '') ?? null
-            const codeText = extractText(codeChild?.props?.children).replace(/\n$/, '')
+            const className = (codeChild?.props?.className as string) ?? ''
+            const langMatch = className.match(/language-(\S+)/)
+            const lang = langMatch?.[1] ?? null
 
             if (lang === 'mermaid') {
-              return <MermaidBlock code={codeText} />
+              return <MermaidBlock code={extractText(codeChild?.props?.children)} />
             }
 
-            return (
-              <div style={{ position: 'relative', margin: '1rem 0' }}>
-                {lang && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '0.5rem',
-                    right: '4.5rem',
-                    fontSize: '0.72rem',
-                    color: '#6b7280',
-                    fontFamily: 'JetBrains Mono, monospace',
-                    userSelect: 'none',
-                    zIndex: 1,
-                  }}>
-                    {lang}
-                  </span>
-                )}
-                <CopyButton code={codeText} />
-                <pre {...props} style={{ margin: 0 }}>{children}</pre>
-              </div>
-            )
+            return <CodeBlock lang={lang}>{children}</CodeBlock>
           },
           blockquote: ({ children }) => (
             <blockquote className="prose-blockquote">

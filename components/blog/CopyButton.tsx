@@ -3,15 +3,32 @@
 import { useState } from 'react'
 import { FiCopy, FiCheck } from 'react-icons/fi'
 
-export default function CopyButton({ code }: { code: string }) {
+export default function CopyButton({ getCode }: { getCode: () => string }) {
   const [copied, setCopied] = useState(false)
 
   const copy = async () => {
+    const code = getCode()
     try {
       await navigator.clipboard.writeText(code)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
-    } catch {}
+    } catch {
+      try {
+        const el = document.createElement('textarea')
+        el.value = code
+        el.style.position = 'fixed'
+        el.style.opacity = '0'
+        document.body.appendChild(el)
+        el.focus()
+        el.select()
+        document.execCommand('copy')
+        document.body.removeChild(el)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1500)
+      } catch {
+        console.error('[CopyButton] 복사 실패. code length:', code.length)
+      }
+    }
   }
 
   return (
