@@ -20,11 +20,13 @@ export default function AboutSidebarCard() {
           style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
         />
         <div>
-          <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.1rem' }}>yerim</p>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>개발을 배우고, 배운 것을 기록합니다</p>
+          <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.1rem' }}>yerim</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>
+            결과로 신뢰를 만드는 개발자
+          </p>
         </div>
       </div>
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem', display: 'flex', gap: '0.75rem' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'left', gap: '0.75rem' }}>
         {[
           { label: 'GitHub', href: 'https://github.com/yerimi00' },
           { label: 'Velog', href: 'https://velog.io/@yerimi00' },

@@ -77,7 +77,10 @@ export default function AboutVersionContent({ version }: { version: AboutVersion
                   : '안녕하세요, 결과로 신뢰를 만드는 개발자 이예림입니다.'}
               />
             </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>개발을 배우고, 배운 것을 기록합니다</p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              함께 일하기 좋은 개발자가 되기 위해 <strong>소통</strong>과 <strong>책임</strong>을 중요하게 생각합니다.<br />
+              프로젝트 경험과 기술적 고민을 기록하고 있습니다.
+            </p>
           </div>
         </div>
       </SectionReveal>
