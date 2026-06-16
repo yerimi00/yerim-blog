@@ -7,7 +7,6 @@ import {
   HiOutlineDocumentText, HiDocumentText,
   HiOutlineFolder, HiFolder,
   HiOutlineBriefcase, HiBriefcase,
-  HiOutlineUser, HiUser,
 } from 'react-icons/hi2'
 
 const NAV_ITEMS = [
@@ -15,7 +14,6 @@ const NAV_ITEMS = [
   { href: '/blog',    label: 'Blog',    Icon: HiOutlineDocumentText, ActiveIcon: HiDocumentText },
   { href: '/series',  label: 'Series',  Icon: HiOutlineFolder,       ActiveIcon: HiFolder },
   { href: '/project', label: 'Project', Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
-  { href: '/about',   label: 'About',   Icon: HiOutlineUser,         ActiveIcon: HiUser },
 ]
 
 export default function BottomNav() {
