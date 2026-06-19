@@ -303,6 +303,26 @@ export async function getPostsByProject(projectSlug: string): Promise<{
   }
 }
 
+// 활동 목록 조회
+export type Activity = { period: string; title: string; category: ('개발' | 'PM')[] }
+
+export const getAllActivities = cache(async (): Promise<Activity[]> => {
+  const dbId = process.env.NOTION_ACTIVITIES_DATABASE_ID
+  if (!dbId) return []
+  const response = await notion.databases.query({ database_id: dbId })
+  return response.results
+    .filter((p): p is PageObjectResponse => 'properties' in p)
+    .map((p) => {
+      const props = p.properties
+      const title = props.Name?.type === 'title' ? props.Name.title[0]?.plain_text ?? '' : ''
+      const period = props.Period?.type === 'rich_text' ? props.Period.rich_text[0]?.plain_text ?? '' : ''
+      const category = props.Category?.type === 'multi_select'
+        ? (props.Category.multi_select.map((s) => s.name) as ('개발' | 'PM')[])
+        : []
+      return { period, title, category }
+    })
+})
+
 // 시리즈 목록 추출
 export async function getAllSeries(): Promise<string[]> {
   const posts = await getAllPosts()

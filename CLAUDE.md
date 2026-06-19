@@ -28,6 +28,7 @@ Required in `.env.local`:
 - `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` — Google AdSense publisher ID (`ca-pub-*`)
 - `NEXT_PUBLIC_ADSENSE_POST_SLOT` — AdSense ad unit slot ID for post pages
 - `NOTION_PROJECTS_DATABASE_ID` — ID of the Notion Projects database
+- `NOTION_ACTIVITIES_DATABASE_ID` — ID of the Notion Activities database (`cc1bc9501c2546e580c4efa5a6e05cab`)
 
 ## Core Principles
 
@@ -79,6 +80,7 @@ Key functions in `lib/notion.ts`:
 - `getAllSeries()` — all unique series names
 - `incrementViews(pageId)` — increments the `Views` property by 1
 - `getPostsByProject(projectSlug)` — Blog Posts DB에서 `Project == slug` 필터 후 `{ troubleshooting, retrospective, other }` 분류
+- `getAllActivities()` — Activities DB 전체 조회 → `Activity[]` (`{ period, title, category }`) 반환. About 페이지 server component에서 호출 후 prop으로 전달
 
 Key functions in `lib/projects.ts`:
 - `getAllProjects()` — Projects DB 전체 조회 (React cache)

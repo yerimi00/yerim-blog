@@ -13,8 +13,8 @@ import {
   interestsByVersion,
   awards,
   education,
-  activities,
 } from '@/app/about/[version]/data'
+import type { Activity } from '@/lib/notion'
 
 const sectionHeadingStyle: React.CSSProperties = {
   fontSize: '0.8rem',
@@ -52,12 +52,18 @@ const philosophyByVersion: Record<AboutVersion, { who: string; cards: { title: s
   },
 }
 
-export default function AboutVersionContent({ version }: { version: AboutVersion }) {
+export default function AboutVersionContent({
+  version,
+  activities,
+}: {
+  version: AboutVersion
+  activities: Activity[]
+}) {
   const isPM = version === 'pm'
   const techStack = techStackByVersion[version]
   const interests = interestsByVersion[version]
   const philosophy = philosophyByVersion[version]
-  const versionActivities = isPM ? activities : activities.filter((a) => a.category === '개발')
+  const versionActivities = isPM ? activities : activities.filter((a) => a.category.includes('개발'))
 
   return (
     <div>
