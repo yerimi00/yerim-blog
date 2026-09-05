@@ -1,7 +1,14 @@
+export interface AiSkillVariant {
+  name: string
+  description: string
+  command: string
+}
+
 export interface AiSkill {
   name: string
   description: string
   command: string
+  variants?: AiSkillVariant[]
 }
 
 export interface AiSkillCategory {
@@ -30,8 +37,40 @@ export const aiSkillCategories: AiSkillCategory[] = [
     skills: [
       {
         name: 'ponytail',
-        description: '가장 단순하고 게으른 해법을 우선하도록 강제하는 코드 스타일 원칙(YAGNI, 표준 라이브러리 우선). 과설계가 의심될 때 켭니다.',
+        description: '가장 단순하고 게으른 해법을 우선하도록 강제하는 코드 스타일 원칙(YAGNI, 표준 라이브러리 우선). 과설계가 의심될 때 켭니다. 하위 명령이 여러 개라 눌러서 확인할 수 있습니다.',
         command: 'ponytail',
+        variants: [
+          {
+            name: 'ponytail',
+            description: '기본 모드. 코딩 작업 전반에서 최소 구현·표준 라이브러리 우선을 강제합니다.',
+            command: 'ponytail',
+          },
+          {
+            name: 'ponytail-review',
+            description: '과잉설계만 짚어내는 코드 리뷰입니다. 정확성 리뷰는 하지 않습니다.',
+            command: '과잉설계 리뷰해줘',
+          },
+          {
+            name: 'ponytail-audit',
+            description: '레포 전체를 훑어 과잉설계된 부분을 감사 리포트로 정리합니다.',
+            command: '이 코드베이스 감사해줘',
+          },
+          {
+            name: 'ponytail-debt',
+            description: '코드 안에 남겨둔 `ponytail:` 주석(의도적으로 미룬 타협)을 모아 목록화합니다.',
+            command: 'ponytail debt',
+          },
+          {
+            name: 'ponytail-gain',
+            description: '벤치마크 기준으로 얼마나 코드가 줄고 효율이 오르는지 요약해서 보여줍니다.',
+            command: 'ponytail gain',
+          },
+          {
+            name: 'ponytail-help',
+            description: '전체 명령어를 한눈에 볼 수 있는 빠른 참고 카드입니다.',
+            command: 'ponytail help',
+          },
+        ],
       },
       {
         name: 'code-review',
