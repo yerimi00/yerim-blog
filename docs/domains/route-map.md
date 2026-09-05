@@ -17,6 +17,7 @@
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/project` | `app/project/page.tsx` | 3600 | 프로젝트 포트폴리오. Notion Projects DB 기반. |
 | `/project/[slug]` | `app/project/[slug]/page.tsx` | 3600 | 프로젝트 상세. 관련 블로그 글 트러블슈팅/회고/기타 섹션 분리. generateStaticParams. |
+| `/ai-skills` | `app/ai-skills/page.tsx` | — | Claude Code 활용 스킬 소개 (포트폴리오용). 데이터는 `app/data/ai-skills.ts` 정적 파일, Notion 연동 없음. |
 | `/notices` | `app/notices/page.tsx` | — | 공지사항 Accordion. Client Component. |
 | `/guestbook` | `app/guestbook/page.tsx` | — | `force-dynamic`. 모바일 허용. |
 

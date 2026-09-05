@@ -117,6 +117,7 @@ Key functions in `lib/guestbook.ts`:
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/project` | `app/project/page.tsx` | Project portfolio list |
 | `/project/[slug]` | `app/project/[slug]/page.tsx` | Project detail |
+| `/ai-skills` | `app/ai-skills/page.tsx` | AI Skills showcase (curated, portfolio-facing). Data from static `app/data/ai-skills.ts`, no Notion. |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |

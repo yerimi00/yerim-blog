@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/blog', label: 'Blog' },
   { href: '/series', label: 'Series' },
   { href: '/project', label: 'Project' },
+  { href: '/ai-skills', label: 'AI Skills' },
   { href: '/about', label: 'About' },
 ]
 

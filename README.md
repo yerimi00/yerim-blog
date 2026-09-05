@@ -93,6 +93,7 @@ yerim-blog/
 │   ├── series/                   # 시리즈 목록 / 상세
 │   ├── about/[version]/          # 소개 (fe / be / pm)
 │   ├── project/                  # 프로젝트 목록
+│   ├── ai-skills/                # AI 스킬 소개 (정적 데이터, Notion 미사용)
 │   ├── guestbook/                # 방명록
 │   ├── notices/                  # 공지사항
 │   └── api/                      # API 라우트
@@ -174,6 +175,10 @@ npm run lint
 > 변경 유형: `Added` 새 기능 / `Changed` 변경 / `Fixed` 버그 수정 / `Removed` 제거
 
 ### [Unreleased]
+
+#### Added
+
+- `/ai-skills` 페이지: 실무에서 쓰는 Claude Code 스킬 소개 (정적 데이터, Notion 미사용). Header 내비게이션에 노출.
 
 ### [2026-04-30] — Design System
 
