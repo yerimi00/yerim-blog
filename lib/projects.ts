@@ -1,8 +1,9 @@
 import { cache } from 'react'
 import { Client } from '@notionhq/client'
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
+import { fetchWithRetry } from './notion-fetch'
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN })
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: fetchWithRetry })
 const PROJECTS_DB_ID = process.env.NOTION_PROJECTS_DATABASE_ID!
 
 export type NotionProject = {
@@ -78,9 +79,17 @@ export const getAllProjects = cache(async (): Promise<NotionProject[]> => {
     database_id: PROJECTS_DB_ID,
     sorts: [{ property: 'Period', direction: 'descending' }],
   })
-  return response.results
+  const projects = response.results
     .filter((page): page is PageObjectResponse => 'properties' in page)
     .map(extractProject)
+
+  const valid = projects.filter((p) => p.slug)
+  if (valid.length !== projects.length) {
+    console.warn(
+      `[getAllProjects] ${projects.length - valid.length}개 프로젝트에 Slug가 비어 있어 제외했습니다.`
+    )
+  }
+  return valid
 })
 
 export async function getProjectBySlug(slug: string): Promise<NotionProject | null> {
