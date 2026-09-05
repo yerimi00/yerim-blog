@@ -58,19 +58,23 @@ export default function AiSkillModal({ skill, isOpen, onClose }: Props) {
           {skill.description}
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {skill.variants?.map((variant) => (
-            <div key={variant.name}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.3rem' }}>
-                {variant.name}
-              </h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: '0 0 0.6rem' }}>
-                {variant.description}
-              </p>
-              <AiSkillCommandBox command={variant.command} />
-            </div>
-          ))}
-        </div>
+        {skill.variants ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {skill.variants.map((variant) => (
+              <div key={variant.name}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.3rem' }}>
+                  {variant.name}
+                </h3>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: '0 0 0.6rem' }}>
+                  {variant.description}
+                </p>
+                <AiSkillCommandBox command={variant.command} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <AiSkillCommandBox command={skill.command} />
+        )}
       </div>
     </div>,
     document.body

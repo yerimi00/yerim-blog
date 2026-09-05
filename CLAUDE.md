@@ -142,6 +142,7 @@ Key functions in `lib/guestbook.ts`:
 | `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
 | `components/project/` | Project page UI |
+| `components/ai-skills/` | AI Skills page UI: AiSkillSection, AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 
