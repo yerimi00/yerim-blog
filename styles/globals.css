@@ -93,7 +93,8 @@
     transition:
       background-color 0.2s,
       color 0.2s;
-    overflow-x: hidden;
+    /* hidden이면 body가 스크롤 컨테이너가 돼서 하위 position: sticky가 전부 깨진다. clip은 넘침만 자른다 */
+    overflow-x: clip;
   }
 
   /* ── Typography Scale ── */
