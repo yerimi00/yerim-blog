@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
+import { motion, AnimatePresence } from 'motion/react'
+import { duration } from '@/components/motion/presets'
 
 const NOTICES = [
   {
@@ -83,19 +85,26 @@ export default function NoticesPage() {
                     </div>
                     <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{notice.date}</span>
                   </div>
-                  <IoIosArrowDown
-                    style={{
-                      color: 'var(--text-muted)',
-                      transform: isOpen ? 'rotate(180deg)' : 'none',
-                      transition: 'transform 0.2s',
-                      flexShrink: 0,
-                    }}
-                  />
+                  <motion.span
+                    initial={false}
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ display: 'flex', color: 'var(--text-muted)', flexShrink: 0 }}
+                  >
+                    <IoIosArrowDown />
+                  </motion.span>
                 </button>
 
                 {/* 본문 */}
+                <AnimatePresence initial={false}>
                 {isOpen && (
-                  <div style={{ paddingBottom: '1.5rem' }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: duration.fast }}
+                    style={{ paddingBottom: '1.5rem' }}
+                  >
                     <ul style={{ margin: 0, paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       {notice.content.map((item, j) => (
                         <li key={j} style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
@@ -103,8 +112,9 @@ export default function NoticesPage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </motion.div>
                 )}
+                </AnimatePresence>
               </div>
             )
           })}

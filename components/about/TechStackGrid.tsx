@@ -2,6 +2,8 @@
 
 import { useState, useRef, useLayoutEffect } from 'react'
 import type { IconType } from 'react-icons'
+import { motion, AnimatePresence } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 import {
   SiHtml5, SiJavascript, SiTypescript, SiReact, SiNextdotjs,
   SiRecoil, SiReactquery, SiStyledcomponents, SiTailwindcss,
@@ -101,7 +103,13 @@ function TechPopup({ tech }: { tech: TechItem }) {
   const tailLeft = 34 - leftAdjust
 
   return (
-    <div ref={ref} style={{
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 4 }}
+      transition={fastTween}
+      style={{
       position: 'absolute',
       bottom: 'calc(100% + 10px)',
       left: leftAdjust,
@@ -147,7 +155,7 @@ function TechPopup({ tech }: { tech: TechItem }) {
       }}>
         {tech.desc}
       </p>
-    </div>
+    </motion.div>
   )
 }
 
@@ -179,8 +187,10 @@ export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) 
                     onMouseEnter={() => setHovered(tech.name)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                    {isVisible && <TechPopup tech={tech} />}
-                    <button
+                    <AnimatePresence>
+                      {isVisible && <TechPopup tech={tech} />}
+                    </AnimatePresence>
+                    <motion.button
                       onClick={() => {
                         if (tapped === tech.name) {
                           setTapped(null)
@@ -189,21 +199,25 @@ export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) 
                           setTapped(tech.name)
                         }
                       }}
+                      initial={false}
+                      animate={{
+                        borderColor: isVisible ? 'var(--accent)' : 'var(--border)',
+                        background: isVisible ? 'color-mix(in srgb, var(--accent) 7%, transparent)' : 'var(--bg-secondary)',
+                      }}
+                      transition={fastTween}
                       style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
                         padding: '0.75rem 0.875rem',
-                        border: `1.5px solid ${isVisible ? 'var(--accent)' : 'var(--border)'}`,
+                        borderWidth: '1.5px', borderStyle: 'solid',
                         borderRadius: '12px',
-                        background: isVisible ? 'color-mix(in srgb, var(--accent) 7%, transparent)' : 'var(--bg-secondary)',
                         cursor: 'pointer', minWidth: '68px', outline: 'none',
-                        transition: 'border-color 0.15s, background 0.15s',
                       }}
                     >
                       <TechIcon icon={tech.icon} name={tech.name} size={28} />
                       <span style={{ fontSize: '0.65rem', color: 'var(--text)', fontWeight: 500, whiteSpace: 'nowrap' }}>
                         {tech.name}
                       </span>
-                    </button>
+                    </motion.button>
                   </div>
                 )
               })}

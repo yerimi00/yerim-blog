@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 
 export interface TocHeading {
   level: number
@@ -55,8 +57,11 @@ export default function TableOfContents({ headings }: { headings: TocHeading[] }
       <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
         {headings.map(({ id, text, level }) => (
           <li key={id} style={{ paddingLeft: level === 3 ? '1.25rem' : '0' }}>
-            <a
+            <motion.a
               href={`#${id}`}
+              initial={false}
+              animate={{ color: activeId === id ? 'var(--text)' : 'var(--text-muted)' }}
+              transition={fastTween}
               onClick={(e) => {
                 e.preventDefault()
                 document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -66,14 +71,12 @@ export default function TableOfContents({ headings }: { headings: TocHeading[] }
                 padding: '0.25rem 0.25rem',
                 fontSize: level === 2 ? '0.82rem' : '0.76rem',
                 fontWeight: activeId === id ? 600 : 400,
-                color: activeId === id ? 'var(--text)' : 'var(--text-muted)',
                 textDecoration: 'none',
                 lineHeight: 1.4,
-                transition: 'color 0.15s',
               }}
             >
               {text}
-            </a>
+            </motion.a>
           </li>
         ))}
       </ol>

@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 
 const TOC_ITEMS = [
   { id: 'about', label: 'About' },
@@ -53,15 +55,16 @@ export default function AboutToc() {
   }
 
   return (
-    <nav
+    <motion.nav
       aria-label="페이지 목차"
       className="about-toc-fixed"
+      initial={false}
+      animate={{ top }}
+      transition={{ duration: 0.1, ease: 'linear' }}
       style={{
         position: 'fixed',
-        top: `${top}px`,
         left: 'max(1rem, calc((100vw - 960px) / 2 - 200px))',
         zIndex: 10,
-        transition: 'top 0.1s linear',
       }}
     >
       <p
@@ -79,25 +82,26 @@ export default function AboutToc() {
       <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
         {TOC_ITEMS.map(({ id, label }) => (
           <li key={id}>
-            <a
+            <motion.a
               href={`#${id}`}
               onClick={(e) => handleClick(e, id)}
+              initial={false}
+              animate={{ color: activeId === id ? 'var(--text)' : 'var(--text-muted)' }}
+              transition={fastTween}
               style={{
                 display: 'block',
                 padding: '0.25rem 0.25rem',
                 fontSize: '0.82rem',
                 fontWeight: activeId === id ? 600 : 400,
-                color: activeId === id ? 'var(--text)' : 'var(--text-muted)',
                 textDecoration: 'none',
                 lineHeight: 1.5,
-                transition: 'color 0.15s',
               }}
             >
               {label}
-            </a>
+            </motion.a>
           </li>
         ))}
       </ol>
-    </nav>
+    </motion.nav>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 
 export default function ReadingProgress() {
   const [progress, setProgress] = useState(0)
@@ -15,20 +16,21 @@ export default function ReadingProgress() {
   }, [])
 
   return (
-    <div
+    <motion.div
       role="progressbar"
       aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
+      initial={false}
+      animate={{ width: `${progress}%` }}
+      transition={{ duration: 0.08, ease: 'linear' }}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         height: '3px',
-        width: `${progress}%`,
         background: 'var(--accent)',
         zIndex: 9999,
-        transition: 'width 0.08s linear',
         pointerEvents: 'none',
       }}
     />

@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import Link from 'next/link'
+import { motion, AnimatePresence } from 'motion/react'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
 
@@ -16,8 +18,12 @@ export default function SearchModal({ isOpen, onClose }: Props) {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [mounted, setMounted] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
+
+  // 포털은 document가 있어야 하므로 마운트 후에만 렌더 (닫힘 애니메이션 유지용으로 항상 포털 유지)
+  useEffect(() => setMounted(true), [])
 
   // 모달 열릴 때 포스트 데이터 fetch
   useEffect(() => {
@@ -80,11 +86,18 @@ export default function SearchModal({ isOpen, onClose }: Props) {
     }
   }
 
-  if (!isOpen) return null
+  if (!mounted) return null
 
   return createPortal(
-    <div
+    <AnimatePresence>
+    {isOpen && (
+    <motion.div
+      key="search-modal"
       onClick={onClose}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={fastTween}
       style={{
         position: 'fixed',
         inset: 0,
@@ -97,8 +110,12 @@ export default function SearchModal({ isOpen, onClose }: Props) {
         paddingTop: '30vh',
       }}
     >
-      <div
+      <motion.div
         onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.97, y: -8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97, y: -8 }}
+        transition={fastTween}
         style={{
           width: '100%',
           maxWidth: '600px',
@@ -169,18 +186,19 @@ export default function SearchModal({ isOpen, onClose }: Props) {
               </p>
             ) : (
               filtered.map((post, i) => (
-                <Link
+                <MotionLink
                   key={post.id}
                   href={`/blog/${post.slug}`}
                   onClick={onClose}
                   data-active={i === activeIndex}
+                  initial={false}
+                  animate={{ background: i === activeIndex ? 'var(--bg-secondary)' : 'rgba(0,0,0,0)' }}
+                  transition={{ duration: 0.1 }}
                   style={{
                     display: 'block',
                     padding: '1rem 1.25rem',
                     textDecoration: 'none',
                     borderBottom: '1px solid var(--border)',
-                    background: i === activeIndex ? 'var(--bg-secondary)' : 'transparent',
-                    transition: 'background 0.1s',
                   }}
                   onMouseEnter={() => setActiveIndex(i)}
                 >
@@ -206,7 +224,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     {formatDate(post.date)}
                   </span>
-                </Link>
+                </MotionLink>
               ))
             )}
           </div>
@@ -244,8 +262,10 @@ export default function SearchModal({ isOpen, onClose }: Props) {
           ))}
         </div>
         )}
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>
+    )}
+    </AnimatePresence>,
     document.body
   )
 }

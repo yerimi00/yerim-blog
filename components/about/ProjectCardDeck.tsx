@@ -1,5 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
+import { motion } from 'motion/react'
+import { duration } from '@/components/motion/presets'
 import ProjectCard from './ProjectCard'
 import type { NotionProject } from '@/lib/projects'
 
@@ -39,9 +41,15 @@ export default function ProjectCardDeck({ projects }: { projects: NotionProject[
       {/* 좌측 목차 */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', paddingTop: '0.25rem' }}>
         {projects.map((project, i) => (
-          <button
+          <motion.button
             key={project.slug}
             onClick={() => goTo(i)}
+            initial={false}
+            animate={{
+              borderLeftColor: i === index ? 'var(--accent)' : 'rgba(0,0,0,0)',
+              opacity: i === index ? 1 : 0.4,
+            }}
+            transition={{ duration: 0.2 }}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -49,12 +57,11 @@ export default function ProjectCardDeck({ projects }: { projects: NotionProject[
               padding: '0.35rem 0.5rem',
               background: 'none',
               border: 'none',
-              borderLeft: i === index ? '2px solid var(--accent)' : '2px solid transparent',
+              borderLeftWidth: '2px',
+              borderLeftStyle: 'solid',
               borderRadius: '0 4px 4px 0',
               cursor: 'pointer',
               textAlign: 'left',
-              transition: 'border-color 0.2s, opacity 0.2s',
-              opacity: i === index ? 1 : 0.4,
             }}
           >
             <span style={{
@@ -65,17 +72,20 @@ export default function ProjectCardDeck({ projects }: { projects: NotionProject[
             }}>
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span style={{
-              fontSize: '0.75rem',
-              color: i === index ? 'var(--text)' : 'var(--text-muted)',
-              fontWeight: i === index ? 600 : 400,
-              lineHeight: 1.3,
-              transition: 'color 0.2s, font-weight 0.2s',
-              whiteSpace: 'nowrap',
-            }}>
+            <motion.span
+              initial={false}
+              animate={{ color: i === index ? 'var(--text)' : 'var(--text-muted)' }}
+              transition={{ duration: 0.2 }}
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: i === index ? 600 : 400,
+                lineHeight: 1.3,
+                whiteSpace: 'nowrap',
+              }}
+            >
               {project.name}
-            </span>
-          </button>
+            </motion.span>
+          </motion.button>
         ))}
       </nav>
 
@@ -84,37 +94,41 @@ export default function ProjectCardDeck({ projects }: { projects: NotionProject[
         {/* 카드 영역 */}
         <div style={{ position: 'relative' }}>
           {projects.map((project, i) => (
-            <div
+            <motion.div
               key={project.slug}
+              initial={false}
+              animate={{ opacity: i === index ? 1 : 0 }}
+              transition={{ duration: duration.base, ease: 'easeInOut' }}
               style={{
                 position: i === index ? 'relative' : 'absolute',
                 inset: 0,
-                opacity: i === index ? 1 : 0,
-                transition: 'opacity 0.3s ease',
                 pointerEvents: i === index ? 'auto' : 'none',
               }}
             >
               <ProjectCard project={project} />
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* 점 인디케이터 */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', marginTop: '1rem' }}>
           {projects.map((_, i) => (
-            <button
+            <motion.button
               key={i}
               onClick={() => goTo(i)}
               aria-label={`${i + 1}번 카드`}
-              style={{
+              initial={false}
+              animate={{
                 width: i === index ? 20 : 6,
+                background: i === index ? 'var(--accent)' : 'var(--border)',
+              }}
+              transition={{ duration: duration.base, ease: 'easeInOut' }}
+              style={{
                 height: 6,
                 borderRadius: '999px',
-                background: i === index ? 'var(--accent)' : 'var(--border)',
                 border: 'none',
                 cursor: 'pointer',
                 padding: 0,
-                transition: 'width 0.3s ease, background 0.3s ease',
                 flexShrink: 0,
               }}
             />

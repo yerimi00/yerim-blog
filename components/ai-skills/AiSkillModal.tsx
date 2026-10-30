@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import type { AiSkill } from '@/app/data/ai-skills'
+import { fastTween } from '@/components/motion/presets'
 import AiSkillCommandBox from '@/components/ai-skills/AiSkillCommandBox'
 
 interface Props {
@@ -12,6 +14,10 @@ interface Props {
 }
 
 export default function AiSkillModal({ skill, isOpen, onClose }: Props) {
+  // 포털은 document가 있어야 하므로 마운트 후에만 렌더 (닫힘 애니메이션 유지용으로 항상 포털 유지)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
   useEffect(() => {
     if (!isOpen) return
     const handleKey = (e: KeyboardEvent) => {
@@ -21,11 +27,18 @@ export default function AiSkillModal({ skill, isOpen, onClose }: Props) {
     return () => window.removeEventListener('keydown', handleKey)
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
+  if (!mounted) return null
 
   return createPortal(
-    <div
+    <AnimatePresence>
+    {isOpen && (
+    <motion.div
+      key="ai-skill-modal"
       onClick={onClose}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={fastTween}
       style={{
         position: 'fixed',
         inset: 0,
@@ -39,8 +52,12 @@ export default function AiSkillModal({ skill, isOpen, onClose }: Props) {
         overflowY: 'auto',
       }}
     >
-      <div
+      <motion.div
         onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.97, y: -8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97, y: -8 }}
+        transition={fastTween}
         style={{
           width: '100%',
           maxWidth: '560px',
@@ -75,8 +92,10 @@ export default function AiSkillModal({ skill, isOpen, onClose }: Props) {
         ) : (
           <AiSkillCommandBox command={skill.command} />
         )}
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>
+    )}
+    </AnimatePresence>,
     document.body
   )
 }

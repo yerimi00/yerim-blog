@@ -1,23 +1,25 @@
 'use client'
 
-import Link from 'next/link'
+import { motion } from 'motion/react'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
 import { Post } from '@/types'
 
 function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post[] }) {
   return (
-    <Link
+    <MotionLink
       href={`/blog/series/${encodeURIComponent(seriesName)}`}
       style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}
-      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.75' }}
-      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
+      whileHover={{ opacity: 0.75 }}
+      transition={fastTween}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <motion.img
         src="/folder.png"
         alt={seriesName}
-        style={{ width: '96px', height: 'auto', transition: 'transform 0.15s ease' }}
-        onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'translateY(-4px)' }}
-        onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'translateY(0)' }}
+        style={{ width: '96px', height: 'auto' }}
+        whileHover={{ y: -4 }}
+        transition={fastTween}
       />
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.3 }}>
@@ -27,7 +29,7 @@ function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post
           {posts.length === 0 ? '모음집' : `${posts.length}편`}
         </div>
       </div>
-    </Link>
+    </MotionLink>
   )
 }
 

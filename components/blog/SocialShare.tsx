@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { FiLinkedin, FiLink, FiCheck } from 'react-icons/fi'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 
 export default function SocialShare({ title, url }: { title: string; url: string }) {
   const [copied, setCopied] = useState(false)
@@ -33,7 +35,6 @@ export default function SocialShare({ title, url }: { title: string; url: string
     background: 'transparent',
     cursor: 'pointer',
     color: 'var(--text-muted)',
-    transition: 'border-color 0.15s, color 0.15s',
   }
 
   return (
@@ -42,17 +43,19 @@ export default function SocialShare({ title, url }: { title: string; url: string
       <button style={base} onClick={openLinkedin} title="LinkedIn에 공유">
         <FiLinkedin size={13} />
       </button>
-      <button
-        style={{
-          ...base,
+      <motion.button
+        style={base}
+        initial={false}
+        animate={{
           color: copied ? '#22c55e' : 'var(--text-muted)',
           borderColor: copied ? 'rgba(34,197,94,0.4)' : 'var(--border)',
         }}
+        transition={fastTween}
         onClick={copyLink}
         title={copied ? '복사됨!' : '링크 복사'}
       >
         {copied ? <FiCheck size={13} /> : <FiLink size={13} />}
-      </button>
+      </motion.button>
     </div>
   )
 }
