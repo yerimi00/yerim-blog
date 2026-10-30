@@ -430,6 +430,26 @@ export function ActivityHeatmap({
     );
     return () => cancelAnimationFrame(frame);
   }, [inView, reduced, reveal]);
+  // 처음 보일 때 대각선 물결로 칸이 나타난다 (Web Animations API, 그리기 전에 시작해 깜빡임 없음)
+  useLayoutEffect(() => {
+    if (reveal !== "revealing") return;
+    const cells = gridRef.current?.querySelectorAll<HTMLElement>("[data-index]") ?? [];
+    const animations = Array.from(cells, (cell) =>
+      cell.animate(
+        [
+          { opacity: 0, transform: "scale(0.4)" },
+          { opacity: 1, transform: "none" },
+        ],
+        {
+          duration: 450,
+          delay: parseFloat(cell.style.getPropertyValue("--wave")) || 0,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          fill: "backwards",
+        },
+      ),
+    );
+    return () => animations.forEach((a) => a.cancel());
+  }, [reveal]);
   useEffect(() => {
     if (reveal !== "revealing") return;
     const timer = window.setTimeout(() => setReveal("done"), WAVE + 700);

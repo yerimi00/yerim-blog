@@ -104,13 +104,7 @@
   height: var(--cell);
   border-radius: 2px;
   background: var(--surface-container);
-  transition:
-    background-color 0.35s ease var(--wave),
-    opacity 0.2s ease;
   outline: none;
-}
-.grid[data-direction='back'] .cell {
-  transition-delay: var(--wave-back), 0s;
 }
 .cell[data-empty] {
   visibility: hidden;
@@ -146,15 +140,7 @@
   opacity: 0;
   transform: scale(0.4);
 }
-.grid[data-reveal='revealing'] .cell {
-  animation: cell-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) var(--wave) backwards;
-}
-@keyframes cell-in {
-  from {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-}
+/* 'revealing' 단계의 물결 등장은 activity-heatmap.tsx에서 Web Animations API로 실행 */
 
 /* 범례 단계 미리보기: 해당 단계가 아닌 칸은 흐리게 */
 .grid[data-highlight='0'] .cell[data-index]:not([data-level='0']),
@@ -176,10 +162,6 @@
   border-radius: 3px;
   opacity: 0;
   pointer-events: none;
-  transition:
-    left 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    top 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.16s;
 }
 .ring[data-shown] {
   opacity: 1;
@@ -310,12 +292,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .cell,
-  .ring {
-    transition: none;
-  }
-  .grid[data-reveal='revealing'] .cell {
-    animation: none;
-  }
-}
