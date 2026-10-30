@@ -75,7 +75,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
         >
           <div className="hero-banner-tags" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             {post.series && (
-              <span style={{ fontSize: '0.73rem', fontWeight: 500, color: 'var(--accent)', background: 'rgba(59,130,246,0.1)', padding: '2px 10px', borderRadius: '20px' }}>
+              <span style={{ fontSize: '0.73rem', fontWeight: 500, color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 10%, transparent)', padding: '2px 10px', borderRadius: '20px' }}>
                 {post.series}
               </span>
             )}

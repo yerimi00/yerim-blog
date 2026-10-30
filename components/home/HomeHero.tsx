@@ -248,8 +248,11 @@ export default function HomeHero({ tags }: { tags: string[] }) {
 
       <div className="home-hero-text">
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>안녕하세요,</p>
-        <h1 style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '2rem', fontWeight: 800, color: 'var(--text)', margin: '0 0 0.6rem', minHeight: '1.3em' }}>
-          <TypewriterText text="이예림입니다." />
+        <h1 className="hand" style={{ fontSize: '3.2rem', lineHeight: 1.1, color: 'var(--text)', margin: '0 0 0.6rem', minHeight: '1.1em' }}>
+          {/* 타이핑(7글자 × 80ms)이 끝난 뒤 밑줄을 긋는다 */}
+          <span className="hand-underline" style={{ '--hand-delay': '0.75s' } as React.CSSProperties}>
+            <TypewriterText text="이예림입니다." />
+          </span>
         </h1>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 0.9rem', maxWidth: '420px' }}>
           프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만들고, 배운 것을 기록해요.

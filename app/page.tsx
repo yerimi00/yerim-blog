@@ -14,7 +14,7 @@ export const revalidate = 3600
 
 const HERO_TAG_COUNT = 14
 
-const sectionTitle: React.CSSProperties = { fontSize: '1rem', fontWeight: 700, color: 'var(--text)', margin: 0 }
+const sectionTitle: React.CSSProperties = { fontFamily: 'var(--font-hand)', fontSize: '1.75rem', fontWeight: 400, lineHeight: 1, color: 'var(--text)', margin: 0 }
 const moreLink: React.CSSProperties = { fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none' }
 
 // '2026-10-30' → '26.10'

@@ -21,7 +21,7 @@ export default async function InterviewPage() {
       <Header />
       <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '2rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem' }}>
+          <h1 className="hand-title">
             Interview
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>

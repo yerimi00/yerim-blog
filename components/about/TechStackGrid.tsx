@@ -134,7 +134,7 @@ function TechPopup({ tech }: { tech: TechItem }) {
           marginLeft: 'auto',
           fontSize: '0.62rem', fontWeight: 700,
           padding: '1px 6px', borderRadius: '999px',
-          background: 'rgba(59,130,246,0.12)',
+          background: 'color-mix(in srgb, var(--accent) 12%, transparent)',
           color: 'var(--accent)',
           whiteSpace: 'nowrap',
         }}>
@@ -194,7 +194,7 @@ export default function TechStackGrid({ techStack }: { techStack: TechItem[] }) 
                         padding: '0.75rem 0.875rem',
                         border: `1.5px solid ${isVisible ? 'var(--accent)' : 'var(--border)'}`,
                         borderRadius: '12px',
-                        background: isVisible ? 'rgba(59,130,246,0.07)' : 'var(--bg-secondary)',
+                        background: isVisible ? 'color-mix(in srgb, var(--accent) 7%, transparent)' : 'var(--bg-secondary)',
                         cursor: 'pointer', minWidth: '68px', outline: 'none',
                         transition: 'border-color 0.15s, background 0.15s',
                       }}

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SearchModal from '@/components/blog/SearchModal'
 
@@ -16,6 +17,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   const { theme, setTheme } = useTheme()
+  const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
@@ -65,7 +67,7 @@ export default function Header() {
         <nav className="header-nav" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <span className="header-nav-links" style={{ display: 'contents' }}>
             {NAV_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href} className="nav-link">
+              <Link key={href} href={href} className={`nav-link${pathname.startsWith(href) ? ' is-active' : ''}`}>
                 {label}
               </Link>
             ))}

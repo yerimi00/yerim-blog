@@ -81,7 +81,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               {project.name}
             </h1>
             {project.status === '진행중' && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '3px 12px', borderRadius: '999px', background: 'rgba(59,130,246,0.12)', color: 'var(--accent)' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '3px 12px', borderRadius: '999px', background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)' }}>
                 진행중
               </span>
             )}

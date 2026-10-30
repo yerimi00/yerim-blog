@@ -209,7 +209,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
               border: 'none',
               cursor: 'pointer',
               padding: '4px',
-              color: !isPublic ? '#3b82f6' : 'var(--text-muted)',
+              color: !isPublic ? 'var(--accent)' : 'var(--text-muted)',
               display: 'flex',
               alignItems: 'center',
               transition: 'color 0.2s',
@@ -227,7 +227,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0' }}>
               <span style={{
                 fontSize: '0.75rem',
-                color: '#3b82f6',
+                color: 'var(--accent)',
                 fontFamily: 'JetBrains Mono, monospace',
                 flexShrink: 0,
                 letterSpacing: '0.04em',
@@ -266,7 +266,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
         }}>
           <span style={{
             fontFamily: 'JetBrains Mono, monospace',
-            color: '#3b82f6',
+            color: 'var(--accent)',
             fontSize: '1.1rem',
             lineHeight: 1.7,
             flexShrink: 0,
@@ -314,7 +314,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
             {!isPublic && (
               <span style={{
                 fontSize: '0.75rem',
-                color: '#3b82f6',
+                color: 'var(--accent)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.25rem',
@@ -331,9 +331,9 @@ export default function GuestbookForm({ onSuccess }: Props) {
             style={{
               padding: '0.4rem 1rem',
               borderRadius: '8px',
-              border: message.trim() ? '1.5px solid #3b82f6' : '1.5px solid var(--border)',
+              border: message.trim() ? '1.5px solid var(--accent)' : '1.5px solid var(--border)',
               background: 'transparent',
-              color: message.trim() ? '#3b82f6' : 'var(--text-muted)',
+              color: message.trim() ? 'var(--accent)' : 'var(--text-muted)',
               fontSize: '0.85rem',
               fontWeight: 600,
               cursor: message.trim() ? 'pointer' : 'default',
@@ -346,14 +346,14 @@ export default function GuestbookForm({ onSuccess }: Props) {
             onMouseEnter={e => {
               if (message.trim()) {
                 const btn = e.currentTarget as HTMLButtonElement
-                btn.style.background = '#3b82f6'
+                btn.style.background = 'var(--accent)'
                 btn.style.color = '#fff'
               }
             }}
             onMouseLeave={e => {
               const btn = e.currentTarget as HTMLButtonElement
               btn.style.background = 'transparent'
-              btn.style.color = message.trim() ? '#3b82f6' : 'var(--text-muted)'
+              btn.style.color = message.trim() ? 'var(--accent)' : 'var(--text-muted)'
             }}
           >
             {status === 'loading' ? '전송중' : <><FiSend size={13} />전송</>}

@@ -60,7 +60,7 @@ export default function ProjectList({ projects }: { projects: NotionProject[] })
                             {project.status === '진행중' && (
                               <span style={{
                                 fontSize: '0.68rem', padding: '1px 8px', borderRadius: '999px',
-                                background: 'rgba(59,130,246,0.12)', color: 'var(--accent)',
+                                background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)',
                               }}>
                                 진행중
                               </span>

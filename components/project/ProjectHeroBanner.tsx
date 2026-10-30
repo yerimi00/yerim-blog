@@ -76,7 +76,7 @@ export default function ProjectHeroBanner({ projects }: { projects: NotionProjec
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
             {project.status === '진행중' && (
-              <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'rgba(59,130,246,0.25)', color: '#93c5fd' }}>
+              <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'color-mix(in srgb, var(--accent) 25%, transparent)', color: '#fca5a5' }}>
                 진행중
               </span>
             )}

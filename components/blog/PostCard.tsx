@@ -36,7 +36,7 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
               fontSize: '0.73rem',
               fontWeight: 500,
               color: 'var(--accent)',
-              background: 'rgba(59, 130, 246, 0.1)',
+              background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
               padding: '2px 10px',
               borderRadius: '20px',
               textDecoration: 'none',

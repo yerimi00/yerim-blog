@@ -41,7 +41,7 @@ export default function Sidebar({ popularPosts, recentComments = [] }: Props) {
                       fontSize: '0.65rem',
                       fontWeight: 500,
                       color: 'var(--accent)',
-                      background: 'rgba(59, 130, 246, 0.1)',
+                      background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
                       padding: '1px 8px',
                       borderRadius: '20px',
                     }}>

@@ -16,11 +16,11 @@ colors:
   outline: '#727785'
   outline-variant: '#c2c6d6'
   surface-tint: '#005ac2'
-  primary: '#0058be'
+  primary: '#e5383b'
   on-primary: '#ffffff'
-  primary-container: '#2170e4'
+  primary-container: '#fde2e2'
   on-primary-container: '#fefcff'
-  inverse-primary: '#adc6ff'
+  inverse-primary: '#ff6b6b'
   secondary: '#575e70'
   on-secondary: '#ffffff'
   secondary-container: '#d9dff5'
@@ -114,7 +114,9 @@ The visual narrative prioritizes content over container, utilizing generous whit
 
 ## Colors
 
-The palette is anchored by a high-contrast foundation of deep ink and pure white. **#3B82F6 (Blue)** serves as the primary action color, used sparingly for links, active states, and primary call-to-actions to maintain a professional "utility" feel. 
+The palette is anchored by a high-contrast foundation of deep ink and pure white. **#E5383B (Red Pen)** serves as the primary action color — like a red ballpoint marking up notes — used sparingly for links, active states, hand-drawn underlines and primary call-to-actions. Dark mode uses **#FF6B6B**.
+
+Always reference it through `var(--accent)` (or `color-mix(in srgb, var(--accent) N%, transparent)` for tints, `var(--accent-soft)` for 12% pills); never hardcode the hex.
 
 **Neutral Tones:**
 - **Primary Text:** #111827 (Rich Black) for maximum legibility.
@@ -130,6 +132,8 @@ The design system utilizes **Inter** (as the closest high-quality match to the r
 - **Headlines:** Use heavy weights (700-800) with slight negative letter-spacing to create a strong visual anchor.
 - **Body Text:** Optimized for long-form reading with a generous line-height (1.75) for the large variant.
 - **Data/Labels:** Medium weights are used for small labels to maintain legibility against background colors.
+- **Hand accent:** **Nanum Pen Script** (`var(--font-hand)`, `.hand`, `.hand-title`) is reserved for points of emphasis only — page titles, the home hero name, home section titles, the "오늘의 면접 질문" label. It renders small, so use ~1.6–1.75× the size of the text it replaces. Body text stays Pretendard.
+- **Hand-drawn underline:** `.hand-underline` (plus active `.nav-link.is-active` and `.series-tab-btn.active`) draws a red squiggle left-to-right. Delay with `--hand-delay`; disabled under `prefers-reduced-motion`.
 
 ## Layout & Spacing
 
@@ -147,7 +151,7 @@ This design system avoids heavy shadows, opting for **Tonal Layers** and **Low-C
 - **Level 0 (Base):** #FFFFFF background.
 - **Level 1 (Surfaces):** #F3F4F6 background with no border (used for code blocks or secondary sections).
 - **Level 2 (Interactive):** 1px solid #E5E7EB border for cards and inputs. 
-- **Focus States:** When an element is active or focused, use a 2px offset ring in the primary color (#3B82F6).
+- **Focus States:** When an element is active or focused, use a 2px offset ring in the primary color (`var(--accent)`).
 - **Shadows:** Only used for floating menus or overlays, using a very diffused, low-opacity gray: `0 10px 15px -3px rgba(0, 0, 0, 0.05)`.
 
 ## Shapes
@@ -161,8 +165,8 @@ The shape language is **Soft** and restrained. Rounded corners are used to subtl
 ## Components
 
 ### Buttons
-- **Primary:** Solid #3B82F6 background with white text. 4px border radius.
-- **Secondary:** Transparent background with #3B82F6 text and a subtle #F3F4F6 hover state.
+- **Primary:** Solid `var(--accent)` background with white text. 4px border radius.
+- **Secondary:** Transparent background with `var(--accent)` text and a subtle #F3F4F6 hover state.
 - **Size:** Height should be 40px for standard actions, with `md` horizontal padding.
 
 ### Navigation
@@ -178,4 +182,4 @@ The shape language is **Soft** and restrained. Rounded corners are used to subtl
 - **Color:** #F3F4F6 background with #6B7280 text. 
 
 ### Input Fields
-- **Style:** #FFFFFF background with 1px #E5E7EB border. On focus, border changes to #3B82F6 with a subtle outer glow.
+- **Style:** #FFFFFF background with 1px #E5E7EB border. On focus, border changes to `var(--accent)` with a subtle outer glow.

@@ -16,7 +16,7 @@ export default function TodayQuestionCard({ question }: { question: InterviewQue
       }}
     >
       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-        <span style={{ fontSize: '0.73rem', fontWeight: 600, color: 'var(--accent)' }}>🧑‍💻 오늘의 면접 질문</span>
+        <span className="hand" style={{ fontSize: '1.35rem', lineHeight: 1, color: 'var(--accent)' }}>🧑‍💻 오늘의 면접 질문</span>
         {question.category && <span className="tag-badge">{question.category}</span>}
         {question.level && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>난이도 {question.level}</span>}
       </div>

@@ -58,7 +58,7 @@ export default function MobileBlockModal() {
             marginTop: '20px',
             padding: '0.7rem 1.25rem',
             borderRadius: '10px',
-            background: '#3b82f6',
+            background: 'var(--accent)',
             color: '#fff',
             fontSize: '0.9rem',
             fontWeight: 600,

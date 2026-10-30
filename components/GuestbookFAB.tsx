@@ -33,7 +33,7 @@ export default function GuestbookFAB() {
           style={{
             position: 'relative',
             visibility: showBubble ? 'visible' : 'hidden',
-            background: '#3b82f6',
+            background: 'var(--accent)',
             color: '#fff',
             fontSize: '0.75rem',
             fontWeight: 400,
@@ -42,7 +42,7 @@ export default function GuestbookFAB() {
             whiteSpace: 'nowrap',
             letterSpacing: '0.01em',
             animation: 'fabFloat 2.4s ease-in-out infinite',
-            boxShadow: '0 2px 12px rgba(59,130,246,0.3)',
+            boxShadow: '0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)',
           }}
         >
           방명록을 남겨주세요
@@ -56,7 +56,7 @@ export default function GuestbookFAB() {
             height: 0,
             borderLeft: '6px solid transparent',
             borderRight: '6px solid transparent',
-            borderTop: '6px solid #3b82f6',
+            borderTop: '6px solid var(--accent)',
           }} />
           <button
             className="fab-close-btn"
@@ -95,25 +95,25 @@ export default function GuestbookFAB() {
             width: '52px',
             height: '52px',
             borderRadius: '50%',
-            background: '#3b82f6',
+            background: 'var(--accent)',
             color: '#fff',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(59,130,246,0.28)',
+            boxShadow: '0 4px 16px color-mix(in srgb, var(--accent) 28%, transparent)',
             transition: 'transform 0.15s ease, box-shadow 0.15s ease',
           }}
           onMouseEnter={e => {
             const btn = e.currentTarget as HTMLButtonElement
             btn.style.transform = 'translateY(-2px)'
-            btn.style.boxShadow = '0 8px 24px rgba(59,130,246,0.4)'
+            btn.style.boxShadow = '0 8px 24px color-mix(in srgb, var(--accent) 40%, transparent)'
           }}
           onMouseLeave={e => {
             const btn = e.currentTarget as HTMLButtonElement
             btn.style.transform = 'translateY(0)'
-            btn.style.boxShadow = '0 4px 16px rgba(59,130,246,0.28)'
+            btn.style.boxShadow = '0 4px 16px color-mix(in srgb, var(--accent) 28%, transparent)'
           }}
         >
           <FiEdit2 size={20} />

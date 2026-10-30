@@ -30,8 +30,10 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 | `--border` | `#e5e7eb` | 기본 구분선 |
 | `--border-subtle` | `#f3f4f6` | 약한 구분선 |
 | `--outline-variant` | `#c2c6d6` | hover 테두리 |
-| `--accent` | `#3b82f6` | 파란색 강조 (링크, 배지, 진행 바) |
-| `--accent-dim` | `#0058be` | 진한 파란색 |
+| `--accent` | `#e5383b` (다크 `#ff6b6b`) | 빨간 펜 강조 (링크, 배지, 활성 메뉴, 손그림 밑줄) |
+| `--accent-dim` | `#b3262a` (다크 `#ffa3a3`) | 진한 빨강 |
+| `--accent-soft` | accent 12% | 배지·pill 배경 |
+| `--font-hand` | `'Nanum Pen Script'` | 손글씨 포인트 폰트 |
 | `--shadow-floating` | `0 10px 15px...` | 플로팅 그림자 |
 
 ### 다크 모드 (`.dark`)
@@ -113,6 +115,19 @@ iOS Safari PWA, Android Chrome PWA 모두 대응합니다. `viewportFit: 'cover'
 
 - **Pretendard**: 본문, 제목 (CDN: `cdn.jsdelivr.net/gh/orioncactus/pretendard`)
 - **JetBrains Mono**: 코드, 인라인 코드 (Google Fonts)
+- **Nanum Pen Script**: 손글씨 포인트 전용 (Google Fonts, `app/layout.tsx` 링크). 본문에는 쓰지 않는다.
+
+## 손글씨 포인트
+
+| 클래스 | 용도 |
+| --- | --- |
+| `.hand` | 손글씨 폰트만 적용 (크기는 사용처에서 지정, 대략 1.6~1.75배) |
+| `.hand-title` | 페이지 제목 (`/blog`, `/blog/series`, `/interview`, `/lab`) |
+| `.hand-underline` | 빨간 손그림 밑줄이 왼→오로 그려짐. `--hand-delay`로 시작 시점 조절 |
+| `.nav-link.is-active` | 헤더 활성 메뉴 손그림 밑줄 (`Header`가 pathname으로 부여) |
+| `.series-tab-btn.active` | 시리즈·카테고리 탭 활성 표시 (곧은 선 대신 손그림 밑줄) |
+
+하드코딩 색 금지: 강조색은 `var(--accent)`, 옅은 배경은 `color-mix(in srgb, var(--accent) N%, transparent)`. Lab 데모 카드처럼 콘텐츠 고유 색은 예외.
 
 ## 스타일 변경 시 체크리스트
 
