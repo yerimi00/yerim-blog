@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { motion } from 'motion/react'
+import { duration } from '@/components/motion/presets'
 
 interface Notification {
   id: number
@@ -78,12 +80,15 @@ export default function NotificationSSEDemo() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{
-            width: 10, height: 10, borderRadius: '50%',
-            background: connected ? '#10b981' : 'var(--border)',
-            boxShadow: connected ? '0 0 0 3px rgba(16,185,129,0.2)' : 'none',
-            transition: 'all 0.3s',
-          }} />
+          <motion.div
+            initial={false}
+            animate={{
+              backgroundColor: connected ? '#10b981' : 'var(--border)',
+              boxShadow: connected ? '0 0 0 3px rgba(16,185,129,0.2)' : '0 0 0 0px rgba(16,185,129,0)',
+            }}
+            transition={{ duration: duration.base, ease: 'easeOut' }}
+            style={{ width: 10, height: 10, borderRadius: '50%' }}
+          />
           <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text, #111)' }}>
             {connected ? 'SSE 연결됨' : '연결 안 됨'}
           </span>
@@ -130,14 +135,18 @@ export default function NotificationSSEDemo() {
           </div>
         )}
         {notifications.map(n => (
-          <div
+          <motion.div
             key={n.id}
+            initial={false}
+            animate={{
+              backgroundColor: n.read ? 'var(--surface)' : 'var(--surface-container)',
+              borderColor: n.read ? 'var(--border)' : 'var(--accent)',
+            }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             style={{
               display: 'flex', gap: 10, alignItems: 'flex-start',
               padding: '10px 12px', borderRadius: 'var(--radius-xl)',
-              background: n.read ? 'var(--surface)' : 'var(--surface-container)',
-              border: `1px solid ${n.read ? 'var(--border)' : 'var(--accent)'}`,
-              transition: 'all 0.2s',
+              borderWidth: 1, borderStyle: 'solid',
             }}
             onClick={() => setNotifications(prev =>
               prev.map(x => x.id === n.id ? { ...x, read: true } : x)
@@ -162,7 +171,7 @@ export default function NotificationSSEDemo() {
             {!n.read && (
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0, marginTop: 5 }} />
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
 

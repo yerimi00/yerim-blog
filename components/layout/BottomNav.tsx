@@ -1,11 +1,12 @@
 'use client'
 
-import Link from 'next/link'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
 import { usePathname } from 'next/navigation'
 import {
   HiOutlineHome, HiHome,
   HiOutlineDocumentText, HiDocumentText,
-  HiOutlineFolder, HiFolder,
+  HiOutlineChatBubbleLeftRight, HiChatBubbleLeftRight,
   HiOutlineBriefcase, HiBriefcase,
   HiOutlineUser, HiUser,
 } from 'react-icons/hi2'
@@ -13,8 +14,8 @@ import {
 const NAV_ITEMS = [
   { href: '/',        label: 'Home',    Icon: HiOutlineHome,         ActiveIcon: HiHome },
   { href: '/blog',    label: 'Blog',    Icon: HiOutlineDocumentText, ActiveIcon: HiDocumentText },
-  { href: '/series',  label: 'Series',  Icon: HiOutlineFolder,       ActiveIcon: HiFolder },
-  { href: '/project', label: 'Project', Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
+  { href: '/interview', label: 'Interview', Icon: HiOutlineChatBubbleLeftRight, ActiveIcon: HiChatBubbleLeftRight },
+  { href: '/work',    label: 'Work',    Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
   { href: '/about',   label: 'About',   Icon: HiOutlineUser,         ActiveIcon: HiUser },
 ]
 
@@ -31,9 +32,12 @@ export default function BottomNav() {
       {NAV_ITEMS.map(({ href, label, Icon, ActiveIcon }) => {
         const active = isActive(href)
         return (
-          <Link
+          <MotionLink
             key={href}
             href={href}
+            initial={false}
+            animate={{ color: active ? 'var(--accent)' : 'var(--text-muted)' }}
+            transition={fastTween}
             style={{
               flex: 1,
               display: 'flex',
@@ -42,10 +46,8 @@ export default function BottomNav() {
               justifyContent: 'center',
               gap: '3px',
               textDecoration: 'none',
-              color: active ? 'var(--accent)' : 'var(--text-muted)',
               paddingTop: '8px',
               paddingBottom: '8px',
-              transition: 'color 0.15s',
             }}
           >
             {active
@@ -55,7 +57,7 @@ export default function BottomNav() {
             <span style={{ fontSize: '0.62rem', fontWeight: active ? 600 : 400, lineHeight: 1 }}>
               {label}
             </span>
-          </Link>
+          </MotionLink>
         )
       })}
     </nav>

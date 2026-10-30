@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { motion } from 'motion/react'
 
 const N          = 4
 const WALLET_W   = 300
@@ -13,6 +13,7 @@ const FRONT_TOP  = WALLET_H - CARD_H - BOTTOM_GAP
 const PEEK_REST  = 18
 const HOVER_LIFT = 28   // 호버된 카드만 올라오는 높이
 const ANIM_MS    = 300
+const LIFT       = { duration: ANIM_MS / 1000, ease: [0.34, 1.4, 0.64, 1] } as const
 
 const CARDS = [
   { bg: '#5667f5', textColor: '#fff',    label: '카드 1' },
@@ -22,13 +23,7 @@ const CARDS = [
 ]
 
 export default function WalletCardDemo2() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-
-  const cardTop = (i: number) => {
-    const base = FRONT_TOP - i * PEEK_REST
-    if (i === 0) return base  // 첫 카드는 제자리 고정
-    return hoveredCard === i ? base - HOVER_LIFT : base
-  }
+  const cardTop = (i: number) => FRONT_TOP - i * PEEK_REST
 
   return (
     <div
@@ -52,11 +47,15 @@ export default function WalletCardDemo2() {
       </div>
 
       {CARDS.map((card, i) => (
-        <div
+        <motion.div
           key={i}
+          initial={false}
+          animate={{ top: cardTop(i), scale: 1 }}
+          // 첫 카드는 제자리 고정, 나머지는 호버 시 위로 올라온다
+          whileHover={{ top: i === 0 ? cardTop(i) : cardTop(i) - HOVER_LIFT, scale: 1.06 }}
+          transition={LIFT}
           style={{
             position: 'absolute',
-            top: cardTop(i),
             left: CARD_LEFT,
             width: CARD_W,
             height: CARD_H,
@@ -67,16 +66,12 @@ export default function WalletCardDemo2() {
             padding: '16px 20px',
             boxSizing: 'border-box',
             cursor: 'pointer',
-            transform: hoveredCard === i ? 'scale(1.06)' : 'scale(1)',
-            transition: `top ${ANIM_MS}ms cubic-bezier(0.34, 1.4, 0.64, 1), transform ${ANIM_MS}ms cubic-bezier(0.34, 1.4, 0.64, 1)`,
           }}
-          onMouseEnter={() => setHoveredCard(i)}
-          onMouseLeave={() => setHoveredCard(null)}
         >
           <span style={{ fontSize: 14, fontWeight: 700, color: card.textColor }}>
             {card.label}
           </span>
-        </div>
+        </motion.div>
       ))}
     </div>
   )

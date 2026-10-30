@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
 
 type View = 'event' | 'schedule'
 
@@ -18,7 +19,10 @@ function CapsuleToggle({
       padding: 3, position: 'relative', userSelect: 'none',
     }}>
       {/* sliding capsule */}
-      <div style={{
+      <motion.div
+        layout
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        style={{
         position: 'absolute',
         top: 3,
         left: value === 'event' ? 3 : 'calc(50% + 1px)',
@@ -26,26 +30,26 @@ function CapsuleToggle({
         bottom: 3,
         borderRadius: 100,
         background: 'var(--accent)',
-        transition: 'left 0.2s ease-out',
         zIndex: 0,
       }} />
       {(['event', 'schedule'] as View[]).map(v => (
-        <button
+        <motion.button
           key={v}
           onClick={() => onChange(v)}
+          initial={false}
+          animate={{ color: value === v ? '#fff' : 'var(--text-secondary)' }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
           style={{
             position: 'relative', zIndex: 1,
             padding: '7px 20px',
             border: 'none', background: 'none',
             borderRadius: 100, cursor: 'pointer',
             fontSize: 13, fontWeight: 600,
-            color: value === v ? '#fff' : 'var(--text-secondary)',
-            transition: 'color 0.2s',
             minWidth: 80,
           }}
         >
           {v === 'event' ? '행사' : '일정'}
-        </button>
+        </motion.button>
       ))}
     </div>
   )

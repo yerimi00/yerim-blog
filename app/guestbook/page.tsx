@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import GuestbookMessages from '@/components/GuestbookMessages'
 import { getGuestbookEntries } from '@/lib/guestbook'
 import type { Metadata } from 'next'
@@ -22,7 +20,6 @@ export default async function GuestbookPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '680px', margin: '0 auto', padding: '3rem 1.5rem 5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <h1
@@ -46,13 +43,13 @@ export default async function GuestbookPage() {
           marginBottom: '2rem',
           padding: '0.875rem 1rem',
           borderRadius: '10px',
-          background: 'rgba(59, 130, 246, 0.03)',
-          border: '1px solid rgba(59, 130, 246, 0.1)',
+          background: 'color-mix(in srgb, var(--accent) 3%, transparent)',
+          border: '1px solid color-mix(in srgb, var(--accent) 10%, transparent)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.25rem',
         }}>
-          <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 600, color: '#3b82f6' }}>
+          <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 600, color: 'var(--accent)' }}>
             📢  업데이트 안내 (2026. 04. 30)
           </p>
           <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
@@ -65,7 +62,6 @@ export default async function GuestbookPage() {
 
         <GuestbookMessages initialEntries={entries} />
       </main>
-      <Footer />
     </>
   )
 }

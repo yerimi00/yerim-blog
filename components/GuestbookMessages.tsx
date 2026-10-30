@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { FiLock, FiMessageSquare } from 'react-icons/fi'
+import { motion } from 'motion/react'
 import GuestbookForm from './GuestbookForm'
 import type { GuestbookEntry, GuestbookComment } from '@/lib/guestbook'
 
@@ -227,25 +228,17 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
   }
 
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       style={{
+        boxShadow: '0 0px 0px rgba(0,0,0,0)',
         border: '1.5px solid var(--border)',
         borderRadius: '12px',
         padding: '1.25rem 1.25rem 1rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.875rem',
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLDivElement
-        el.style.transform = 'translateY(-4px)'
-        el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.06)'
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLDivElement
-        el.style.transform = 'translateY(0)'
-        el.style.boxShadow = 'none'
       }}
     >
       <div style={{
@@ -347,7 +340,7 @@ function MessageCard({ entry }: { entry: GuestbookEntry }) {
         adminPin={adminPin}
         onPinVerify={handlePinVerify}
       />
-    </div>
+    </motion.div>
   )
 }
 

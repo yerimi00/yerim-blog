@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion } from 'motion/react'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
 
@@ -75,7 +76,7 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
         >
           <div className="hero-banner-tags" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             {post.series && (
-              <span style={{ fontSize: '0.73rem', fontWeight: 500, color: 'var(--accent)', background: 'rgba(59,130,246,0.1)', padding: '2px 10px', borderRadius: '20px' }}>
+              <span style={{ fontSize: '0.73rem', fontWeight: 500, color: 'var(--accent)', background: 'color-mix(in srgb, var(--accent) 10%, transparent)', padding: '2px 10px', borderRadius: '20px' }}>
                 {post.series}
               </span>
             )}
@@ -126,10 +127,13 @@ export default function HeroBanner({ posts }: { posts: Post[] }) {
       {/* 인디케이터 */}
       <div style={{ position: 'absolute', bottom: '1.5rem', right: '2rem', display: 'flex', gap: '6px', zIndex: 10 }}>
         {posts.map((_, i) => (
-          <button
+          <motion.button
             key={i}
             onClick={() => { if (i !== current) setCurrent(i) }}
-            style={{ width: i === current ? '20px' : '6px', height: '6px', borderRadius: '3px', background: i === current ? 'var(--accent)' : 'var(--border)', border: 'none', cursor: 'pointer', padding: 0, transition: 'width 0.2s, background 0.2s' }}
+            initial={false}
+            animate={{ width: i === current ? 20 : 6, background: i === current ? 'var(--accent)' : 'var(--border)' }}
+            transition={{ duration: 0.2 }}
+            style={{ height: '6px', borderRadius: '3px', border: 'none', cursor: 'pointer', padding: 0 }}
           />
         ))}
       </div>

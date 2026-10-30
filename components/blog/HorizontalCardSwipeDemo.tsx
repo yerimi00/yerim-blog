@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+import { animate, motion, useMotionValue, useTransform } from 'motion/react'
+import type { MotionValue } from 'motion/react'
 
 const CARD_W = 300
 const PEEK = 24
@@ -9,6 +11,8 @@ const STACK_W = CARD_W + PEEK
 const CARD_H = 420
 const THRESHOLD = 60
 const ANIM_MS = 320
+// 원본 CSS transition과 동일한 스냅 곡선
+const SNAP = { duration: ANIM_MS / 1000, ease: [0.25, 0.46, 0.45, 0.94] } as const
 
 const CARDS = [
   { bg: '#3b82f6', label: '카드 1' },
@@ -72,29 +76,16 @@ export default function HorizontalCardSwipeDemo() {
   const [renderIdx, setRenderIdx] = useState(0)
 
   const snapIdxRef  = useRef(0)
-  const offsetRef   = useRef(0)
+  // 스택 전체 오프셋 — 각 카드가 useTransform으로 x·scale을 파생
+  const offset      = useMotionValue(0)
   const dragRef     = useRef({ live: false, startX: 0, startOffset: 0 })
   const isAnimating = useRef(false)
-  const cardRefs    = useRef<(HTMLDivElement | null)[]>([])
   const stackRef    = useRef<HTMLDivElement>(null)
   const n = CARDS.length
 
-  const applyTransforms = useCallback((withTransition: boolean) => {
-    const offset = offsetRef.current
-    cardRefs.current.forEach((el, pi) => {
-      if (!el) return
-      const tx = offset + pi * CARD_W
-      el.style.transition = withTransition
-        ? `transform ${ANIM_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
-        : 'none'
-      el.style.transform = `translateX(${tx}px) scale(${getScaleFromTx(tx)})`
-    })
-  }, [])
-
   const snapToCurrent = useCallback(() => {
-    offsetRef.current = -snapIdxRef.current * CARD_W
-    applyTransforms(true)
-  }, [applyTransforms])
+    animate(offset, -snapIdxRef.current * CARD_W, SNAP)
+  }, [offset])
 
   const go = useCallback((dir: 1 | -1) => {
     if (isAnimating.current) return
@@ -103,20 +94,10 @@ export default function HorizontalCardSwipeDemo() {
 
     isAnimating.current = true
     snapIdxRef.current = next
-    offsetRef.current = -next * CARD_W
-
-    applyTransforms(true)
     setRenderIdx(next)
 
-    const release = () => { isAnimating.current = false }
-    const card = cardRefs.current[next]
-    if (card) {
-      card.addEventListener('transitionend',    release, { once: true })
-      card.addEventListener('transitioncancel', release, { once: true })
-    } else {
-      setTimeout(release, ANIM_MS)
-    }
-  }, [n, applyTransforms])
+    animate(offset, -next * CARD_W, SNAP).finished.finally(() => { isAnimating.current = false })
+  }, [n, offset])
 
   useEffect(() => {
     const el = stackRef.current
@@ -124,8 +105,9 @@ export default function HorizontalCardSwipeDemo() {
 
     const handleStart = (x: number) => {
       if (isAnimating.current) return
+      offset.stop()  // 진행 중인 되돌림 스냅을 멈추고 현재 위치에서 이어 잡기
       dragRef.current.startX      = x
-      dragRef.current.startOffset = offsetRef.current
+      dragRef.current.startOffset = offset.get()
       dragRef.current.live        = true
       el.style.cursor = 'grabbing'
     }
@@ -136,8 +118,7 @@ export default function HorizontalCardSwipeDemo() {
       const idx = snapIdxRef.current
       if (delta < 0 && idx >= n - 1) delta *= 0.2
       if (delta > 0 && idx <= 0)     delta *= 0.2
-      offsetRef.current = dragRef.current.startOffset + delta
-      applyTransforms(false)
+      offset.set(dragRef.current.startOffset + delta)
     }
 
     const handleEnd = (x: number) => {
@@ -184,7 +165,7 @@ export default function HorizontalCardSwipeDemo() {
       el.removeEventListener('pointercancel', onPointerCancel)
       el.removeEventListener('keydown',       onKeyDown)
     }
-  }, [go, applyTransforms, snapToCurrent, n])
+  }, [go, snapToCurrent, n, offset])
 
   const pis = useMemo(
     () => [renderIdx - 1, renderIdx, renderIdx + 1, renderIdx + 2].filter(pi => pi >= 0 && pi < n),
@@ -197,26 +178,30 @@ export default function HorizontalCardSwipeDemo() {
         {pis.map(pi => {
           const card = CARDS[pi]
           return (
-            <div
-              key={pi}
-              ref={(el) => {
-                cardRefs.current[pi] = el
-                // 신규 mount 시에만 초기 위치 설정 — 기존 카드 re-render 시 애니메이션 유지
-                if (el && !el.style.transform) {
-                  const tx = offsetRef.current + pi * CARD_W
-                  el.style.transition = 'none'
-                  el.style.transform = `translateX(${tx}px) scale(${getScaleFromTx(tx)})`
-                }
-              }}
-              style={{ ...cardWrapperBase, pointerEvents: pi === renderIdx ? 'auto' : 'none' }}
-            >
+            <SlideCard key={pi} pi={pi} offset={offset} isActive={pi === renderIdx}>
               <div style={{ ...cardInnerBase, background: card.bg }}>
                 <span style={labelStyle}>{card.label}</span>
               </div>
-            </div>
+            </SlideCard>
           )
         })}
       </div>
     </div>
+  )
+}
+
+// 카드 래퍼 — 공유 offset에서 자기 위치·스케일을 파생 (SSR 첫 렌더부터 같은 transform)
+function SlideCard({ pi, offset, isActive, children }: {
+  pi: number
+  offset: MotionValue<number>
+  isActive: boolean
+  children: ReactNode
+}) {
+  const x     = useTransform(offset, o => o + pi * CARD_W)
+  const scale = useTransform(x, getScaleFromTx)
+  return (
+    <motion.div style={{ ...cardWrapperBase, x, scale, pointerEvents: isActive ? 'auto' : 'none' }}>
+      {children}
+    </motion.div>
   )
 }

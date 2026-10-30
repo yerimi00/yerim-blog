@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import AboutVersionSwiper from '@/components/about/AboutVersionSwiper'
 import { getAllActivities } from '@/lib/notion'
+import { getContributionDays } from '@/lib/github'
 
 export function generateStaticParams() {
   return [{ version: 'fe' }, { version: 'be' }, { version: 'pm' }]
@@ -17,12 +16,10 @@ export async function generateMetadata({ params }: { params: { version: string }
 
 export default async function AboutVersionPage({ params }: { params: { version: string } }) {
   if (!['fe', 'be', 'pm'].includes(params.version)) notFound()
-  const activities = await getAllActivities()
+  const [activities, contributions] = await Promise.all([getAllActivities(), getContributionDays()])
   return (
     <>
-      <Header />
-      <AboutVersionSwiper initialVersion={params.version} activities={activities} />
-      <Footer />
+      <AboutVersionSwiper initialVersion={params.version} activities={activities} contributions={contributions} />
     </>
   )
 }

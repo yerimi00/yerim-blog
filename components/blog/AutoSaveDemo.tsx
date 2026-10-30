@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { CSSProperties } from 'react'
+import { motion } from 'motion/react'
+import { duration } from '@/components/motion/presets'
 
 const STORAGE_KEY = 'yerim-blog:autosave-demo-v2'
 const DEBOUNCE_MS  = 10_000
@@ -119,24 +121,27 @@ export default function AutoSaveDemo() {
 
         {/* 상태 바 */}
         <div style={{ padding: '12px 14px 0', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: statusColor }}>
-          <div style={{ width: 7, height: 7, borderRadius: '50%', background: dotBg, transition: 'background 0.3s', flexShrink: 0 }} />
+          <motion.div
+            initial={false}
+            animate={{ backgroundColor: dotBg }}
+            transition={{ duration: duration.base }}
+            style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0 }}
+          />
           {statusText}
         </div>
 
         {/* 디바운스 카운트다운 바 */}
         <div style={{ height: 3, margin: '8px 0 0', background: 'var(--border)', overflow: 'hidden' }}>
           {status === 'typing' && (
-            <div
+            <motion.div
               key={animKey}
-              style={{
-                height: '100%', background: 'var(--accent)',
-                transformOrigin: 'left',
-                animation: `autosave-cd ${DEBOUNCE_MS}ms linear forwards`,
-              }}
+              initial={{ scaleX: 1 }}
+              animate={{ scaleX: 0 }}
+              transition={{ duration: DEBOUNCE_MS / 1000, ease: 'linear' }}
+              style={{ height: '100%', background: 'var(--accent)', transformOrigin: 'left' }}
             />
           )}
         </div>
-        <style>{`@keyframes autosave-cd { from { transform: scaleX(1) } to { transform: scaleX(0) } }`}</style>
 
         <div style={{ padding: '12px 14px 16px' }}>
           <label style={labelStyle}>문서 제목</label>

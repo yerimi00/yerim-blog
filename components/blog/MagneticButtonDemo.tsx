@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback, useLayoutEffect, useEffect } from 'react'
 import { FiArrowRight } from 'react-icons/fi'
+import { motion } from 'motion/react'
 
 const FLEE_RADIUS = 130  // 감지 거리(px)
 const FLEE_DIST   = 120  // 도망 거리(px)
@@ -65,15 +66,15 @@ export default function MagneticButtonDemo() {
 
       {/* 도망치는 버튼 — position: fixed로 페이지 전체를 돌아다님 */}
       {displayPos && (
-        <button
+        <motion.button
           onClick={showToast}
+          initial={false}
+          animate={{ left: displayPos.x - BTN_W / 2, top: displayPos.y - BTN_H / 2 }}
+          transition={{ duration: 0.12, ease: 'easeOut' }}
           style={{
             position: 'fixed',
-            left: displayPos.x - BTN_W / 2,
-            top:  displayPos.y - BTN_H / 2,
             width:  BTN_W,
             height: BTN_H,
-            transition: 'left 0.12s ease-out, top 0.12s ease-out',
             borderRadius: 'var(--radius-full)',
             border: 'none',
             background: 'var(--accent)',
@@ -93,21 +94,23 @@ export default function MagneticButtonDemo() {
           }}
         >
           시작하기 <FiArrowRight size={15} />
-        </button>
+        </motion.button>
       )}
 
-      <div style={{
+      <motion.div
+        initial={false}
+        animate={{ color: toast ? 'var(--accent)' : 'var(--text-muted)' }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        style={{
         padding: '12px 16px',
         background: 'var(--surface-container)',
         borderRadius: 'var(--radius-lg)',
         fontSize: 13,
-        color: toast ? 'var(--accent)' : 'var(--text-muted)',
         textAlign: 'center',
-        transition: 'color 0.2s',
         fontWeight: toast ? 600 : 400,
       }}>
         {toast ?? '커서가 가까워지면 버튼이 도망칩니다.'}
-      </div>
+      </motion.div>
     </div>
   )
 }

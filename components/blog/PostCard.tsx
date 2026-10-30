@@ -5,38 +5,39 @@ import { useRouter } from 'next/navigation'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
 import { HiOutlineChatBubbleLeft } from 'react-icons/hi2'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
+
+const titleVariants = {
+  rest: { color: 'var(--text)' },
+  hover: { color: 'var(--accent)' },
+}
 
 export default function PostCard({ post, commentCount = 0 }: { post: Post; index?: number; commentCount?: number }) {
   const router = useRouter()
 
   return (
-    <article
+    <motion.article
+      initial="rest"
+      whileHover="hover"
       style={{
         padding: '1.5rem 0',
         borderBottom: '1px solid var(--border)',
         cursor: 'pointer',
       }}
       onClick={() => router.push(`/blog/${post.slug}`)}
-      onMouseEnter={(e) => {
-        const title = (e.currentTarget as HTMLElement).querySelector('.post-card-title') as HTMLElement
-        if (title) title.style.color = 'var(--accent)'
-      }}
-      onMouseLeave={(e) => {
-        const title = (e.currentTarget as HTMLElement).querySelector('.post-card-title') as HTMLElement
-        if (title) title.style.color = 'var(--text)'
-      }}
     >
       {/* 시리즈 + 태그 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
         {post.series && (
           <Link
-            href={`/series/${encodeURIComponent(post.series)}`}
+            href={`/blog/series/${encodeURIComponent(post.series)}`}
             onClick={(e) => e.stopPropagation()}
             style={{
               fontSize: '0.73rem',
               fontWeight: 500,
               color: 'var(--accent)',
-              background: 'rgba(59, 130, 246, 0.1)',
+              background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
               padding: '2px 10px',
               borderRadius: '20px',
               textDecoration: 'none',
@@ -62,19 +63,19 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
       </div>
 
       {/* 제목 */}
-      <h3
+      <motion.h3
         className="post-card-title"
+        variants={titleVariants}
+        transition={fastTween}
         style={{
           fontSize: '1.1rem',
           fontWeight: 700,
-          color: 'var(--text)',
           marginBottom: '0.4rem',
           lineHeight: 1.45,
-          transition: 'color 0.15s',
         }}
       >
         {post.title}
-      </h3>
+      </motion.h3>
 
       {/* 설명 */}
       <p
@@ -102,6 +103,6 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
           {commentCount}
         </span>
       </div>
-    </article>
+    </motion.article>
   )
 }

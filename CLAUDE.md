@@ -29,6 +29,8 @@ Required in `.env.local`:
 - `NEXT_PUBLIC_ADSENSE_POST_SLOT` — AdSense ad unit slot ID for post pages
 - `NOTION_PROJECTS_DATABASE_ID` — ID of the Notion Projects database
 - `NOTION_ACTIVITIES_DATABASE_ID` — ID of the Notion Activities database (`cc1bc9501c2546e580c4efa5a6e05cab`)
+- `NOTION_INTERVIEW_DATABASE_ID` — ID of the Notion interview-question database (`28aa639a33784ebfb210339075d39e17`). Optional: unset → `/interview` shows an empty state
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_NAVER_SITE_VERIFICATION` — Search Console / Search Advisor ownership meta. Optional
 
 ## Core Principles
 
@@ -63,8 +65,10 @@ This is a **Next.js 14 App Router** blog that uses **Notion as a CMS**.
 Four data layer files in `lib/`:
 - `lib/notion.ts` — wraps `@notionhq/client` and `notion-to-md`. All blog post data.
 - `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
+- `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (상태 `발행`, 발행일 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`. 답변 본문은 `getPostContent(pageId)` 재사용.
+- `lib/site.ts` — `SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION` 단일 출처.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
-- `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments.
+- `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments, and `getContributionDays()` (About 페이지 GitHub 잔디, 실패 시 `[]` → 섹션 숨김).
 - `lib/utils.ts` — `formatDate`, `cn`, `calculateReadingTime`, `getRelatedPosts`.
 - `lib/structured-data.ts` — `buildBlogPostingSchema`, `buildBreadcrumbSchema` (JSON-LD).
 
@@ -100,27 +104,35 @@ Key functions in `lib/guestbook.ts`:
 
 **Projects** — `Name` (title), `Slug` (rich_text), `Featured` (checkbox), `Description` (rich_text), `Overview` (rich_text), `Status` (select: 완료/진행중), `Period` (rich_text), `UpdatedAt` (rich_text), `Roles` (multi_select), `Tech` (multi_select), `Award` (rich_text), `GitHub` (url), `URL` (url), `Image` (rich_text — 이미지 URL). 담당 기능은 Notion 페이지 본문에 기술.
 
+**Interview** — `질문` (title), `Slug` (rich_text), `카테고리` (select), `난이도` (select: 하/중/상), `한 줄 요약` (rich_text), `꼬리질문` (rich_text), `발행일` (date), `상태` (status: 대기/검수중/발행/보류), `번호` (unique_id), `참고 링크` (url). 답변은 페이지 본문.
+
 **Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox), `Password` (rich_text, private entries only). Comments stored as paragraph block children in `name|message` format.
 
 ### Pages
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | Hero banner + all posts + sidebar. `revalidate = 3600` |
+| `/` | `app/page.tsx` | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 + 대표 작업 3 + Lab 진입. `revalidate = 3600` |
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
-| `/series` | `app/series/page.tsx` | Posts grouped by series. "인터랙션 모음" 폴더 항상 표시 (Notion 포스트 없어도 hardcode 주입) |
-| `/series/[seriesName]` | `app/series/[seriesName]/page.tsx` | Posts in a specific series. `seriesName === "인터랙션 모음"`이면 `InteractionSeriesView` 렌더 |
-| `/series/[seriesName]/[subFolder]` | `app/series/[seriesName]/[subFolder]/page.tsx` | 인터랙션 모음 전용 서브폴더. 모바일: CardStackPostList, 데스크탑: flat list. `revalidate = 86400` |
-| `/about` | `app/about/page.tsx` | Redirects to `/about/fe` |
-| `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
-| `/project` | `app/project/page.tsx` | Project portfolio list |
-| `/project/[slug]` | `app/project/[slug]/page.tsx` | Project detail |
-| `/ai-skills` | `app/ai-skills/page.tsx` | AI Skills showcase (curated, portfolio-facing). Data from static `app/data/ai-skills.ts`, no Notion. |
+| `/blog/series` | `app/blog/series/page.tsx` | Posts grouped by series (`interactions` 제외) |
+| `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
+| `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
+| `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
+| `/lab` | `app/lab/page.tsx` | 인터랙션 데모 그리드 (구 "인터랙션 모음") |
+| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 데모 + 같은 slug 블로그 본문. `revalidate = 86400` |
+| `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
+| `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
+| `/work` | `app/work/page.tsx` | Project portfolio + `#ai-skills` 섹션 (static `app/data/ai-skills.ts`) |
+| `/work/[slug]` | `app/work/[slug]/page.tsx` | Project detail |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
+| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, lab, work |
+| `/robots.txt` | `app/robots.ts` | Allow all except `/api/`, points to sitemap |
+
+Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new routes via `next.config.js` `redirects()`. See `docs/domains/route-map.md`.
 
 ### API Routes
 
@@ -138,11 +150,15 @@ Key functions in `lib/guestbook.ts`:
 
 | Path | Purpose |
 |---|---|
-| `components/layout/` | Header, Footer (`site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비), MobileFooterLinks (모바일 About 하단 링크) |
+| `components/layout/` | `app/layout.tsx`에서 한 번만 렌더 (페이지·loading.tsx에서 렌더 금지 — 전환 시 재마운트 방지). Header (Blog · Interview · Lab · Work · About, 로고=Home), Footer (RSS 링크 포함, `site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비: Home · Blog · Interview · Work · About), MobileFooterLinks (모바일 About 하단 링크) |
 | `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
-| `components/project/` | Project page UI |
-| `components/ai-skills/` | AI Skills page UI: AiSkillSection, AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
+| `components/project/` | Work page UI: ProjectSqueezeCarousel (히어로 — 이미지 있는 프로젝트, Featured 먼저, 선택 카드만 넓고 나머지는 띠), ProjectView |
+| `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
+| `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
+| `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
+| `components/home/` | 홈 전용: HomeHero (태그 칩 + 커서 반응 점 배경), TiltCard (3D 틸트), ContainerScroll (스크롤 시 기울어진 카드가 펴짐, 최근 글) |
+| `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 
@@ -154,7 +170,8 @@ Key functions in `lib/guestbook.ts`:
   - Surfaces: `--bg`, `--bg-secondary`, `--surface`, `--surface-container`, `--surface-container-high`
   - Text: `--text`, `--text-secondary`, `--text-muted`
   - Borders: `--border`, `--border-subtle`, `--outline`, `--outline-variant`
-  - Accent: `--accent`, `--accent-dim`, `--secondary`, `--secondary-container`
+  - Accent (빨간 펜 `#e5383b` / 다크 `#ff6b6b`): `--accent`, `--accent-dim`, `--accent-soft`, `--secondary`, `--secondary-container`
+  - Fonts: `--font-hand` (Nanum Pen Script, 포인트 전용)
   - Shadows: `--shadow-floating`, `--shadow-card`
   - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
 - Tailwind theme extensions (`tailwind.config.js`):
@@ -164,8 +181,15 @@ Key functions in `lib/guestbook.ts`:
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
 - `.series-tab-bar` / `.series-tab-btn`: `touch-action: pan-x` + `user-select: none` — 모바일 수평 스크롤 중 텍스트 드래그 선택 방지
-- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
-- Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
+- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid`, `.project-view-grid` (grid blowout 방지 `min-width: 0`), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.project-hero-banner`, `.project-hero-banner-content`, `.project-list-period` (≤480px 숨김), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.home-work-grid` (≤768px 1열), `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
+- Fonts: Pretendard (sans), JetBrains Mono (code/monospace), Nanum Pen Script (`hand` — 손글씨 포인트 전용)
+- 손글씨 포인트 클래스: `.hand`, `.hand-title`, `.hand-underline` (`--hand-delay`), 활성 `.nav-link.is-active` / `.series-tab-btn.active`는 빨간 손그림 밑줄. 상세는 `docs/domains/styling.md`
+- 하드코딩 색 금지: 강조색은 `var(--accent)`, 옅은 배경은 `color-mix(in srgb, var(--accent) N%, transparent)`
+- **인터랙션·애니메이션은 JS(motion)로**: CSS `transition`·`@keyframes`·`:hover` 효과·`onMouseEnter`로 style 바꾸기 금지. `motion/react`의 `animate`/`whileHover`/`whileInView`/`AnimatePresence`를 쓴다
+  - 공통 값: `components/motion/presets.ts` (`ease`, `duration`, `spring`, `fastTween`, `fadeUp`)
+  - 공용 컴포넌트: `MotionLink`(next/link), `HoverCardLink`·`HoverFade`(서버 컴포넌트에서 사용 가능), `TabButton`, `HandUnderline`(손그림 밑줄 SVG), `Skeleton`, `BlinkCursor`
+  - 앱 전체가 `MotionProvider`(`MotionConfig reducedMotion="user"`)로 감싸져 있어 동작 줄이기 설정을 따른다
+  - CSS로 계산하는 레이아웃 값은 motion이 CSS 변수(`--active` 등)를 애니메이션하고 CSS가 읽는다 (예: `ProjectSqueezeCarousel`, `GuestbookFAB`)
 
 ### Post Rendering
 

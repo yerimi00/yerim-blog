@@ -1,8 +1,6 @@
 import { getAllPosts, getPostBySlug, getPostContent } from '@/lib/notion'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import TableOfContents, { TocHeading } from '@/components/blog/TableOfContents'
@@ -16,8 +14,7 @@ import GoogleAdsense from '@/components/GoogleAdsense'
 import { formatDate, calculateReadingTime, getRelatedPosts } from '@/lib/utils'
 import { buildBlogPostingSchema, buildBreadcrumbSchema } from '@/lib/structured-data'
 import GithubSlugger from 'github-slugger'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yerim.dev'
+import { SITE_URL } from '@/lib/site'
 
 function extractHeadings(markdown: string): TocHeading[] {
   const headings: TocHeading[] = []
@@ -55,6 +52,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -87,7 +85,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <ReadingProgress />
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div
           className="post-grid"
@@ -119,12 +116,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.9rem', flexWrap: 'wrap' }}>
                 {post.series && (
                   <Link
-                    href={`/series/${encodeURIComponent(post.series)}`}
+                    href={`/blog/series/${encodeURIComponent(post.series)}`}
                     style={{
                       fontSize: '0.73rem',
                       fontWeight: 500,
                       color: 'var(--accent)',
-                      background: 'rgba(59, 130, 246, 0.1)',
+                      background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
                       padding: '2px 10px',
                       borderRadius: '20px',
                       textDecoration: 'none',
@@ -215,7 +212,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
           )}
         </div>
       </main>
-      <Footer />
 
       {/* 이미지 줌 */}
       <MediumZoom />

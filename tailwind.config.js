@@ -12,6 +12,7 @@ module.exports = {
         sans: ['Pretendard', 'system-ui', 'sans-serif'],
         serif: ['Pretendard', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        hand: ['Nanum Pen Script', 'Pretendard', 'cursive'],
       },
       colors: {
         /* CSS custom property aliases */
@@ -29,8 +30,7 @@ module.exports = {
         accent: {
           DEFAULT: 'var(--accent)',
           dim: 'var(--accent-dim)',
-          blue: '#3B82F6',
-          'blue-dark': '#60A5FA',
+          soft: 'var(--accent-soft)',
         },
         /* Design System — Insight Minimalist palette */
         ds: {
@@ -45,10 +45,10 @@ module.exports = {
           'inverse-on-surface': '#f0f1f3',
           outline: '#727785',
           'outline-variant': '#c2c6d6',
-          primary: '#0058be',
-          'primary-container': '#2170e4',
+          primary: '#e5383b',
+          'primary-container': '#fde2e2',
           'on-primary': '#ffffff',
-          'inverse-primary': '#adc6ff',
+          'inverse-primary': '#ff6b6b',
           secondary: '#575e70',
           'secondary-container': '#d9dff5',
           'on-secondary': '#ffffff',
@@ -91,7 +91,7 @@ module.exports = {
             maxWidth: 'none',
             color: 'inherit',
             lineHeight: '1.75',
-            a: { color: '#3B82F6', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
+            a: { color: 'var(--accent)', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } },
             'h1,h2,h3,h4': { color: 'inherit', fontWeight: '700', letterSpacing: '-0.01em' },
             h1: { letterSpacing: '-0.02em', fontWeight: '800' },
             code: { color: '#e11d48', backgroundColor: '#fef2f2', padding: '2px 6px', borderRadius: '4px', fontSize: '0.875em' },

@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation'
 import { IoIosArrowForward } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { getAllProjects, getProjectBySlug } from '@/lib/projects'
 import { getPostsByProject } from '@/lib/notion'
 import PostCard from '@/components/blog/PostCard'
@@ -17,7 +15,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const project = await getProjectBySlug(params.slug)
   if (!project) return {}
-  return { title: `${project.name} — 프로젝트`, description: project.description }
+  return {
+    title: `${project.name} — Work`,
+    description: project.description,
+    alternates: { canonical: `/work/${project.slug}` },
+  }
 }
 
 const sectionStyle: React.CSSProperties = {
@@ -67,7 +69,6 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
 
         {/* 헤더 */}
@@ -77,7 +78,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               {project.name}
             </h1>
             {project.status === '진행중' && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '3px 12px', borderRadius: '999px', background: 'rgba(59,130,246,0.12)', color: 'var(--accent)' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '3px 12px', borderRadius: '999px', background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)' }}>
                 진행중
               </span>
             )}
@@ -167,7 +168,6 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         )}
 
       </main>
-      <Footer />
     </>
   )
 }

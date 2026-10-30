@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { FiSend, FiLock, FiUnlock } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'motion/react'
+import { fastTween, spring } from '@/components/motion/presets'
 
 interface Props {
   onSuccess: (entry: { id: string; name: string; message: string; createdAt: string }) => void
@@ -21,7 +23,11 @@ const WRITE_IMAGES = [
 function SuccessModal({ onClose }: { onClose: () => void }) {
   const randomImage = WRITE_IMAGES[Math.floor(Math.random() * WRITE_IMAGES.length)]
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
       style={{
         position: 'fixed',
         inset: 0,
@@ -31,18 +37,20 @@ function SuccessModal({ onClose }: { onClose: () => void }) {
         justifyContent: 'center',
         background: 'rgba(0,0,0,0.35)',
         backdropFilter: 'blur(4px)',
-        animation: 'fadeIn 0.2s ease',
       }}
       onClick={onClose}
     >
-      <div
+      <motion.div
         onClick={e => e.stopPropagation()}
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={spring.bouncy}
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '1rem',
-          animation: 'popIn 0.35s cubic-bezier(0.34,1.56,0.64,1)',
         }}
       >
         {/* 모달 위 텍스트 */}
@@ -73,8 +81,10 @@ function SuccessModal({ onClose }: { onClose: () => void }) {
             background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)',
             padding: '2rem 1.75rem 1.75rem',
           }}>
-            <button
+            <motion.button
               onClick={onClose}
+              whileHover={{ background: 'rgba(255,255,255,0.28)', borderColor: 'rgba(255,255,255,0.8)' }}
+              transition={fastTween}
               style={{
                 width: '100%',
                 padding: '0.8rem',
@@ -87,25 +97,14 @@ function SuccessModal({ onClose }: { onClose: () => void }) {
                 fontWeight: 600,
                 cursor: 'pointer',
                 fontFamily: 'inherit',
-                transition: 'background 0.15s, border-color 0.15s',
-              }}
-              onMouseEnter={e => {
-                const btn = e.currentTarget as HTMLButtonElement
-                btn.style.background = 'rgba(255,255,255,0.28)'
-                btn.style.borderColor = 'rgba(255,255,255,0.8)'
-              }}
-              onMouseLeave={e => {
-                const btn = e.currentTarget as HTMLButtonElement
-                btn.style.background = 'rgba(255,255,255,0.15)'
-                btn.style.borderColor = 'rgba(255,255,255,0.5)'
               }}
             >
               닫기
-            </button>
+            </motion.button>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
@@ -162,7 +161,9 @@ export default function GuestbookForm({ onSuccess }: Props) {
 
   return (
     <>
-      {showModal && <SuccessModal onClose={() => setShowModal(false)} />}
+      <AnimatePresence>
+        {showModal && <SuccessModal onClose={() => setShowModal(false)} />}
+      </AnimatePresence>
 
       <form onSubmit={handleSubmit}>
         {/* 상단 구분선 */}
@@ -200,24 +201,25 @@ export default function GuestbookForm({ onSuccess }: Props) {
               background: 'transparent',
             }}
           />
-          <button
+          <motion.button
             type="button"
             onClick={() => setIsPublic(prev => !prev)}
+            initial={false}
+            animate={{ color: !isPublic ? 'var(--accent)' : 'var(--text-muted)' }}
+            transition={{ duration: 0.2 }}
             title={!isPublic ? '비공개 — 저에게만 전달됩니다' : '공개 — 모두에게 보입니다'}
             style={{
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               padding: '4px',
-              color: !isPublic ? '#3b82f6' : 'var(--text-muted)',
               display: 'flex',
               alignItems: 'center',
-              transition: 'color 0.2s',
               flexShrink: 0,
             }}
           >
             {!isPublic ? <FiLock size={15} /> : <FiUnlock size={15} />}
-          </button>
+          </motion.button>
         </div>
 
         {/* 비공개 시 비밀번호 입력 */}
@@ -227,7 +229,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0' }}>
               <span style={{
                 fontSize: '0.75rem',
-                color: '#3b82f6',
+                color: 'var(--accent)',
                 fontFamily: 'JetBrains Mono, monospace',
                 flexShrink: 0,
                 letterSpacing: '0.04em',
@@ -266,7 +268,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
         }}>
           <span style={{
             fontFamily: 'JetBrains Mono, monospace',
-            color: '#3b82f6',
+            color: 'var(--accent)',
             fontSize: '1.1rem',
             lineHeight: 1.7,
             flexShrink: 0,
@@ -314,7 +316,7 @@ export default function GuestbookForm({ onSuccess }: Props) {
             {!isPublic && (
               <span style={{
                 fontSize: '0.75rem',
-                color: '#3b82f6',
+                color: 'var(--accent)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.25rem',
@@ -325,15 +327,22 @@ export default function GuestbookForm({ onSuccess }: Props) {
             )}
           </div>
 
-          <button
+          <motion.button
             type="submit"
             disabled={status === 'loading' || !message.trim()}
+            initial={false}
+            animate={{
+              borderColor: message.trim() ? 'var(--accent)' : 'var(--border)',
+              color: message.trim() ? 'var(--accent)' : 'var(--text-muted)',
+              background: 'rgba(0,0,0,0)',
+            }}
+            whileHover={status !== 'loading' && message.trim() ? { background: 'var(--accent)', color: '#fff' } : undefined}
+            transition={fastTween}
             style={{
               padding: '0.4rem 1rem',
               borderRadius: '8px',
-              border: message.trim() ? '1.5px solid #3b82f6' : '1.5px solid var(--border)',
-              background: 'transparent',
-              color: message.trim() ? '#3b82f6' : 'var(--text-muted)',
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
               fontSize: '0.85rem',
               fontWeight: 600,
               cursor: message.trim() ? 'pointer' : 'default',
@@ -341,23 +350,10 @@ export default function GuestbookForm({ onSuccess }: Props) {
               display: 'flex',
               alignItems: 'center',
               gap: '0.35rem',
-              transition: 'all 0.15s',
-            }}
-            onMouseEnter={e => {
-              if (message.trim()) {
-                const btn = e.currentTarget as HTMLButtonElement
-                btn.style.background = '#3b82f6'
-                btn.style.color = '#fff'
-              }
-            }}
-            onMouseLeave={e => {
-              const btn = e.currentTarget as HTMLButtonElement
-              btn.style.background = 'transparent'
-              btn.style.color = message.trim() ? '#3b82f6' : 'var(--text-muted)'
             }}
           >
             {status === 'loading' ? '전송중' : <><FiSend size={13} />전송</>}
-          </button>
+          </motion.button>
         </div>
 
         {status === 'error' && (

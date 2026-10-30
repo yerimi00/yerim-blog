@@ -1,0 +1,294 @@
+/* ActivityHeatmap 스타일. 원본 패키지에 빠져 있어 사이트 토큰(--accent 등) 기준으로 작성 */
+.root {
+  --cell: 11px;
+  --gap: 3px;
+  --step: calc(var(--cell) + var(--gap));
+  --label-col: 28px;
+  position: relative;
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.summary {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.total {
+  font-weight: 700;
+  color: var(--text);
+}
+.period {
+  color: var(--text-muted);
+}
+.actions {
+  flex-shrink: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 좁은 화면에서는 가로 스크롤 */
+.scroller {
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.canvas {
+  display: grid;
+  grid-template-columns: var(--label-col) auto;
+  grid-template-rows: 18px auto;
+  width: max-content;
+}
+.months {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  width: calc(var(--weeks) * var(--step));
+}
+.month {
+  position: absolute;
+  left: calc(var(--col) * var(--step));
+  top: 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.weekdays {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.weekday {
+  height: var(--cell);
+  font-size: 0.65rem;
+  line-height: var(--cell);
+  color: var(--text-muted);
+}
+.plot {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+}
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  outline: none;
+}
+.row {
+  display: flex;
+  gap: var(--gap);
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 2px;
+  background: var(--surface-container);
+  outline: none;
+}
+.cell[data-empty] {
+  visibility: hidden;
+}
+.cell[data-level='1'],
+.swatch[data-level='1'] {
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface-container));
+}
+.cell[data-level='2'],
+.swatch[data-level='2'] {
+  background: color-mix(in srgb, var(--accent) 48%, var(--surface-container));
+}
+.cell[data-level='3'],
+.swatch[data-level='3'] {
+  background: color-mix(in srgb, var(--accent) 74%, var(--surface-container));
+}
+.cell[data-level='4'],
+.swatch[data-level='4'] {
+  background: var(--accent);
+}
+.cell[data-index] {
+  cursor: pointer;
+}
+.cell[data-index]:hover {
+  box-shadow: 0 0 0 1px var(--text);
+}
+.cell:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* 처음 보일 때 대각선으로 퍼지는 웨이브 */
+.grid[data-reveal='hidden'] .cell {
+  opacity: 0;
+  transform: scale(0.4);
+}
+/* 'revealing' 단계의 물결 등장은 activity-heatmap.tsx에서 Web Animations API로 실행 */
+
+/* 범례 단계 미리보기: 해당 단계가 아닌 칸은 흐리게 */
+.grid[data-highlight='0'] .cell[data-index]:not([data-level='0']),
+.grid[data-highlight='1'] .cell[data-index]:not([data-level='1']),
+.grid[data-highlight='2'] .cell[data-index]:not([data-level='2']),
+.grid[data-highlight='3'] .cell[data-index]:not([data-level='3']),
+.grid[data-highlight='4'] .cell[data-index]:not([data-level='4']) {
+  opacity: 0.2;
+}
+
+/* 선택한 날 표시 링 */
+.ring {
+  position: absolute;
+  left: calc(var(--col) * var(--step) - 2px);
+  top: calc(var(--row) * var(--step) - 2px);
+  width: calc(var(--cell) + 4px);
+  height: calc(var(--cell) + 4px);
+  border: 2px solid var(--text);
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+}
+.ring[data-shown] {
+  opacity: 1;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  min-height: 1.4em;
+}
+.caption {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  min-width: 0;
+}
+.captionShort {
+  display: none;
+}
+.scale {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.legendText {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.swatches {
+  display: flex;
+  gap: var(--gap);
+}
+.swatch {
+  width: var(--cell);
+  height: var(--cell);
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: var(--surface-container);
+  cursor: pointer;
+}
+.swatch:focus-visible,
+.swatch[aria-pressed='true'] {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+/* 툴팁: 칸 위에 뜨고 칸 사이를 미끄러지듯 이동 */
+.tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+.bubble {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  transform-origin: bottom center;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-floating);
+}
+.tipBody {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 0.4rem 0.65rem;
+  box-sizing: content-box;
+}
+.tipMeasure {
+  position: absolute;
+  visibility: hidden;
+  display: inline-flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+.tipLines {
+  display: inline-flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+.tipPrimary {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.tipSecondary {
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+/* 숫자·문구 롤링 */
+.rollingFrame {
+  display: inline-block;
+  vertical-align: bottom;
+  overflow: hidden;
+}
+.rolling {
+  display: inline-flex;
+}
+.place {
+  position: relative;
+  display: inline-block;
+}
+.placeChar {
+  display: inline-block;
+}
+.rise {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.riseLine {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .captionLong {
+    display: none;
+  }
+  .captionShort {
+    display: inline;
+  }
+}
+

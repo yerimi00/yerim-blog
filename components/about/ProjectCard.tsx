@@ -7,7 +7,7 @@ export default function ProjectCard({ project }: { project: NotionProject }) {
 
   return (
     <div
-      onClick={() => router.push(`/project/${project.slug}`)}
+      onClick={() => router.push(`/work/${project.slug}`)}
       style={{
         position: 'relative',
         aspectRatio: '16/9',
@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: { project: NotionProject }) {
         {/* 역할 뱃지 + 상태 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
           {project.status === '진행중' && (
-            <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'rgba(59,130,246,0.12)', color: 'var(--accent)' }}>
+            <span style={{ fontSize: '0.73rem', fontWeight: 600, padding: '2px 10px', borderRadius: '999px', background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)' }}>
               진행중
             </span>
           )}

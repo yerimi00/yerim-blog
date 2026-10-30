@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import BlinkCursor from '@/components/motion/BlinkCursor'
 
 export default function TypewriterText({ text, style }: { text: string; style?: React.CSSProperties }) {
   const [displayed, setDisplayed] = useState('')
@@ -24,20 +25,7 @@ export default function TypewriterText({ text, style }: { text: string; style?: 
   return (
     <span style={style}>
       {displayed}
-      {!done && (
-        <span
-          style={{
-            display: 'inline-block',
-            width: '2px',
-            height: '1em',
-            background: 'var(--text)',
-            marginLeft: '2px',
-            verticalAlign: 'text-bottom',
-            animation: 'blink 0.7s step-end infinite',
-          }}
-        />
-      )}
-      <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
+      {!done && <BlinkCursor style={{ width: '2px', height: '1em', background: 'var(--text)', marginLeft: '2px' }} />}
     </span>
   )
 }

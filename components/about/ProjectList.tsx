@@ -43,7 +43,7 @@ export default function ProjectList({ projects }: { projects: NotionProject[] })
                   key={project.slug}
                   style={{ borderBottom: ai < items.length - 1 ? '1px solid var(--border)' : 'none' }}
                 >
-                  <Link href={`/project/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                  <Link href={`/work/${project.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                     <div className="project-list-item" style={{ padding: '0.8rem 0', cursor: 'pointer' }}>
                       <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
                         <span className="project-list-period" style={{
@@ -60,7 +60,7 @@ export default function ProjectList({ projects }: { projects: NotionProject[] })
                             {project.status === '진행중' && (
                               <span style={{
                                 fontSize: '0.68rem', padding: '1px 8px', borderRadius: '999px',
-                                background: 'rgba(59,130,246,0.12)', color: 'var(--accent)',
+                                background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)',
                               }}>
                                 진행중
                               </span>

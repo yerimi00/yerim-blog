@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { IconType } from 'react-icons'
+import { motion } from 'motion/react'
 import { FiTrendingUp, FiLayers, FiCamera, FiFileText } from 'react-icons/fi'
 
 const BANNERS: { bg: string; title: string; sub: string; Icon: IconType }[] = [
@@ -12,6 +13,8 @@ const BANNERS: { bg: string; title: string; sub: string; Icon: IconType }[] = [
 ]
 
 const AUTO_DELAY = 7000
+// 원본 CSS transition 기본값 `ease`와 동일한 곡선
+const CSS_EASE = [0.25, 0.1, 0.25, 1] as const
 
 export default function BannerCarouselDemo() {
   const [idx, setIdx] = useState(0)
@@ -52,14 +55,15 @@ export default function BannerCarouselDemo() {
   return (
     <div style={{ width: 320, margin: '0 auto', fontFamily: 'Pretendard, sans-serif' }}>
       {/* Banner */}
-      <div
+      <motion.div
+        initial={false}
+        animate={{ backgroundColor: banner.bg }}
+        transition={{ duration: 0.5, ease: CSS_EASE }}
         style={{
           height: 180, borderRadius: 18,
-          background: banner.bg,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           cursor: 'grab', userSelect: 'none',
-          transition: 'background 0.5s ease',
           position: 'relative', overflow: 'hidden',
         }}
         onPointerDown={onPointerDown}
@@ -74,35 +78,34 @@ export default function BannerCarouselDemo() {
 
         {/* Progress bar */}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'rgba(255,255,255,0.2)' }}>
-          <div
+          <motion.div
             key={idx}
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: AUTO_DELAY / 1000, ease: 'linear' }}
             style={{
               height: '100%', background: 'rgba(255,255,255,0.8)',
               borderRadius: 'var(--radius-sm)',
-              animation: `banner-progress ${AUTO_DELAY}ms linear forwards`,
             }}
           />
         </div>
-
-        <style>{`
-          @keyframes banner-progress {
-            from { width: 0% }
-            to   { width: 100% }
-          }
-        `}</style>
-      </div>
+      </motion.div>
 
       {/* Dots */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 12 }}>
         {BANNERS.map((_, i) => (
-          <button
+          <motion.button
             key={i}
             onClick={() => go(i)}
+            initial={false}
+            animate={{
+              width: i === idx ? 20 : 7,
+              backgroundColor: i === idx ? 'var(--accent)' : 'var(--border)',
+            }}
+            transition={{ duration: 0.25, ease: CSS_EASE }}
             style={{
-              width: i === idx ? 20 : 7, height: 7, borderRadius: 'var(--radius)',
+              height: 7, borderRadius: 'var(--radius)',
               border: 'none', padding: 0, cursor: 'pointer',
-              background: i === idx ? 'var(--accent)' : 'var(--border)',
-              transition: 'all 0.25s',
             }}
           />
         ))}

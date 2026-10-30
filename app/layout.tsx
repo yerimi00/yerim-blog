@@ -5,10 +5,15 @@ import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
 import GuestbookFAB from '@/components/GuestbookFAB'
 import BottomNav from '@/components/layout/BottomNav'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import MotionProvider from '@/components/motion/MotionProvider'
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: { default: 'yerim.dev', template: '%s | yerim.dev' },
-  description: '피할 수 없다면 즐..즐입니다 ~ KIN',
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -18,8 +23,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://yerim.vercel.app',
-    siteName: 'yerim.dev',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION
+      ? { 'naver-site-verification': process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION }
+      : undefined,
   },
   icons: {
     icon: '/logo.jpg',
@@ -51,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Nanum+Pen+Script&display=swap" />
         <link rel="alternate" type="application/rss+xml" title="yerim.dev RSS" href="/rss.xml" />
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t==='dark'||((t==='system'||!t)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}` }} />
       </head>
@@ -66,9 +77,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <GuestbookFAB />
-          <BottomNav />
+          <MotionProvider>
+            {/* 헤더·푸터는 레이아웃에 둬서 페이지 전환 시 다시 마운트되지 않게 한다 */}
+            <Header />
+            {children}
+            <Footer />
+            <GuestbookFAB />
+            <BottomNav />
+          </MotionProvider>
         </ThemeProvider>
         <Script
           id="sw-register"

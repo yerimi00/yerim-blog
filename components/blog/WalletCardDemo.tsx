@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
 
 const N          = 4
 const WALLET_W   = 300
@@ -14,6 +15,7 @@ const FRONT_TOP  = WALLET_H - CARD_H - BOTTOM_GAP   // 230
 const PEEK_REST  = 18   // 접힌 상태: 카드 헤더 18px씩 노출
 const PEEK_OPEN  = 62   // 열린 상태: 카드 62px씩 노출
 const ANIM_MS    = 380
+const SPREAD     = { duration: ANIM_MS / 1000, ease: [0.34, 1.4, 0.64, 1] } as const
 
 const CARDS = [
   { bg: '#3b82f6', textColor: '#fff',    label: '카드 1' },
@@ -59,11 +61,13 @@ export default function WalletCardDemo() {
 
       {/* 카드들 — 하단 정렬, hover/click 시 위로 펼쳐짐 */}
       {CARDS.map((card, i) => (
-        <div
+        <motion.div
           key={i}
+          initial={false}
+          animate={{ top: cardTop(i) }}
+          transition={SPREAD}
           style={{
             position: 'absolute',
-            top: cardTop(i),
             left: CARD_LEFT,
             width: CARD_W,
             height: CARD_H,
@@ -73,13 +77,12 @@ export default function WalletCardDemo() {
             boxShadow: '0 6px 24px rgba(0,0,0,0.45)',
             padding: '16px 20px',
             boxSizing: 'border-box',
-            transition: `top ${ANIM_MS}ms cubic-bezier(0.34, 1.4, 0.64, 1)`,
           }}
         >
           <span style={{ fontSize: 14, fontWeight: 700, color: card.textColor }}>
             {card.label}
           </span>
-        </div>
+        </motion.div>
       ))}
     </div>
   )

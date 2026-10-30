@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 
 function Chip({
   active,
@@ -12,20 +14,24 @@ function Chip({
   children: React.ReactNode
 }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
+      initial={false}
+      animate={{
+        borderColor: active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
+        backgroundColor: active ? 'var(--accent)' : 'var(--surface, #fff)',
+        color: active ? '#fff' : 'var(--text, #374151)',
+      }}
+      transition={fastTween}
       style={{
         padding: '7px 14px', borderRadius: 100,
-        border: `1.5px solid ${active ? 'var(--accent)' : 'var(--border, #e5e7eb)'}`,
-        background: active ? 'var(--accent)' : 'var(--surface, #fff)',
-        color: active ? '#fff' : 'var(--text, #374151)',
+        borderWidth: 1.5, borderStyle: 'solid',
         fontSize: 13, fontWeight: active ? 600 : 400,
         cursor: 'pointer',
-        transition: 'all 0.15s ease',
       }}
     >
       {children}
-    </button>
+    </motion.button>
   )
 }
 
