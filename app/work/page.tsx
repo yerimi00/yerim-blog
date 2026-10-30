@@ -1,5 +1,5 @@
 import ProjectView from '@/components/project/ProjectView'
-import ProjectHeroBanner from '@/components/project/ProjectHeroBanner'
+import ProjectSqueezeCarousel from '@/components/project/ProjectSqueezeCarousel'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
 import { getAllProjects } from '@/lib/projects'
 import { aiSkillCategories } from '@/app/data/ai-skills'
@@ -14,16 +14,20 @@ export const metadata = {
 
 export default async function WorkPage() {
   const projects = await getAllProjects()
-  const featured = projects.filter((p) => p.featured)
+  // 히어로: 이미지 있는 프로젝트, Featured 먼저 (최대 8개)
+  const heroProjects = projects
+    .filter((p) => p.image)
+    .sort((a, b) => Number(b.featured) - Number(a.featured))
+    .slice(0, 8)
 
   return (
     <>
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
 
-        {featured.length > 0 && (
-          <section style={{ margin: '2rem 0 3rem' }}>
-            <ProjectHeroBanner projects={featured} />
-          </section>
+        {heroProjects.length > 0 && (
+          <div style={{ margin: '2rem 0 3rem' }}>
+            <ProjectSqueezeCarousel projects={heroProjects} />
+          </div>
         )}
 
         <div style={{ marginBottom: '2rem' }}>

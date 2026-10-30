@@ -153,11 +153,12 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/layout/` | `app/layout.tsx`에서 한 번만 렌더 (페이지·loading.tsx에서 렌더 금지 — 전환 시 재마운트 방지). Header (Blog · Interview · Lab · Work · About, 로고=Home), Footer (RSS 링크 포함, `site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비: Home · Blog · Interview · Work · About), MobileFooterLinks (모바일 About 하단 링크) |
 | `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
-| `components/project/` | Work page UI |
+| `components/project/` | Work page UI: ProjectSqueezeCarousel (히어로 — 이미지 있는 프로젝트, Featured 먼저, 선택 카드만 넓고 나머지는 띠), ProjectView |
 | `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
-| `components/home/` | 홈 전용: HomeHero (matter-js 태그 칩 + 커서 반응 점 배경), TiltCard (3D 틸트) |
+| `components/home/` | 홈 전용: HomeHero (태그 칩 + 커서 반응 점 배경), TiltCard (3D 틸트), ContainerScroll (스크롤 시 기울어진 카드가 펴짐, 최근 글) |
+| `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 
