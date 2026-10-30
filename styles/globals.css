@@ -938,6 +938,7 @@
     grid-template-columns: 1fr;
   }
 }
+
 /* 홈 히어로: 커서 반응 점 배경 + 물리 태그 칩 */
 .home-hero {
   position: relative;
@@ -1067,6 +1068,7 @@
     transform: none !important;
   }
 }
+
 /* ── 손글씨 포인트 (빨간 펜) ── */
 .hand {
   font-family: var(--font-hand);
@@ -1137,4 +1139,10 @@
   line-height: 1.1;
   color: var(--text);
   margin: 0 0 0.5rem;
+}
+
+/* /about 랜딩(전체 화면 히어로)에서는 레이아웃 헤더·푸터를 숨긴다. CSS로 처리해 첫 화면부터 깜빡임 없음 */
+body:has(.about-hero-grid) .site-header,
+body:has(.about-hero-grid) .site-footer {
+  display: none;
 }
