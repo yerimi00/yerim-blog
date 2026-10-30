@@ -17,6 +17,12 @@ const CATEGORY_ICONS: Record<Category, IconType> = {
 const CAFE_DATA = ['블루보틀 성수', '프릳츠 도화', '어니언 미아', '테라로사 경복궁', '나무사이로 서교', '커피리브레 연남', '센터커피 한남', '브루어스 이태원', '커피한약방 익선', '스페셜티 합정']
 const FOOD_DATA = ['이태원 모노끼', '을지로 감자국', '삼청 파스타', '홍대 타코', '청담 스시', '합정 피자', '성수 브런치', '연남 라멘', '마포 냉면', '한남 비스트로']
 
+// 서버·클라이언트가 같은 값을 내야 해서(하이드레이션) Math.random 대신 id 기반 고정 난수
+const seeded = (n: number) => {
+  const x = Math.sin(n * 9301 + 49297) * 233280
+  return x - Math.floor(x)
+}
+
 function generateItems(category: Category, page: number) {
   const base = category === '카페' || category === '전시' ? CAFE_DATA : FOOD_DATA
   const priceBase = { '카페': 5, '음식점': 12, '쇼핑': 8, '전시': 2 }[category]
@@ -25,9 +31,9 @@ function generateItems(category: Category, page: number) {
     return {
       id: page * 5 + i,
       name: base[idx] + (page > 0 ? ` ${page + 1}` : ''),
-      price: `${priceBase + Math.floor(Math.random() * priceBase / 2)}만원~`,
-      rating: (4 + Math.random()).toFixed(1),
-      reviews: Math.floor(20 + Math.random() * 200),
+      price: `${priceBase + Math.floor(seeded(page * 5 + i) * priceBase / 2)}만원~`,
+      rating: (4 + seeded(page * 5 + i + 100)).toFixed(1),
+      reviews: Math.floor(20 + seeded(page * 5 + i + 200) * 200),
     }
   })
 }
