@@ -1192,3 +1192,62 @@ body:has(.about-hero-grid) .site-footer {
     --ball-scale: 0.62;
   }
 }
+
+/* 홈: 컨테이너 스크롤 (기울어진 화면이 스크롤에 따라 펴짐) */
+.container-scroll {
+  padding: 2rem 0 4rem;
+  perspective: 1000px;
+}
+.container-scroll-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.container-scroll-card {
+  transform-origin: center top;
+  border: 3px solid var(--outline-variant);
+  border-radius: 24px;
+  padding: 0.6rem;
+  background: var(--surface-container-high);
+  box-shadow:
+    0 0 #0000004d,
+    0 9px 20px #0000004a,
+    0 37px 37px #00000042,
+    0 84px 50px #00000026,
+    0 149px 60px #0000000a;
+}
+.container-scroll-screen {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+.browser-chrome span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--outline-variant);
+}
+.browser-chrome span:first-child {
+  background: var(--accent);
+}
+.browser-chrome p {
+  margin: 0 auto;
+  padding: 0.15rem 1rem;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .container-scroll-card {
+    transform: none !important;
+  }
+}

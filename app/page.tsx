@@ -6,6 +6,7 @@ import TodayQuestionCard from '@/components/interview/TodayQuestionCard'
 import HomeHero from '@/components/home/HomeHero'
 import TiltCard from '@/components/home/TiltCard'
 import SectionReveal from '@/components/about/SectionReveal'
+import ContainerScroll from '@/components/home/ContainerScroll'
 import { DEMOS } from '@/app/data/interactions/interactions-data'
 
 export const revalidate = 3600
@@ -53,27 +54,42 @@ export default async function HomePage() {
           </SectionReveal>
         )}
 
-        {/* 최근 글 */}
-        <SectionReveal style={{ marginBottom: '3rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
-            <h2 style={sectionTitle}>최근 글</h2>
-            <Link href="/blog" style={moreLink}>전체 {posts.length}개 보기 →</Link>
+        {/* 최근 글 — 스크롤하면 기울어진 화면이 펴진다 */}
+        <ContainerScroll
+          title={
+            <>
+              <p className="hand" style={{ fontSize: '1.5rem', color: 'var(--accent)', margin: '0 0 0.25rem' }}>요즘 쓰고 있는 것들</p>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 800, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>
+                배운 건 바로바로 기록해요
+              </h2>
+            </>
+          }
+        >
+          <div className="browser-chrome" aria-hidden="true">
+            <span /><span /><span />
+            <p>yerim.dev/blog</p>
           </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {recentPosts.map((post) => (
-              <li key={post.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                <Link href={`/blog/${post.slug}`} style={{ display: 'flex', gap: '1rem', alignItems: 'baseline', padding: '0.9rem 0', textDecoration: 'none' }}>
-                  <span style={{ fontSize: '0.78rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--text-muted)', flexShrink: 0 }}>
-                    {toYYMM(post.date)}
-                  </span>
-                  <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.5 }}>
-                    {post.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </SectionReveal>
+          <div style={{ padding: '0.5rem 1.25rem 1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '0.75rem 0 0.25rem' }}>
+              <h3 style={sectionTitle}>최근 글</h3>
+              <Link href="/blog" style={moreLink}>전체 {posts.length}개 보기 →</Link>
+            </div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {recentPosts.map((post) => (
+                <li key={post.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <Link href={`/blog/${post.slug}`} style={{ display: 'flex', gap: '1rem', alignItems: 'baseline', padding: '0.9rem 0', textDecoration: 'none' }}>
+                    <span style={{ fontSize: '0.78rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--text-muted)', flexShrink: 0 }}>
+                      {toYYMM(post.date)}
+                    </span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.5 }}>
+                      {post.title}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ContainerScroll>
 
         {/* 대표 작업 */}
         {works.length > 0 && (
