@@ -17,7 +17,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const project = await getProjectBySlug(params.slug)
   if (!project) return {}
-  return { title: `${project.name} — 프로젝트`, description: project.description }
+  return {
+    title: `${project.name} — Work`,
+    description: project.description,
+    alternates: { canonical: `/work/${project.slug}` },
+  }
 }
 
 const sectionStyle: React.CSSProperties = {

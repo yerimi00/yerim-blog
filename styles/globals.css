@@ -922,3 +922,15 @@
     padding-top: 0 !important;
   }
 }
+
+/* 홈: 대표 작업 3열 → 모바일 1열 */
+.home-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .home-work-grid {
+    grid-template-columns: 1fr;
+  }
+}

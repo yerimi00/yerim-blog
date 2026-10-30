@@ -30,7 +30,7 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
         {post.series && (
           <Link
-            href={`/series/${encodeURIComponent(post.series)}`}
+            href={`/blog/series/${encodeURIComponent(post.series)}`}
             onClick={(e) => e.stopPropagation()}
             style={{
               fontSize: '0.73rem',

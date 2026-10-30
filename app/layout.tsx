@@ -5,10 +5,12 @@ import '@/styles/globals.css'
 import 'highlight.js/styles/github.css'
 import GuestbookFAB from '@/components/GuestbookFAB'
 import BottomNav from '@/components/layout/BottomNav'
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: { default: 'yerim.dev', template: '%s | yerim.dev' },
-  description: '피할 수 없다면 즐..즐입니다 ~ KIN',
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -18,8 +20,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://yerim.vercel.app',
-    siteName: 'yerim.dev',
+    url: SITE_URL,
+    siteName: SITE_NAME,
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION
+      ? { 'naver-site-verification': process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION }
+      : undefined,
   },
   icons: {
     icon: '/logo.jpg',

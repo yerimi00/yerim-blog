@@ -67,7 +67,7 @@ export default function ProjectHeroBanner({ projects }: { projects: NotionProjec
         style={{ position: 'absolute', inset: 0, zIndex: 2 }}
         onClick={() => {
           if (isDragging.current) return
-          router.push(`/project/${project.slug}`)
+          router.push(`/work/${project.slug}`)
         }}
       >
         <div

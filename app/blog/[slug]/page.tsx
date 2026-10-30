@@ -16,8 +16,7 @@ import GoogleAdsense from '@/components/GoogleAdsense'
 import { formatDate, calculateReadingTime, getRelatedPosts } from '@/lib/utils'
 import { buildBlogPostingSchema, buildBreadcrumbSchema } from '@/lib/structured-data'
 import GithubSlugger from 'github-slugger'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yerim.dev'
+import { SITE_URL } from '@/lib/site'
 
 function extractHeadings(markdown: string): TocHeading[] {
   const headings: TocHeading[] = []
@@ -55,6 +54,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: post.title,
     description: post.description,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -119,7 +119,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.9rem', flexWrap: 'wrap' }}>
                 {post.series && (
                   <Link
-                    href={`/series/${encodeURIComponent(post.series)}`}
+                    href={`/blog/series/${encodeURIComponent(post.series)}`}
                     style={{
                       fontSize: '0.73rem',
                       fontWeight: 500,

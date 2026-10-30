@@ -3,6 +3,7 @@ import Link from 'next/link'
 const LINKS = [
   { label: '공지사항', href: '/notices', external: false },
   { label: '개발자에게', href: '/guestbook', external: false },
+  { label: 'RSS', href: '/rss.xml', external: true },
   { label: 'GitHub', href: 'https://github.com/yerimi00', external: true },
   { label: 'Velog', href: 'https://velog.io/@yerimi00', external: true },
 ]

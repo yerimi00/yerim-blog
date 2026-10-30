@@ -237,7 +237,7 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
 
   return (
     <Link
-      href={`/project/${project.slug}`}
+      href={`/work/${project.slug}`}
       className="about-hero-glass about-hero-project-card"
       style={{
         display: 'block',

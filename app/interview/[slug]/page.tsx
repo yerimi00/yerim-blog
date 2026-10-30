@@ -1,0 +1,116 @@
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import PostBody from '@/components/blog/PostBody'
+import GiscusComments from '@/components/blog/GiscusComments'
+import GoogleAdsense from '@/components/GoogleAdsense'
+import AnswerReveal from '@/components/interview/AnswerReveal'
+import { getPublishedQuestions, getQuestionBySlug } from '@/lib/interview'
+import { getPostContent } from '@/lib/notion'
+import { formatDate } from '@/lib/utils'
+
+export const revalidate = 3600
+
+export async function generateStaticParams() {
+  const questions = await getPublishedQuestions()
+  return questions.map((q) => ({ slug: q.slug }))
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const q = await getQuestionBySlug(params.slug)
+  if (!q) return {}
+  return {
+    title: q.question,
+    description: q.summary || q.question,
+    alternates: { canonical: `/interview/${q.slug}` },
+    openGraph: { title: q.question, description: q.summary || q.question, type: 'article', publishedTime: q.publishedAt },
+  }
+}
+
+export default async function InterviewDetailPage({ params }: { params: { slug: string } }) {
+  const q = await getQuestionBySlug(params.slug)
+  if (!q) notFound()
+
+  const [content, all] = await Promise.all([getPostContent(q.id), getPublishedQuestions()])
+  const idx = all.findIndex((item) => item.slug === q.slug)
+  const prev = all[idx + 1] ?? null
+  const next = idx > 0 ? all[idx - 1] : null
+
+  return (
+    <>
+      <Header />
+      <main style={{ maxWidth: '760px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+        <Link
+          href="/interview"
+          style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', marginBottom: '1.5rem' }}
+        >
+          <IoIosArrowBack /> Interview
+        </Link>
+
+        <header style={{ marginBottom: '2.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.9rem', flexWrap: 'wrap' }}>
+            {q.number !== null && (
+              <span style={{ fontSize: '0.78rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--accent)' }}>Q{q.number}</span>
+            )}
+            {q.category && <span className="tag-badge">{q.category}</span>}
+            {q.level && <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>난이도 {q.level}</span>}
+            {q.publishedAt && <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{formatDate(q.publishedAt)}</span>}
+          </div>
+          <h1 className="post-title" style={{ fontFamily: 'Pretendard, sans-serif', fontSize: '2rem', fontWeight: 700, lineHeight: 1.4, color: 'var(--text)', margin: 0 }}>
+            {q.question}
+          </h1>
+        </header>
+
+        <AnswerReveal>
+          <PostBody content={content} />
+
+          {q.followUp && (
+            <section style={{ marginTop: '2.5rem', padding: '1.25rem 1.5rem', borderRadius: 'var(--radius-lg)', background: 'var(--bg-secondary)' }}>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem' }}>🔁 꼬리질문</h2>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.75, margin: 0, whiteSpace: 'pre-line' }}>{q.followUp}</p>
+            </section>
+          )}
+
+          {q.referenceUrl && (
+            <p style={{ marginTop: '1.5rem', fontSize: '0.85rem' }}>
+              <a href={q.referenceUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                참고 문서 보기 <IoIosArrowForward style={{ verticalAlign: 'middle' }} />
+              </a>
+            </p>
+          )}
+        </AnswerReveal>
+
+        <GoogleAdsense slot={process.env.NEXT_PUBLIC_ADSENSE_POST_SLOT ?? ''} style={{ margin: '2rem 0' }} />
+
+        {(prev || next) && (
+          <nav style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--border)' }}>
+            <div>
+              {prev && (
+                <Link href={`/interview/${prev.slug}`} style={{ textDecoration: 'none' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>이전 문제</p>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 }}>{prev.question}</p>
+                </Link>
+              )}
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              {next && (
+                <Link href={`/interview/${next.slug}`} style={{ textDecoration: 'none' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.3rem' }}>다음 문제</p>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 }}>{next.question}</p>
+                </Link>
+              )}
+            </div>
+          </nav>
+        )}
+
+        <section style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--border)' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>내 답변 공유하기</h2>
+          <GiscusComments />
+        </section>
+      </main>
+      <Footer />
+    </>
+  )
+}

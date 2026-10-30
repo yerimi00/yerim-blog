@@ -1,11 +1,9 @@
 import { getAllPosts } from '@/lib/notion'
 import { NextResponse } from 'next/server'
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
 
 export const revalidate = 86400
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yerim.dev'
-const SITE_NAME = 'yerim.dev'
-const SITE_DESCRIPTION = '피할 수 없다면 즐..즐입니다 ~ KIN'
 
 export async function GET() {
   const posts = await getAllPosts()

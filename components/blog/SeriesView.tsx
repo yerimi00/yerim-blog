@@ -6,7 +6,7 @@ import { Post } from '@/types'
 function SeriesGridCard({ seriesName, posts }: { seriesName: string; posts: Post[] }) {
   return (
     <Link
-      href={`/series/${encodeURIComponent(seriesName)}`}
+      href={`/blog/series/${encodeURIComponent(seriesName)}`}
       style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}
       onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.75' }}
       onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}

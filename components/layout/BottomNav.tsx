@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   HiOutlineHome, HiHome,
   HiOutlineDocumentText, HiDocumentText,
-  HiOutlineFolder, HiFolder,
+  HiOutlineChatBubbleLeftRight, HiChatBubbleLeftRight,
   HiOutlineBriefcase, HiBriefcase,
   HiOutlineUser, HiUser,
 } from 'react-icons/hi2'
@@ -13,8 +13,8 @@ import {
 const NAV_ITEMS = [
   { href: '/',        label: 'Home',    Icon: HiOutlineHome,         ActiveIcon: HiHome },
   { href: '/blog',    label: 'Blog',    Icon: HiOutlineDocumentText, ActiveIcon: HiDocumentText },
-  { href: '/series',  label: 'Series',  Icon: HiOutlineFolder,       ActiveIcon: HiFolder },
-  { href: '/project', label: 'Project', Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
+  { href: '/interview', label: 'Interview', Icon: HiOutlineChatBubbleLeftRight, ActiveIcon: HiChatBubbleLeftRight },
+  { href: '/work',    label: 'Work',    Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
   { href: '/about',   label: 'About',   Icon: HiOutlineUser,         ActiveIcon: HiUser },
 ]
 

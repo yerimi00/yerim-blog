@@ -5,12 +5,12 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import SearchModal from '@/components/blog/SearchModal'
 
+// 로고가 Home 역할
 const NAV_LINKS = [
-  { href: '/', label: 'Home' },
   { href: '/blog', label: 'Blog' },
-  { href: '/series', label: 'Series' },
-  { href: '/project', label: 'Project' },
-  { href: '/ai-skills', label: 'AI Skills' },
+  { href: '/interview', label: 'Interview' },
+  { href: '/lab', label: 'Lab' },
+  { href: '/work', label: 'Work' },
   { href: '/about', label: 'About' },
 ]
 

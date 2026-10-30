@@ -7,7 +7,7 @@ export default function ProjectCard({ project }: { project: NotionProject }) {
 
   return (
     <div
-      onClick={() => router.push(`/project/${project.slug}`)}
+      onClick={() => router.push(`/work/${project.slug}`)}
       style={{
         position: 'relative',
         aspectRatio: '16/9',

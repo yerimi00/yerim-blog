@@ -1,7 +1,7 @@
 import type { Post } from '@/types'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yerim.dev'
-const SITE_NAME = 'yerim.dev'
+import { SITE_URL, SITE_NAME } from '@/lib/site'
+
 const AUTHOR = 'yerim'
 
 export function buildBlogPostingSchema(post: Post, postUrl: string) {

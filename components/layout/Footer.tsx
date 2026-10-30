@@ -39,6 +39,8 @@ export default function Footer() {
         <span aria-hidden="true">·</span>
         <Link href="/guestbook" style={linkStyle}>개발자에게</Link>
         <span aria-hidden="true">·</span>
+        <a href="/rss.xml" style={linkStyle}>RSS</a>
+        <span aria-hidden="true">·</span>
         <a href="https://github.com/yerimi00" target="_blank" rel="noopener noreferrer" style={linkStyle}>
           <GitHubIcon /> GitHub
         </a>

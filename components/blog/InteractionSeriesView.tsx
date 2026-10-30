@@ -5,13 +5,13 @@ import { DEMOS } from '@/app/data/interactions/interactions-data'
 
 const SUB_FOLDERS = Object.entries(DEMOS).map(([slug, { title }]) => ({ slug, label: title }))
 
-export default function InteractionSeriesView({ seriesName }: { seriesName: string }) {
+export default function InteractionSeriesView() {
   return (
     <div className="series-folder-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem 0.5rem' }}>
       {SUB_FOLDERS.map(({ slug, label }) => (
         <Link
           key={slug}
-          href={`/series/${seriesName}/${slug}`}
+          href={`/lab/${slug}`}
           style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}
           onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.75' }}
           onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
