@@ -934,3 +934,132 @@
     grid-template-columns: 1fr;
   }
 }
+/* 홈 히어로: 커서 반응 점 배경 + 물리 태그 칩 */
+.home-hero {
+  position: relative;
+  height: 380px;
+  margin-bottom: 3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface);
+}
+.home-hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.home-hero-text {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 2rem 0;
+  pointer-events: none;
+}
+.home-hero-text a {
+  pointer-events: auto;
+}
+.home-hero-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  gap: 0.5rem;
+  padding: 1.25rem 2rem;
+  pointer-events: none;
+}
+.home-hero-stage.is-physics {
+  padding: 0;
+}
+.home-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.home-hero-stage.is-physics .home-hero-chip {
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+}
+.home-hero-stage.is-physics .home-hero-chip:active {
+  cursor: grabbing;
+}
+.home-hero-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.home-hero-hint {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .home-hero {
+    height: 420px;
+  }
+  .home-hero-text {
+    padding: 1.5rem 1.25rem 0;
+  }
+  .home-hero-stage:not(.is-physics) {
+    padding: 1rem 1.25rem;
+  }
+  .home-hero-chip {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  .home-hero-hint {
+    display: none;
+  }
+}
+
+/* 3D 틸트 카드: 마우스 방향으로 기울고 빛이 따라온다 */
+.tilt-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tilt-card.is-tilting {
+  transition: transform 0.08s linear;
+}
+.tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.tilt-card.is-tilting::after {
+  opacity: 1;
+}
+.tilt-card > a {
+  height: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilt-card {
+    transform: none !important;
+  }
+}
