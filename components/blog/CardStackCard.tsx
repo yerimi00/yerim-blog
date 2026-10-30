@@ -1,8 +1,18 @@
 import type { CSSProperties } from 'react'
+import { motion, useTransform } from 'motion/react'
+import type { MotionValue } from 'motion/react'
 
 const CARD_H   = 514
 const HANDLE_H = 20
 const DARK = '#16181f'
+const MAX_SHRINK_Y = 120
+
+// 위로 밀려난 카드만 최대 0.8까지 축소
+const getScaleFromTy = (ty: number): number => {
+  if (ty >= 0) return 1
+  const progress = Math.min(-ty / MAX_SHRINK_Y, 1)
+  return 1 - 0.2 * progress
+}
 
 const cardWrapperBase: CSSProperties = {
   position: 'absolute',
@@ -46,14 +56,15 @@ const labelStyle: CSSProperties = {
 interface Props {
   pi:      number
   isActive: boolean
-  elRef:   (el: HTMLDivElement | null) => void
+  offset:  MotionValue<number>
 }
 
-export default function CardStackCard({ pi, isActive, elRef }: Props) {
+export default function CardStackCard({ pi, isActive, offset }: Props) {
+  const y     = useTransform(offset, o => o + pi * CARD_H)
+  const scale = useTransform(y, getScaleFromTy)
   return (
-    <div
-      ref={elRef}
-      style={{ ...cardWrapperBase, pointerEvents: isActive ? 'auto' : 'none' }}
+    <motion.div
+      style={{ ...cardWrapperBase, y, scale, pointerEvents: isActive ? 'auto' : 'none' }}
     >
       <div style={handleStyle}>
         <div style={handlePillStyle} />
@@ -61,6 +72,6 @@ export default function CardStackCard({ pi, isActive, elRef }: Props) {
       <div style={bodyStyle}>
         <span style={labelStyle}>카드 {pi + 1}</span>
       </div>
-    </div>
+    </motion.div>
   )
 }

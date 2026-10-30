@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { motion } from 'motion/react'
 
 const MARKS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 const THUMB_W = 28
@@ -58,14 +59,17 @@ export default function PriceRangeSliderDemo() {
           transform: 'translateY(-50%)',
         }} />
         {/* fill */}
-        <div style={{
-          position: 'absolute', top: '50%', left: 0,
-          height: 6, borderRadius: 3,
-          width: `${pct}%`,
-          background: 'var(--accent)',
-          transform: 'translateY(-50%)',
-          transition: 'width 0.1s',
-        }} />
+        <motion.div
+          initial={false}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.1, ease: 'easeOut' }}
+          style={{
+            position: 'absolute', top: '50%', left: 0,
+            height: 6, borderRadius: 3,
+            background: 'var(--accent)',
+            transform: 'translateY(-50%)',
+          }}
+        />
 
         {/* bubble */}
         {selected && (
@@ -102,18 +106,27 @@ export default function PriceRangeSliderDemo() {
         />
 
         {/* thumb visual */}
-        <div style={{
-          position: 'absolute', top: '50%',
-          left: `calc(${pct}% - ${THUMB_W / 2}px)`,
-          width: THUMB_W, height: THUMB_W,
-          borderRadius: '50%',
-          background: selected ? 'var(--accent)' : 'var(--border)',
-          border: '3px solid var(--surface)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          transform: 'translateY(-50%)',
-          transition: 'background 0.2s, left 0.05s',
-          pointerEvents: 'none',
-        }} />
+        <motion.div
+          initial={false}
+          animate={{
+            left: `${pct}%`,
+            backgroundColor: selected ? 'var(--accent)' : 'var(--border)',
+          }}
+          transition={{
+            left: { duration: 0.05, ease: 'easeOut' },
+            backgroundColor: { duration: 0.2, ease: 'easeOut' },
+          }}
+          style={{
+            position: 'absolute', top: '50%',
+            marginLeft: -THUMB_W / 2,
+            width: THUMB_W, height: THUMB_W,
+            borderRadius: '50%',
+            border: '3px solid var(--surface)',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+          }}
+        />
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-muted, #9ca3af)', marginTop: 4 }}>

@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { IconType } from 'react-icons'
 import { FiHeart, FiStar, FiZap, FiSun, FiSmile, FiCloud, FiMoon } from 'react-icons/fi'
+import { motion } from 'motion/react'
 
 const FLOAT_ICONS: IconType[] = [FiHeart, FiStar, FiZap, FiSun, FiSmile, FiCloud, FiMoon]
 const FLOAT_COLORS = ['#3b82f6', '#6366f1', '#a855f7', '#ec4899', '#10b981', '#f59e0b', '#06b6d4']
 const SHEET_FULL = 340
+const SHEET_SNAP = { duration: 0.35, ease: [0.34, 1.4, 0.64, 1] } as const
+const checkTween = { duration: 0.2, ease: 'easeOut' } as const
 
 interface Heart {
   id: number
@@ -138,7 +141,6 @@ export default function PhysicsHeartDemo() {
             opacity: h.opacity,
             pointerEvents: 'none',
             transform: 'translate(-50%, -50%)',
-            transition: 'none',
           }}
         >
           <h.Icon size={h.size} color={h.iconColor} />
@@ -154,7 +156,10 @@ export default function PhysicsHeartDemo() {
       </div>
 
       {/* Bottom sheet */}
-      <div
+      <motion.div
+        initial={false}
+        animate={{ y: sheetY }}
+        transition={dragging ? { duration: 0 } : SHEET_SNAP}
         style={{
           position: 'absolute',
           bottom: 0, left: 0, right: 0,
@@ -162,8 +167,6 @@ export default function PhysicsHeartDemo() {
           background: 'var(--surface)',
           borderRadius: '20px 20px 0 0',
           boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
-          transform: `translateY(${sheetY}px)`,
-          transition: dragging ? 'none' : 'transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1)',
           cursor: 'grab',
           zIndex: 10,
         }}
@@ -190,31 +193,41 @@ export default function PhysicsHeartDemo() {
                 textAlign: 'left',
               }}
             >
-              <div style={{
-                width: 22, height: 22, borderRadius: '50%',
-                border: `2px solid ${t.done ? 'var(--accent)' : 'var(--border)'}`,
-                background: t.done ? 'var(--accent)' : 'transparent',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.2s',
-                flexShrink: 0,
-              }}>
+              <motion.div
+                initial={false}
+                animate={{
+                  borderColor: t.done ? 'var(--accent)' : 'var(--border)',
+                  backgroundColor: t.done ? 'var(--accent)' : 'rgba(0,0,0,0)',
+                }}
+                transition={checkTween}
+                style={{
+                  width: 22, height: 22, borderRadius: '50%',
+                  borderWidth: 2, borderStyle: 'solid',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
                 {t.done && (
                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
                     <polyline points="1.5,6.5 4.5,9.5 10.5,2.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
-              </div>
-              <span style={{
-                fontSize: 14, color: t.done ? 'var(--text-muted)' : 'var(--text)',
-                textDecoration: t.done ? 'line-through' : 'none',
-                transition: 'all 0.2s',
-              }}>
+              </motion.div>
+              <motion.span
+                initial={false}
+                animate={{ color: t.done ? 'var(--text-muted)' : 'var(--text)' }}
+                transition={checkTween}
+                style={{
+                  fontSize: 14,
+                  textDecoration: t.done ? 'line-through' : 'none',
+                }}
+              >
                 {t.label}
-              </span>
+              </motion.span>
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
     </div>
   )

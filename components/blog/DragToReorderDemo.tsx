@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { FiMenu, FiStar, FiHeart, FiBookmark, FiClock, FiTrendingUp } from 'react-icons/fi'
 import type { IconType } from 'react-icons'
+import { motion } from 'motion/react'
 
 interface Item { id: number; label: string; Icon: IconType }
 
@@ -129,10 +130,14 @@ export default function DragToReorderDemo() {
         {items.map((item, i) => {
           const isDragging = dragState?.id === item.id
           return (
-            <div
+            <motion.div
               key={item.id}
               data-drag-row
               onPointerDown={e => onHandleDown(e, item.id)}
+              initial={false}
+              animate={{ y: getShift(i) }}
+              // 드래그 중엔 밀려나는 행을 부드럽게, 드롭(재정렬) 순간엔 즉시 0으로
+              transition={dragState ? { duration: 0.15, ease: [0.25, 0.1, 0.25, 1] } : { duration: 0 }}
               style={{
                 height: ITEM_H,
                 borderRadius: 'var(--radius-lg)',
@@ -143,8 +148,6 @@ export default function DragToReorderDemo() {
                 gap: 12,
                 padding: '0 14px',
                 opacity: isDragging ? 0.3 : 1,
-                transform: `translateY(${getShift(i)}px)`,
-                transition: dragState ? 'transform 0.15s ease' : 'none',
                 userSelect: 'none',
                 cursor: 'grab',
                 touchAction: 'none',
@@ -156,7 +159,7 @@ export default function DragToReorderDemo() {
                 {item.label}
               </span>
               <FiMenu size={14} color="var(--border)" />
-            </div>
+            </motion.div>
           )
         })}
       </div>

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { IconType } from 'react-icons'
+import { motion } from 'motion/react'
+import { duration, fastTween } from '@/components/motion/presets'
 import { FiHeart, FiStar, FiZap, FiSun, FiMoon, FiSmile, FiCloud, FiCoffee } from 'react-icons/fi'
 
 // ─── 물리 상수 ───────────────────────────────────────────────────────────────
@@ -235,31 +237,44 @@ export default function DropHeartStackDemo() {
           borderRadius: 'var(--radius-xl)', padding: 3, gap: 3, flexShrink: 0,
         }}>
           {(['single', 'burst'] as Mode[]).map(m => (
-            <button key={m} onClick={() => setMode(m)} style={{
-              padding: '0 12px', border: 'none',
-              borderRadius: 'var(--radius-lg)',
-              background: mode === m ? 'var(--accent)' : 'transparent',
-              color: mode === m ? '#fff' : 'var(--text-muted)',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              transition: 'background 0.15s, color 0.15s', whiteSpace: 'nowrap',
-            }}>
+            <motion.button
+              key={m}
+              onClick={() => setMode(m)}
+              initial={false}
+              animate={{
+                backgroundColor: mode === m ? 'var(--accent)' : 'rgba(0, 0, 0, 0)',
+                color: mode === m ? '#fff' : 'var(--text-muted)',
+              }}
+              transition={fastTween}
+              style={{
+                padding: '0 12px', border: 'none',
+                borderRadius: 'var(--radius-lg)',
+                fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {m === 'single' ? '하나씩' : `${BURST_COUNT}개 한번에`}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         {/* 드롭 버튼 */}
-        <button onClick={() => spawn(spawnCount)} disabled={isFull} style={{
-          flex: 1, padding: '10px 16px', border: 'none',
-          borderRadius: 'var(--radius-lg)',
-          background: isFull ? 'var(--surface-container)' : 'var(--accent)',
-          color: isFull ? 'var(--text-muted)' : '#fff',
-          fontSize: 13, fontWeight: 600,
-          cursor: isFull ? 'default' : 'pointer',
-          transition: 'background 0.15s',
-        }}>
+        <motion.button
+          onClick={() => spawn(spawnCount)}
+          disabled={isFull}
+          initial={false}
+          animate={{ backgroundColor: isFull ? 'var(--surface-container)' : 'var(--accent)' }}
+          transition={fastTween}
+          style={{
+            flex: 1, padding: '10px 16px', border: 'none',
+            borderRadius: 'var(--radius-lg)',
+            color: isFull ? 'var(--text-muted)' : '#fff',
+            fontSize: 13, fontWeight: 600,
+            cursor: isFull ? 'default' : 'pointer',
+          }}
+        >
           {isFull ? '가득 찼어요' : '하트 떨어뜨리기'}
-        </button>
+        </motion.button>
 
         {/* 초기화 */}
         <button onClick={clear} style={{
@@ -342,12 +357,12 @@ export default function DropHeartStackDemo() {
           position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
           background: 'var(--border)',
         }}>
-          <div style={{
-            height: '100%',
-            width: `${(sleepCount / MAX_ITEMS) * 100}%`,
-            background: 'var(--accent)',
-            transition: 'width 0.3s ease',
-          }} />
+          <motion.div
+            initial={false}
+            animate={{ width: `${(sleepCount / MAX_ITEMS) * 100}%` }}
+            transition={{ duration: duration.base, ease: [0.25, 0.1, 0.25, 1] }}
+            style={{ height: '100%', background: 'var(--accent)' }}
+          />
         </div>
       </div>
     </div>

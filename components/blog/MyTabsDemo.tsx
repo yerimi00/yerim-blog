@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 import type { IconType } from 'react-icons'
 import { FiCalendar, FiStar, FiBookmark } from 'react-icons/fi'
 
@@ -31,17 +33,18 @@ export default function MyTabsDemo() {
         marginBottom: 20,
       }}>
         {TABS.map(t => (
-          <button
+          <motion.button
             key={t.key}
             onClick={() => setTab(t.key)}
+            initial={false}
+            animate={{ color: tab === t.key ? 'var(--text, #111)' : 'var(--text-muted, #6b7280)' }}
+            transition={fastTween}
             style={{
               flex: 1, padding: '10px 0',
               background: 'none', border: 'none',
               cursor: 'pointer',
               fontSize: 14, fontWeight: tab === t.key ? 700 : 400,
-              color: tab === t.key ? 'var(--text, #111)' : 'var(--text-muted, #6b7280)',
               position: 'relative',
-              transition: 'color 0.15s',
             }}
           >
             {t.label}
@@ -52,7 +55,7 @@ export default function MyTabsDemo() {
                 borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0',
               }} />
             )}
-          </button>
+          </motion.button>
         ))}
       </div>
 

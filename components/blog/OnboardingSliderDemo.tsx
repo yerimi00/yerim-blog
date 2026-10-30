@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import type { IconType } from 'react-icons'
 import { FiCalendar, FiBarChart2, FiSun } from 'react-icons/fi'
+import { motion } from 'motion/react'
 
 const SLIDES: { Icon: IconType; title: string; desc: string; bg: string }[] = [
   { Icon: FiCalendar,  title: '스마트 플래너', desc: '나만의 일정을\n스마트하게 계획하세요', bg: 'linear-gradient(135deg, #fce7f3, #fbcfe8)' },
@@ -12,6 +13,8 @@ const SLIDES: { Icon: IconType; title: string; desc: string; bg: string }[] = [
 
 const ANIM_MS = 380
 const AUTO_DELAY = 3500
+const CSS_EASE = [0.25, 0.1, 0.25, 1] as const
+const slideTween = { duration: ANIM_MS / 1000, ease: CSS_EASE }
 
 export default function OnboardingSliderDemo() {
   const [idx, setIdx] = useState(0)
@@ -19,6 +22,9 @@ export default function OnboardingSliderDemo() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const startXRef = useRef(0)
   const dragging = useRef(false)
+  // 첫 렌더(SSR)는 아이콘 등장 애니메이션 없이 그대로 그린다
+  const mountedRef = useRef(false)
+  useEffect(() => { mountedRef.current = true }, [])
 
   const go = useCallback((next: number) => {
     setIdx(Math.max(0, Math.min(SLIDES.length - 1, next)))
@@ -54,43 +60,55 @@ export default function OnboardingSliderDemo() {
 
   return (
     <div style={{ width: 300, margin: '0 auto', fontFamily: 'Pretendard, sans-serif' }}>
-      <div
+      <motion.div
         ref={containerRef}
+        initial={false}
+        animate={{ background: slide.bg }}
+        transition={slideTween}
         style={{
           height: 380, borderRadius: 24,
-          background: slide.bg,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           position: 'relative', overflow: 'hidden',
           cursor: 'grab',
-          transition: `background ${ANIM_MS}ms ease`,
           userSelect: 'none',
         }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        <div style={{ marginBottom: 20, transition: `transform ${ANIM_MS}ms ease` }}>
+        <motion.div
+          key={idx}
+          initial={mountedRef.current ? { scale: 0.85, opacity: 0 } : false}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={slideTween}
+          style={{ marginBottom: 20 }}
+        >
           <slide.Icon size={64} color="rgba(0,0,0,0.5)" />
-        </div>
+        </motion.div>
         <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 10 }}>
           {slide.title}
         </div>
         <div style={{ fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'pre-line', lineHeight: 1.6 }}>
           {slide.desc}
         </div>
-      </div>
+      </motion.div>
 
       {/* Indicators */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 16 }}>
         {SLIDES.map((_, i) => (
-          <button
+          <motion.button
             key={i}
             onClick={() => { go(i); resetTimer() }}
+            initial={false}
+            animate={{
+              width: i === idx ? 24 : 8,
+              backgroundColor: i === idx ? 'var(--accent)' : 'var(--border)',
+            }}
+            transition={{ duration: 0.25, ease: CSS_EASE }}
             style={{
-              width: i === idx ? 24 : 8, height: 8,
+              height: 8,
               borderRadius: 'var(--radius)', border: 'none', cursor: 'pointer',
-              background: i === idx ? 'var(--accent)' : 'var(--border)',
-              transition: 'all 0.25s ease', padding: 0,
+              padding: 0,
             }}
           />
         ))}

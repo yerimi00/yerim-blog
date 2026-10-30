@@ -1,6 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
+import { duration, fastTween } from '@/components/motion/presets'
+
+const lineTween = { duration: duration.base, ease: 'easeOut' } as const
+const dotTween = { duration: 0.2, ease: 'easeOut' } as const
 
 type Step = 1 | 2 | 3
 
@@ -15,30 +20,37 @@ function StepIndicator({ current }: { current: Step }) {
         return (
           <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
             {i > 0 && (
-              <div style={{
-                position: 'absolute', left: 0, right: '50%', top: 13, height: 2,
-                background: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
-                transition: 'background 0.3s',
-              }} />
+              <motion.div
+                initial={false}
+                animate={{ backgroundColor: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)' }}
+                transition={lineTween}
+                style={{ position: 'absolute', left: 0, right: '50%', top: 13, height: 2 }}
+              />
             )}
             {i < steps.length - 1 && (
-              <div style={{
-                position: 'absolute', left: '50%', right: 0, top: 13, height: 2,
-                background: done ? 'var(--accent)' : 'var(--border, #e5e7eb)',
-                transition: 'background 0.3s',
-              }} />
+              <motion.div
+                initial={false}
+                animate={{ backgroundColor: done ? 'var(--accent)' : 'var(--border, #e5e7eb)' }}
+                transition={lineTween}
+                style={{ position: 'absolute', left: '50%', right: 0, top: 13, height: 2 }}
+              />
             )}
-            <div style={{
-              position: 'relative', zIndex: 1,
-              width: 28, height: 28, borderRadius: '50%',
-              background: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
-              color: done || active ? '#fff' : 'var(--text-muted, #9ca3af)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12, fontWeight: 700,
-              transition: 'all 0.2s',
-            }}>
+            <motion.div
+              initial={false}
+              animate={{
+                backgroundColor: done || active ? 'var(--accent)' : 'var(--border, #e5e7eb)',
+                color: done || active ? '#fff' : 'var(--text-muted, #9ca3af)',
+              }}
+              transition={dotTween}
+              style={{
+                position: 'relative', zIndex: 1,
+                width: 28, height: 28, borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, fontWeight: 700,
+              }}
+            >
               {done ? '✓' : n}
-            </div>
+            </motion.div>
             <span style={{ fontSize: 11, marginTop: 4, color: active ? 'var(--accent)' : 'var(--text-muted, #9ca3af)', fontWeight: active ? 600 : 400 }}>
               {label}
             </span>
@@ -237,15 +249,21 @@ export default function SignupWizardDemo() {
 
 function CheckBox({ checked }: { checked: boolean }) {
   return (
-    <div style={{
-      width: 20, height: 20, borderRadius: 'var(--radius-md)', flexShrink: 0,
-      border: `2px solid ${checked ? 'var(--accent)' : 'var(--border)'}`,
-      background: checked ? 'var(--accent)' : 'transparent',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      transition: 'all 0.15s',
-    }}>
+    <motion.div
+      initial={false}
+      animate={{
+        borderColor: checked ? 'var(--accent)' : 'var(--border)',
+        backgroundColor: checked ? 'var(--accent)' : 'rgba(0,0,0,0)',
+      }}
+      transition={fastTween}
+      style={{
+        width: 20, height: 20, borderRadius: 'var(--radius-md)', flexShrink: 0,
+        borderWidth: 2, borderStyle: 'solid',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+    >
       {checked && <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><polyline points="1.5,6.5 4.5,9.5 10.5,2.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-    </div>
+    </motion.div>
   )
 }
 
