@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import GuestbookMessages from '@/components/GuestbookMessages'
 import { getGuestbookEntries } from '@/lib/guestbook'
 import type { Metadata } from 'next'
@@ -22,7 +20,6 @@ export default async function GuestbookPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '680px', margin: '0 auto', padding: '3rem 1.5rem 5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <h1
@@ -65,7 +62,6 @@ export default async function GuestbookPage() {
 
         <GuestbookMessages initialEntries={entries} />
       </main>
-      <Footer />
     </>
   )
 }

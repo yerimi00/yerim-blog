@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 const NOTICES = [
   {
@@ -24,7 +22,6 @@ export default function NoticesPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '760px', margin: '0 auto', padding: '4rem 1.5rem 6rem' }}>
         {/* 상단 헤더 */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -113,7 +110,6 @@ export default function NoticesPage() {
           })}
         </div>
       </main>
-      <Footer />
     </>
   )
 }

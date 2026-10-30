@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import InteractionSeriesView from '@/components/blog/InteractionSeriesView'
 import { DEMOS } from '@/app/data/interactions/interactions-data'
 
@@ -12,7 +10,6 @@ export const metadata = {
 export default function LabPage() {
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <h1 className="hand-title">
@@ -24,7 +21,6 @@ export default function LabPage() {
         </div>
         <InteractionSeriesView />
       </main>
-      <Footer />
     </>
   )
 }

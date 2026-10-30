@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 function SeriesGridItemSkeleton() {
   return (
@@ -16,7 +14,6 @@ function SeriesGridItemSkeleton() {
 export default function SeriesLoading() {
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <div className="skeleton" style={{ width: '96px', height: '2rem', marginBottom: '0.5rem' }} />
@@ -35,7 +32,6 @@ export default function SeriesLoading() {
           ))}
         </div>
       </main>
-      <Footer />
     </>
   )
 }

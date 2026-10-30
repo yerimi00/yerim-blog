@@ -1,8 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { getPostsBySeries } from '@/lib/notion'
 import { formatDate } from '@/lib/utils'
 
@@ -32,7 +30,6 @@ export default async function SeriesDetailPage({ params }: { params: { name: str
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
 
         <div style={{ marginBottom: '2.5rem' }}>
@@ -106,7 +103,6 @@ export default async function SeriesDetailPage({ params }: { params: { name: str
         </div>
 
       </main>
-      <Footer />
     </>
   )
 }

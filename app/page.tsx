@@ -2,8 +2,6 @@ import Link from 'next/link'
 import { getAllPosts } from '@/lib/notion'
 import { getAllProjects } from '@/lib/projects'
 import { getPublishedQuestions } from '@/lib/interview'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import TodayQuestionCard from '@/components/interview/TodayQuestionCard'
 import HomeHero from '@/components/home/HomeHero'
 import TiltCard from '@/components/home/TiltCard'
@@ -43,7 +41,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <HomeHero tags={heroTags} />
 
@@ -119,7 +116,6 @@ export default async function HomePage() {
           </TiltCard>
         </SectionReveal>
       </main>
-      <Footer />
     </>
   )
 }

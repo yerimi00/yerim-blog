@@ -1,8 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { IoIosArrowBack } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import PostBody from '@/components/blog/PostBody'
 import { getPostBySlug, getPostContent } from '@/lib/notion'
 import { DEMOS, DEMO_COMPONENTS } from '@/app/data/interactions/interactions-data'
@@ -33,7 +31,6 @@ export default async function LabDetailPage({ params }: { params: { slug: string
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '680px', margin: '0 auto', padding: '3rem 1.5rem' }}>
 
         <Link
@@ -67,7 +64,6 @@ export default async function LabDetailPage({ params }: { params: { slug: string
         )}
 
       </main>
-      <Footer />
     </>
   )
 }

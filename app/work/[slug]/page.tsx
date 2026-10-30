@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation'
 import { IoIosArrowForward } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { getAllProjects, getProjectBySlug } from '@/lib/projects'
 import { getPostsByProject } from '@/lib/notion'
 import PostCard from '@/components/blog/PostCard'
@@ -71,7 +69,6 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
 
         {/* 헤더 */}
@@ -171,7 +168,6 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         )}
 
       </main>
-      <Footer />
     </>
   )
 }

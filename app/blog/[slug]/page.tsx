@@ -1,8 +1,6 @@
 import { getAllPosts, getPostBySlug, getPostContent } from '@/lib/notion'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import TableOfContents, { TocHeading } from '@/components/blog/TableOfContents'
@@ -87,7 +85,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <>
       <ReadingProgress />
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div
           className="post-grid"
@@ -215,7 +212,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
           )}
         </div>
       </main>
-      <Footer />
 
       {/* 이미지 줌 */}
       <MediumZoom />

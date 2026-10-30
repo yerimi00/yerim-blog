@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import ProjectView from '@/components/project/ProjectView'
 import ProjectHeroBanner from '@/components/project/ProjectHeroBanner'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
@@ -20,7 +18,6 @@ export default async function WorkPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
 
         {featured.length > 0 && (
@@ -54,7 +51,6 @@ export default async function WorkPage() {
         </section>
 
       </main>
-      <Footer />
     </>
   )
 }

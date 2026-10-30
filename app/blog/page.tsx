@@ -1,7 +1,5 @@
 import { getAllPosts, getAllSeries } from '@/lib/notion'
 import Link from 'next/link'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import BlogFilter from '@/components/blog/BlogFilter'
 
 export const revalidate = 86400
@@ -17,7 +15,6 @@ export default async function BlogPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <h1 className="hand-title">
@@ -34,7 +31,6 @@ export default async function BlogPage() {
         {/* 시리즈 필터 */}
         <BlogFilter series={series} posts={posts} />
       </main>
-      <Footer />
     </>
   )
 }

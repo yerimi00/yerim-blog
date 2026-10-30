@@ -1,6 +1,4 @@
 import { getPostsBySeries } from '@/lib/notion'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
 import { IoIosArrowBack } from 'react-icons/io'
 import SeriesView from '@/components/blog/SeriesView'
@@ -15,7 +13,6 @@ export default async function SeriesPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <Link
@@ -33,7 +30,6 @@ export default async function SeriesPage() {
         </div>
         <SeriesView seriesEntries={seriesEntries} />
       </main>
-      <Footer />
     </>
   )
 }

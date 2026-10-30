@@ -1,13 +1,10 @@
 'use client'
 
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 export default function NotFound() {
   return (
     <>
-      <Header />
       <main
         style={{
           minHeight: 'calc(100vh - 120px)',
@@ -27,7 +24,6 @@ export default function NotFound() {
           페이지를 찾을 수 없어요
         </p>
       </main>
-      <Footer />
     </>
   )
 }

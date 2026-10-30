@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 function PostCardSkeleton() {
   return (
@@ -26,7 +24,6 @@ function PostCardSkeleton() {
 export default function BlogLoading() {
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <div className="skeleton" style={{ width: '80px', height: '2rem', marginBottom: '0.5rem' }} />
@@ -53,7 +50,6 @@ export default function BlogLoading() {
           <PostCardSkeleton key={i} />
         ))}
       </main>
-      <Footer />
     </>
   )
 }

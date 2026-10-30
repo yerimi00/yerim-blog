@@ -1,5 +1,3 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import TodayQuestionCard from '@/components/interview/TodayQuestionCard'
 import InterviewArchive from '@/components/interview/InterviewArchive'
 import { getPublishedQuestions } from '@/lib/interview'
@@ -18,7 +16,6 @@ export default async function InterviewPage() {
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2rem' }}>
           <h1 className="hand-title">
@@ -49,7 +46,6 @@ export default async function InterviewPage() {
           </p>
         )}
       </main>
-      <Footer />
     </>
   )
 }

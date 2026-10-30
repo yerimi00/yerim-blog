@@ -1,8 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import GoogleAdsense from '@/components/GoogleAdsense'
@@ -40,7 +38,6 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
 
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '760px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <Link
           href="/interview"
@@ -110,7 +107,6 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
           <GiscusComments />
         </section>
       </main>
-      <Footer />
     </>
   )
 }

@@ -1,10 +1,7 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 export default function PostLoading() {
   return (
     <>
-      <Header />
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div
           className="post-grid"
@@ -64,7 +61,6 @@ export default function PostLoading() {
           </aside>
         </div>
       </main>
-      <Footer />
     </>
   )
 }
