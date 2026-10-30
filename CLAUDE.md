@@ -65,7 +65,7 @@ This is a **Next.js 14 App Router** blog that uses **Notion as a CMS**.
 Four data layer files in `lib/`:
 - `lib/notion.ts` — wraps `@notionhq/client` and `notion-to-md`. All blog post data.
 - `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
-- `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (상태 `발행`, 발행일 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`. 답변 본문은 `getPostContent(pageId)` 재사용.
+- `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (운영은 상태 `발행`만, 로컬 개발은 `검수중`도 미리보기 / 발행일·번호 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`, `getQuestionContent(pageId)` (본문 Markdown에서 "🎮 위젯 데이터" 토글 제거). 제목에 "검수 메모"가 들어간 콜아웃은 `lib/notion.ts` 콜아웃 변환에서 항상 제외된다.
 - `lib/site.ts` — `SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION` 단일 출처.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
 - `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments, and `getContributionDays()` (About 페이지 GitHub 잔디, 실패 시 `[]` → 섹션 숨김).

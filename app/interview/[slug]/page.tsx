@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import { IoIosArrowBack } from 'react-icons/io'
 import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import AnswerReveal from '@/components/interview/AnswerReveal'
-import { getPublishedQuestions, getQuestionBySlug } from '@/lib/interview'
-import { getPostContent } from '@/lib/notion'
+import { getPublishedQuestions, getQuestionBySlug, getQuestionContent } from '@/lib/interview'
 import { formatDate } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -32,7 +31,7 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
   const q = await getQuestionBySlug(params.slug)
   if (!q) notFound()
 
-  const [content, all] = await Promise.all([getPostContent(q.id), getPublishedQuestions()])
+  const [content, all] = await Promise.all([getQuestionContent(q.id), getPublishedQuestions()])
   const idx = all.findIndex((item) => item.slug === q.slug)
   const prev = all[idx + 1] ?? null
   const next = idx > 0 ? all[idx - 1] : null
@@ -61,23 +60,9 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
           </h1>
         </header>
 
+        {/* 꼬리질문·참고 자료는 Notion 본문에 들어 있다 */}
         <AnswerReveal>
           <PostBody content={content} />
-
-          {q.followUp && (
-            <section style={{ marginTop: '2.5rem', padding: '1.25rem 1.5rem', borderRadius: 'var(--radius-lg)', background: 'var(--bg-secondary)' }}>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem' }}>🔁 꼬리질문</h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.75, margin: 0, whiteSpace: 'pre-line' }}>{q.followUp}</p>
-            </section>
-          )}
-
-          {q.referenceUrl && (
-            <p style={{ marginTop: '1.5rem', fontSize: '0.85rem' }}>
-              <a href={q.referenceUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-                참고 문서 보기 <IoIosArrowForward style={{ verticalAlign: 'middle' }} />
-              </a>
-            </p>
-          )}
         </AnswerReveal>
 
         <GoogleAdsense slot={process.env.NEXT_PUBLIC_ADSENSE_POST_SLOT ?? ''} style={{ margin: '2rem 0' }} />

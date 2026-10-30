@@ -58,6 +58,9 @@ const CALLOUT_BG: Record<string, string> = {
 async function calloutBlockToHtml(block: any): Promise<string> {
   const c = block.callout
   if (!c) return ''
+  // 작성자용 검수 메모 콜아웃은 사이트에 렌더링하지 않는다
+  const plain = (c.rich_text as RichTextItemResponse[]).map((t) => t.plain_text).join('')
+  if (plain.includes('검수 메모')) return ''
   const icon = c.icon
   const emoji = icon?.type === 'emoji' ? icon.emoji : '💡'
   const colorClass = CALLOUT_BG[c.color || 'default'] || 'callout-default'
