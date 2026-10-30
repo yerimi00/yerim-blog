@@ -7,11 +7,11 @@ import type {
   BlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints'
 import { Post } from '@/types'
-import { fetchWithRetry } from './notion-fetch'
+import { fetchWithRetry, NOTION_TIMEOUT_MS } from './notion-fetch'
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
-  fetch: fetchWithRetry,
+  fetch: fetchWithRetry, timeoutMs: NOTION_TIMEOUT_MS,
 })
 
 const n2m = new NotionToMarkdown({ notionClient: notion })

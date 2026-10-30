@@ -11,3 +11,6 @@ export async function fetchWithRetry(
     await new Promise((r) => setTimeout(r, retryAfterSec * 1000))
   }
 }
+
+// 429 재시도 대기까지 포함해 기다린다 (SDK 기본 60초면 빌드 중 요청이 몰릴 때 타임아웃)
+export const NOTION_TIMEOUT_MS = 120_000

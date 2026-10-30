@@ -1,9 +1,9 @@
 import { cache } from 'react'
 import { Client } from '@notionhq/client'
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
-import { fetchWithRetry } from './notion-fetch'
+import { fetchWithRetry, NOTION_TIMEOUT_MS } from './notion-fetch'
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: fetchWithRetry })
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: fetchWithRetry, timeoutMs: NOTION_TIMEOUT_MS })
 
 export type InterviewQuestion = {
   id: string

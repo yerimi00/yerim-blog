@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 빌드 시 정적 페이지를 동시에 만들면 Notion API 요청 한도(429)에 걸려 긴 글이 타임아웃난다 → 워커 1개로 순차 생성
+  experimental: { cpus: 1 },
   images: {
     minimumCacheTTL: 1800,
     remotePatterns: [
