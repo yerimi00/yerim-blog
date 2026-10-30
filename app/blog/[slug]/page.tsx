@@ -41,9 +41,10 @@ function extractHeadings(markdown: string): TocHeading[] {
 
 export const revalidate = 86400
 
+// 본문을 Notion에서 받아오는 페이지라 빌드 때 미리 만들지 않는다 (요청이 몰리면 Vercel 빌드가 타임아웃으로 실패).
+// 첫 방문 때 만들어 캐시하고 revalidate 주기로 갱신(ISR)
 export async function generateStaticParams() {
-  const posts = await getAllPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  return []
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
