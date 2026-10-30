@@ -996,14 +996,6 @@
   -webkit-user-select: none;
   transition: border-color 0.15s, color 0.15s;
 }
-.home-hero-stage.is-physics .home-hero-chip {
-  cursor: grab;
-  touch-action: none;
-  will-change: transform;
-}
-.home-hero-stage.is-physics .home-hero-chip:active {
-  cursor: grabbing;
-}
 .home-hero-chip:hover {
   border-color: var(--accent);
   color: var(--accent);
@@ -1145,4 +1137,58 @@
 body:has(.about-hero-grid) .site-header,
 body:has(.about-hero-grid) .site-footer {
   display: none;
+}
+
+/* 물리 스테이지 공통 (usePhysicsStage).
+   물리 시작 전엔 아이템을 숨겨 "정적 배치 → 위로 점프" 깜빡임을 막는다. 동작 줄이기 사용자는 정적 배치를 그대로 본다 */
+@media (prefers-reduced-motion: no-preference) {
+  .physics-stage:not(.is-physics) [data-physics] {
+    visibility: hidden;
+  }
+}
+.physics-stage.is-physics [data-physics] {
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+}
+.physics-stage.is-physics [data-physics]:active {
+  cursor: grabbing;
+}
+
+/* About 랜딩: 화면 아래에 쌓이는 기술 아이콘 공 */
+.about-physics-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  --ball-scale: 1;
+}
+.about-physics-stage.is-physics {
+  padding: 0;
+}
+.about-physics-ball {
+  width: calc(var(--ball) * var(--ball-scale) * 1px);
+  height: calc(var(--ball) * var(--ball-scale) * 1px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ball-color) 14%, var(--bg));
+  border: 1px solid color-mix(in srgb, var(--ball-color) 22%, var(--border));
+  user-select: none;
+  -webkit-user-select: none;
+}
+.about-physics-ball > * {
+  width: 46%;
+  height: 46%;
+  pointer-events: none;
+}
+@media (max-width: 860px) {
+  .about-physics-stage {
+    --ball-scale: 0.62;
+  }
 }

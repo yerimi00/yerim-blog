@@ -20,7 +20,7 @@ const ICON_MAP: Record<string, IconType> = {
   DiCss3, DiWindows, DiVisualstudio, DiJava,
 }
 
-const ICON_COLOR: Record<string, string> = {
+export const ICON_COLOR: Record<string, string> = {
   SiHtml5:            '#E34F26',
   DiCss3:             '#1572B6',
   SiJavascript:       '#F7DF1E',
@@ -57,7 +57,7 @@ export type TechItem = {
   icon: string
 }
 
-function TechIcon({ icon, name, size = 28 }: { icon: string; name: string; size?: number }) {
+export function TechIcon({ icon, name, size = 28 }: { icon: string; name: string; size?: number }) {
   if (icon.startsWith('img:')) {
     return (
       <img

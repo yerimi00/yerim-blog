@@ -1,50 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import type { IconType } from 'react-icons'
-import {
-  SiHtml5, SiJavascript, SiTypescript, SiReact, SiNextdotjs,
-  SiRecoil, SiReactquery, SiStyledcomponents, SiTailwindcss,
-  SiFlutter, SiDiscord, SiIntellijidea, SiGit, SiGithub,
-  SiApple, SiSpringboot, SiHibernate, SiMysql, SiNotion,
-} from 'react-icons/si'
-import { DiCss3, DiWindows, DiVisualstudio, DiJava } from 'react-icons/di'
 import type { NotionProject } from '@/lib/projects'
+import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
+import { TechIcon, ICON_COLOR } from '@/components/about/TechStackGrid'
 
-// ─── 물리 상수 ───────────────────────────────────────────────────────────────
-const G            = 1.4
-const RESTITUTION  = 0.1
-const FLOOR_MU     = 0.18
-const DAMPING      = 0.97
-const SLOP         = 0.5
-const CORR_PCT     = 0.65
-const ITERATIONS   = 10
-const SLEEP_V      = 0.3
-const SLEEP_FRAMES = 10
-const WAKE_IMPULSE = 1.0
-
-const LEVEL_R: Record<string, number> = {
-  '상': 68, '중상': 56, '중': 44, '초중': 32, '입문': 22,
-}
-
-const ICON_MAP: Record<string, IconType> = {
-  SiHtml5, SiJavascript, SiTypescript, SiReact, SiNextdotjs,
-  SiRecoil, SiReactquery, SiStyledcomponents, SiTailwindcss,
-  SiFlutter, SiDiscord, SiIntellijidea, SiGit, SiGithub,
-  SiApple, SiSpringboot, SiHibernate, SiMysql, SiNotion,
-  DiCss3, DiWindows, DiVisualstudio, DiJava,
-}
-
-const ICON_COLOR: Record<string, string> = {
-  SiHtml5: '#E34F26', DiCss3: '#1572B6', SiJavascript: '#c9a800',
-  SiTypescript: '#3178C6', SiReact: '#3ab8d8', SiNextdotjs: '#666',
-  SiRecoil: '#3578E5', SiReactquery: '#FF4154', SiStyledcomponents: '#DB7093',
-  SiTailwindcss: '#06B6D4', SiFlutter: '#02569B', SiDiscord: '#5865F2',
-  DiVisualstudio: '#007ACC', SiIntellijidea: '#FE315D', SiGit: '#F05032',
-  SiGithub: '#888', SiApple: '#888', DiWindows: '#0078D4',
-  SiSpringboot: '#6DB33F', DiJava: '#ED8B00', SiHibernate: '#59666C',
-  SiMysql: '#4479A1', SiNotion: '#888',
+// 숙련도 → 공 지름(px). 모바일은 CSS --ball-scale로 줄인다
+const LEVEL_SIZE: Record<string, number> = {
+  '상': 96, '중상': 84, '중': 72, '초중': 62, '입문': 54,
 }
 
 const LANDING_ITEMS = [
@@ -74,71 +38,6 @@ const LANDING_ITEMS = [
   { name: 'MySQL',        level: '초중', icon: 'SiMysql' },
   { name: 'Notion',       level: '상',  icon: 'SiNotion' },
 ]
-
-function hexToRgba(hex: string, alpha: number): string {
-  if (!hex.startsWith('#')) return `rgba(120,120,120,${alpha})`
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r},${g},${b},${alpha})`
-}
-
-interface PhysicsItem {
-  id: number; r: number
-  x: number; y: number; vx: number; vy: number; angle: number
-  sleeping: boolean; sleepFrames: number
-  name: string; iconKey: string; iconColor: string; bgColor: string
-}
-
-let heroId = 0
-
-function solveCollisions(items: PhysicsItem[], W: number, H: number) {
-  for (let iter = 0; iter < ITERATIONS; iter++) {
-    for (const a of items) {
-      if (a.sleeping) continue
-      const floor = H - a.r - 4
-      if (a.y > floor) {
-        a.y = floor
-        if (a.vy > 0) { a.vy = -a.vy * RESTITUTION; a.vx *= (1 - FLOOR_MU) }
-      }
-      if (a.y - a.r < 0 && a.vy < 0) { a.y = a.r; a.vy = 0 }
-      if (a.x - a.r < 0) { a.x = a.r;     a.vx =  Math.abs(a.vx) * RESTITUTION }
-      if (a.x + a.r > W) { a.x = W - a.r; a.vx = -Math.abs(a.vx) * RESTITUTION }
-    }
-    for (let i = 0; i < items.length; i++) {
-      for (let j = i + 1; j < items.length; j++) {
-        const a = items[i]; const b = items[j]
-        if (a.sleeping && b.sleeping) continue
-        const dx = b.x - a.x; const dy = b.y - a.y
-        const d2 = dx * dx + dy * dy
-        const minDist = a.r + b.r
-        if (d2 >= minDist * minDist || d2 < 1e-4) continue
-        const dist = Math.sqrt(d2)
-        const nx = dx / dist; const ny = dy / dist
-        const penetration = minDist - dist
-        const velN = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny
-        if (velN < 0) {
-          const jEst = Math.abs(-(1 + RESTITUTION) * velN / 2)
-          if (a.sleeping && jEst > WAKE_IMPULSE) { a.sleeping = false; a.sleepFrames = 0 }
-          if (b.sleeping && jEst > WAKE_IMPULSE) { b.sleeping = false; b.sleepFrames = 0 }
-          const ima = a.sleeping ? 0 : 1; const imb = b.sleeping ? 0 : 1; const tim = ima + imb
-          if (tim > 0) {
-            const jj = -(1 + RESTITUTION) * velN / tim
-            a.vx -= jj * nx * ima; a.vy -= jj * ny * ima
-            b.vx += jj * nx * imb; b.vy += jj * ny * imb
-          }
-        }
-        const imaC = a.sleeping ? 0 : 1; const imbC = b.sleeping ? 0 : 1; const timC = imaC + imbC
-        if (timC === 0) continue
-        const corr = Math.max(penetration - SLOP, 0) * CORR_PCT / timC
-        if (corr > 0) {
-          a.x -= corr * nx * imaC; a.y -= corr * ny * imaC
-          b.x += corr * nx * imbC; b.y += corr * ny * imbC
-        }
-      }
-    }
-  }
-}
 
 // ─── 루핑 타이핑 훅 (세그먼트 기반) ─────────────────────────────────────────
 type Segment = { text: string; highlight: boolean }
@@ -348,105 +247,12 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
 
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function AboutHeroLanding({ featuredProjects }: { featuredProjects: NotionProject[] }) {
-  const itemsRef  = useRef<PhysicsItem[]>([])
-  const animRef   = useRef<number>(0)
-  const wRef      = useRef(0)
-  const hRef      = useRef(0)
-  const sceneRef  = useRef<HTMLDivElement>(null)
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
-  const [, setRenderKey] = useState(0)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const { active } = usePhysicsStage(stageRef, { dropGap: 28 })
   const { segments, revealedCount, showCursor } = useLoopingTypewriter()
-
-  useEffect(() => {
-    const el = sceneRef.current
-    if (!el) return
-    wRef.current = el.offsetWidth
-    hRef.current = el.offsetHeight
-    const ro = new ResizeObserver(e => {
-      wRef.current = e[0].contentRect.width
-      hRef.current = e[0].contentRect.height
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  const tick = useCallback(() => {
-    const items = itemsRef.current
-    const W = wRef.current
-    const H = hRef.current
-    let anyAwake = false
-    for (const a of items) {
-      if (a.sleeping) continue
-      anyAwake = true
-      a.vy += G; a.vx *= DAMPING; a.vy *= DAMPING
-      a.x += a.vx; a.y += a.vy
-      a.angle += (a.vx / a.r) * (180 / Math.PI)
-    }
-    const sleepBefore = items.filter(i => i.sleeping).length
-    if (items.length > 0) solveCollisions(items, W, H)
-    const justWoke = items.filter(i => !i.sleeping).length > (items.length - sleepBefore)
-    let justSlept = false
-    for (const a of items) {
-      if (a.sleeping) continue
-      if (Math.abs(a.vx) + Math.abs(a.vy) < SLEEP_V) {
-        a.sleepFrames++
-        if (a.sleepFrames >= SLEEP_FRAMES) { a.sleeping = true; a.vx = 0; a.vy = 0; justSlept = true }
-      } else { a.sleepFrames = 0 }
-    }
-    if (anyAwake || justSlept || justWoke) setRenderKey(k => k + 1)
-    animRef.current = requestAnimationFrame(tick)
-  }, [])
-
-  useEffect(() => {
-    animRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(animRef.current)
-  }, [tick])
-
-  const spawnAll = useCallback(() => {
-    if (sceneRef.current) {
-      wRef.current = sceneRef.current.offsetWidth
-      hRef.current = sceneRef.current.offsetHeight
-    }
-    timersRef.current.forEach(clearTimeout)
-    timersRef.current = []
-    itemsRef.current  = []
-    setRenderKey(k => k + 1)
-
-    LANDING_ITEMS.forEach((item, idx) => {
-      const t = setTimeout(() => {
-        const W = wRef.current
-        const r = LEVEL_R[item.level] ?? 44
-        const iconColor = ICON_COLOR[item.icon] ?? '#888'
-        itemsRef.current.push({
-          id: heroId++, r,
-          x: r + 8 + Math.random() * Math.max(W - r * 2 - 16, 1),
-          y: -r - 4,
-          vx: (Math.random() - 0.5) * 8,
-          vy: Math.random() * 4 + 3,
-          angle: Math.random() * 360,
-          sleeping: false, sleepFrames: 0,
-          name: item.name, iconKey: item.icon,
-          iconColor, bgColor: hexToRgba(iconColor, 0.14),
-        })
-        setRenderKey(k => k + 1)
-      }, idx * 100)
-      timersRef.current.push(t)
-    })
-  }, [])
-
-  useEffect(() => {
-    const t = setTimeout(spawnAll, 200)
-    return () => {
-      clearTimeout(t)
-      timersRef.current.forEach(clearTimeout)
-    }
-  }, [spawnAll])
-
-  const items = itemsRef.current
 
   return (
     <div
-      ref={sceneRef}
       style={{
         position: 'relative',
         width: '100%',
@@ -509,6 +315,7 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
         }
 
         .about-hero-grid {
+          pointer-events: none;
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 3rem;
@@ -516,6 +323,9 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
           width: 100%;
           max-width: 1140px;
           padding: 0 2.5rem;
+        }
+        .about-hero-grid a {
+          pointer-events: auto;
         }
         @media (max-width: 860px) {
           .about-hero-grid {
@@ -528,47 +338,27 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
         }
       `}</style>
 
-      {/* ── 배경: 물리 아이콘 ── */}
-      {items.map(item => {
-        const IconComp = ICON_MAP[item.iconKey]
-        const iconSize = Math.round(item.r * 0.88)
-        return (
-          <div
-            key={item.id}
-            title={item.name}
-            style={{
-              position: 'absolute',
-              left: item.x - item.r,
-              top:  item.y - item.r,
-              width:  item.r * 2,
-              height: item.r * 2,
-              borderRadius: '50%',
-              background: item.bgColor,
-              border: '2px solid var(--border-subtle)',
-              boxShadow: item.sleeping ? 'var(--shadow-card)' : '0 4px 20px rgba(0,0,0,0.08)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transform: `rotate(${item.angle}deg)`,
-              pointerEvents: 'none', userSelect: 'none',
-            }}
-          >
-            {item.iconKey.startsWith('img:') ? (
-              <img
-                src={`/icons/${item.iconKey.slice(4)}.svg`}
-                alt={item.name}
-                width={iconSize}
-                height={iconSize}
-                style={{ objectFit: 'contain' }}
-              />
-            ) : IconComp ? (
-              <IconComp size={iconSize} color={item.iconColor} />
-            ) : (
-              <span style={{ fontSize: Math.max(iconSize * 0.38, 9), fontWeight: 700, color: item.iconColor, lineHeight: 1 }}>
-                {item.name.slice(0, 2)}
-              </span>
-            )}
-          </div>
-        )
-      })}
+      {/* ── 배경: 물리 아이콘 (잡아서 던질 수 있음) ── */}
+      <div ref={stageRef} className={`physics-stage about-physics-stage${active ? ' is-physics' : ''}`}>
+        {LANDING_ITEMS.map((item) => {
+          const color = ICON_COLOR[item.icon] ?? 'var(--text-muted)'
+          return (
+            <div
+              key={item.name}
+              data-physics=""
+              data-shape="circle"
+              title={item.name}
+              className="about-physics-ball"
+              style={{
+                '--ball': LEVEL_SIZE[item.level] ?? 72,
+                '--ball-color': color,
+              } as React.CSSProperties}
+            >
+              <TechIcon icon={item.icon} name={item.name} size={Math.round((LEVEL_SIZE[item.level] ?? 72) * 0.46)} />
+            </div>
+          )
+        })}
+      </div>
 
       {/* ── 전경: 2-column 레이아웃 ── */}
       <div style={{
@@ -580,7 +370,7 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
         zIndex: 10,
         pointerEvents: 'none',
       }}>
-        <div className="about-hero-grid" style={{ pointerEvents: 'auto' }}>
+        <div className="about-hero-grid">
 
           {/* LEFT: 텍스트 */}
           <div>

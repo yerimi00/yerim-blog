@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import type { Body, Constraint, Engine } from 'matter-js'
 import TypewriterText from '@/components/about/TypewriterText'
+import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
 
 const HERO_LINKS = [
   { label: 'About', href: '/about' },
@@ -13,7 +13,6 @@ const HERO_LINKS = [
 
 const DOT_GAP = 22
 const PUSH_RADIUS = 110
-const CLICK_SLOP = 6
 
 // 커서 근처 점이 밀려나는 배경. 화면에 보일 때만 그린다
 function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: React.RefObject<HTMLElement>) {
@@ -105,142 +104,13 @@ function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: Rea
   }, [canvasRef, heroRef])
 }
 
-// 태그 칩이 떨어져 쌓이고, 잡아서 던질 수 있는 물리 영역.
-// 첫 렌더는 정적인 칩 목록(SSR과 동일) → 마운트 후 물리로 전환
-function usePhysicsChips(
-  stageRef: React.RefObject<HTMLDivElement>,
-  chipRefs: React.MutableRefObject<(HTMLAnchorElement | null)[]>,
-  draggedRef: React.MutableRefObject<boolean>,
-  count: number,
-) {
-  const [active, setActive] = useState(false)
-
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    setActive(true)
-  }, [])
-
-  useEffect(() => {
-    if (!active) return
-    const stage = stageRef.current
-    if (!stage) return
-    let cleanup = () => {}
-    let cancelled = false
-
-    import('matter-js').then(({ default: Matter }) => {
-      if (cancelled) return
-      const { Engine, Runner, Bodies, Composite, Constraint, Body } = Matter
-      const engine: Engine = Engine.create({ gravity: { x: 0, y: 1, scale: 0.0012 } })
-      const width = stage.clientWidth
-      const height = stage.clientHeight
-      const wall = 200
-      const floor = Bodies.rectangle(width / 2, height + wall / 2, width * 3, wall, { isStatic: true })
-      const left = Bodies.rectangle(-wall / 2, height / 2, wall, height * 4, { isStatic: true })
-      const right = Bodies.rectangle(width + wall / 2, height / 2, wall, height * 4, { isStatic: true })
-
-      const chips = chipRefs.current.slice(0, count).filter((el): el is HTMLAnchorElement => !!el)
-      const bodies: Body[] = chips.map((el, i) => {
-        const w = el.offsetWidth
-        const h = el.offsetHeight
-        const x = Math.min(width - w / 2, Math.max(w / 2, Math.random() * width))
-        return Bodies.rectangle(x, -60 - i * 45, w, h, {
-          chamfer: { radius: h / 2 },
-          restitution: 0.35,
-          friction: 0.3,
-          angle: (Math.random() - 0.5) * 0.6,
-        })
-      })
-      Composite.add(engine.world, [floor, left, right, ...bodies])
-
-      chips.forEach((el) => {
-        el.style.position = 'absolute'
-        el.style.left = '0'
-        el.style.top = '0'
-      })
-
-      // 칩 위치를 DOM transform에 반영
-      const sync = () => {
-        bodies.forEach((b, i) => {
-          const el = chips[i]
-          el.style.transform = `translate(${b.position.x - el.offsetWidth / 2}px, ${b.position.y - el.offsetHeight / 2}px) rotate(${b.angle}rad)`
-        })
-      }
-      Matter.Events.on(engine, 'afterUpdate', sync)
-      const runner = Runner.create()
-      Runner.run(runner, engine)
-
-      // 칩 드래그 — 칩에만 touch-action: none을 줘서 빈 영역에서는 페이지 스크롤 유지
-      let drag: { constraint: Constraint; startX: number; startY: number } | null = null
-      const toLocal = (e: PointerEvent) => {
-        const rect = stage.getBoundingClientRect()
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top }
-      }
-      const handlers = chips.map((el, i) => {
-        const onDown = (e: PointerEvent) => {
-          const p = toLocal(e)
-          el.setPointerCapture(e.pointerId)
-          draggedRef.current = false
-          const constraint = Constraint.create({ pointA: p, bodyB: bodies[i], stiffness: 0.15, damping: 0.1, length: 0 })
-          Composite.add(engine.world, constraint)
-          drag = { constraint, startX: p.x, startY: p.y }
-        }
-        const onMove = (e: PointerEvent) => {
-          if (!drag) return
-          const p = toLocal(e)
-          drag.constraint.pointA = p
-          if (Math.hypot(p.x - drag.startX, p.y - drag.startY) > CLICK_SLOP) draggedRef.current = true
-        }
-        const onUp = () => {
-          if (!drag) return
-          Composite.remove(engine.world, drag.constraint)
-          drag = null
-        }
-        el.addEventListener('pointerdown', onDown)
-        el.addEventListener('pointermove', onMove)
-        el.addEventListener('pointerup', onUp)
-        el.addEventListener('pointercancel', onUp)
-        return () => {
-          el.removeEventListener('pointerdown', onDown)
-          el.removeEventListener('pointermove', onMove)
-          el.removeEventListener('pointerup', onUp)
-          el.removeEventListener('pointercancel', onUp)
-        }
-      })
-
-      // 너비가 바뀌면 오른쪽 벽·바닥만 옮긴다
-      const ro = new ResizeObserver(() => {
-        const w = stage.clientWidth
-        Body.setPosition(right, { x: w + wall / 2, y: right.position.y })
-        Body.setPosition(floor, { x: w / 2, y: floor.position.y })
-      })
-      ro.observe(stage)
-
-      cleanup = () => {
-        ro.disconnect()
-        handlers.forEach((off) => off())
-        Runner.stop(runner)
-        Engine.clear(engine)
-      }
-    })
-
-    return () => {
-      cancelled = true
-      cleanup()
-    }
-  }, [active, stageRef, chipRefs, draggedRef, count])
-
-  return active
-}
-
 export default function HomeHero({ tags }: { tags: string[] }) {
   const heroRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
-  const chipRefs = useRef<(HTMLAnchorElement | null)[]>([])
-  const draggedRef = useRef(false)
 
   useDotField(canvasRef, heroRef)
-  const physics = usePhysicsChips(stageRef, chipRefs, draggedRef, tags.length)
+  const { active: physics, draggedRef } = usePhysicsStage(stageRef, { dropGap: 45 })
 
   return (
     <section ref={heroRef} className="home-hero">
@@ -268,11 +138,11 @@ export default function HomeHero({ tags }: { tags: string[] }) {
         </div>
       </div>
 
-      <div ref={stageRef} className={`home-hero-stage${physics ? ' is-physics' : ''}`}>
-        {tags.map((tag, i) => (
+      <div ref={stageRef} className={`physics-stage home-hero-stage${physics ? ' is-physics' : ''}`}>
+        {tags.map((tag) => (
           <Link
             key={tag}
-            ref={(el) => { chipRefs.current[i] = el }}
+            data-physics=""
             href={`/blog/tag/${encodeURIComponent(tag)}`}
             className="home-hero-chip"
             draggable={false}
