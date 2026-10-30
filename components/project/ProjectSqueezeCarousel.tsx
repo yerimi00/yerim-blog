@@ -58,8 +58,13 @@ export default function ProjectSqueezeCarousel({ projects }: { projects: NotionP
               aria-current={isActive || undefined}
             >
               {p.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.image} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
+                <>
+                  {/* 흐린 배경으로 여백을 채우고, 본 이미지는 잘리지 않게 contain */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="squeeze-img-bg" src={p.image} alt="" aria-hidden="true" loading={i === 0 ? 'eager' : 'lazy'} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="squeeze-img" src={p.image} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
+                </>
               ) : (
                 <span className="squeeze-fallback">{p.name.slice(0, 1)}</span>
               )}
