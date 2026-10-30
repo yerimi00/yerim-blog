@@ -143,3 +143,37 @@ export async function getCommentCounts(slugs: string[]): Promise<Record<string, 
     return {}
   }
 }
+
+export interface ContributionDay {
+  date: string
+  count: number
+}
+
+// GitHub 프로필 잔디(지난 1년 기여 기록). 토큰이 없거나 실패하면 빈 배열
+export async function getContributionDays(login = 'yerimi00'): Promise<ContributionDay[]> {
+  const token = process.env.GITHUB_TOKEN
+  if (!token) return []
+
+  const query = `
+    query($login: String!) {
+      user(login: $login) {
+        contributionsCollection {
+          contributionCalendar {
+            weeks { contributionDays { date contributionCount } }
+          }
+        }
+      }
+    }
+  `
+  try {
+    const res = await githubRequest(token, query, { login })
+    const json = (await res.json()) as {
+      data?: { user?: { contributionsCollection: { contributionCalendar: { weeks: { contributionDays: { date: string; contributionCount: number }[] }[] } } } }
+    }
+    const weeks = json.data?.user?.contributionsCollection.contributionCalendar.weeks ?? []
+    return weeks.flatMap((w) => w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount })))
+  } catch (error) {
+    console.warn('[getContributionDays] GitHub 잔디 조회 실패:', error)
+    return []
+  }
+}

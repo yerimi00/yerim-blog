@@ -9,6 +9,7 @@ const TOC_ITEMS = [
   { id: 'education', label: 'Education' },
   { id: 'activities', label: 'Activities' },
   { id: 'stack', label: 'Tech Stack' },
+  { id: 'github', label: 'GitHub' },
   { id: 'contact', label: 'Contact' },
 ]
 

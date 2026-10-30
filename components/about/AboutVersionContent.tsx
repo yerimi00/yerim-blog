@@ -8,6 +8,8 @@ import TechStackGrid from '@/components/about/TechStackGrid'
 import YearTimeline from '@/components/about/YearTimeline'
 import PhilosophyList from '@/components/about/PhilosophyList'
 import SectionReveal from '@/components/about/SectionReveal'
+import ActivityHeatmap from '@/components/ui/activity-heatmap'
+import type { ContributionDay } from '@/lib/github'
 import {
   techStackByVersion,
   interestsByVersion,
@@ -55,9 +57,11 @@ const philosophyByVersion: Record<AboutVersion, { who: string; cards: { title: s
 export default function AboutVersionContent({
   version,
   activities,
+  contributions,
 }: {
   version: AboutVersion
   activities: Activity[]
+  contributions: ContributionDay[]
 }) {
   const isPM = version === 'pm'
   const techStack = techStackByVersion[version]
@@ -214,6 +218,20 @@ export default function AboutVersionContent({
         </SectionReveal>
 
         <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
+
+        {/* GitHub 잔디 */}
+        {contributions.length > 0 && (
+          <>
+            <SectionReveal style={{ marginBottom: '3.5rem' }}>
+              <section id="github" style={{ scrollMarginTop: '100px' }}>
+                <h2 style={sectionHeadingStyle}>GitHub</h2>
+                <ActivityHeatmap days={contributions} label="지난 1년 GitHub 기여" period="지난 1년" />
+              </section>
+            </SectionReveal>
+
+            <hr style={{ borderColor: 'var(--border)', marginBottom: '3.5rem' }} />
+          </>
+        )}
 
         {/* Contact */}
         <SectionReveal>
