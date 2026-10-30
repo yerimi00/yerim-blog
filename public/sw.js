@@ -1,5 +1,6 @@
-const CACHE_NAME = 'yerim-dev-v2'
-const STATIC_ASSETS = ['/', '/blog', '/about', '/series']
+// v3: 캐시 우선 → 네트워크 우선으로 바꾸면서 이전 캐시를 비운다
+const CACHE_NAME = 'yerim-dev-v3'
+const STATIC_ASSETS = ['/', '/blog', '/about']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -27,16 +28,16 @@ self.addEventListener('fetch', (event) => {
     url.hostname.includes('notion')
   ) return
 
+  // 네트워크 우선: 항상 최신 페이지를 보여주고, 오프라인일 때만 캐시로 대체
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request).then((res) => {
+    fetch(event.request)
+      .then((res) => {
         if (res.ok) {
           const clone = res.clone()
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
         }
         return res
       })
-      return cached || network
-    })
+      .catch(() => caches.match(event.request).then((cached) => cached || Response.error()))
   )
 })
