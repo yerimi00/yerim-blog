@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 import type { AiSkill } from '@/app/data/ai-skills'
 import AiSkillModal from '@/components/ai-skills/AiSkillModal'
 
@@ -10,9 +12,11 @@ export default function AiSkillCard({ skill }: { skill: AiSkill }) {
 
   return (
     <>
-      <button
+      <motion.button
         onClick={() => setIsOpen(true)}
-        className="sidebar-card card-hover"
+        whileHover={{ backgroundColor: 'var(--surface-container)' }}
+        transition={fastTween}
+        className="sidebar-card"
         style={{ textAlign: 'left', cursor: 'pointer', width: '100%', font: 'inherit' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
@@ -28,7 +32,7 @@ export default function AiSkillCard({ skill }: { skill: AiSkill }) {
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
           {skill.description}
         </p>
-      </button>
+      </motion.button>
       <AiSkillModal skill={skill} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   )

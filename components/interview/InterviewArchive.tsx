@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import TabButton from '@/components/motion/TabButton'
 import Link from 'next/link'
 import type { InterviewQuestion } from '@/lib/interview'
 
@@ -15,13 +16,9 @@ export default function InterviewArchive({ questions }: { questions: InterviewQu
         {['전체', ...categories].map((tab) => {
           const isActive = tab === '전체' ? !selected : selected === tab
           return (
-            <button
-              key={tab}
-              onClick={() => setSelected(tab === '전체' || tab === selected ? null : tab)}
-              className={`series-tab-btn${isActive ? ' active' : ''}`}
-            >
+            <TabButton key={tab} active={isActive} onClick={() => setSelected(tab === '전체' || tab === selected ? null : tab)}>
               {tab}
-            </button>
+            </TabButton>
           )
         })}
       </div>

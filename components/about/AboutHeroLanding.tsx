@@ -1,10 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import type { NotionProject } from '@/lib/projects'
 import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
 import { TechIcon, ICON_COLOR } from '@/components/about/TechStackGrid'
+import { motion } from 'motion/react'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import BlinkCursor from '@/components/motion/BlinkCursor'
+import { fastTween } from '@/components/motion/presets'
 
 // 숙련도 → 공 지름(px). 모바일은 CSS --ball-scale로 줄인다
 const LEVEL_SIZE: Record<string, number> = {
@@ -135,8 +138,10 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
   const project = projects[activeIdx]
 
   return (
-    <Link
+    <MotionLink
       href={`/work/${project.slug}`}
+      whileHover={{ y: -3, boxShadow: 'var(--hero-card-hover-shadow)' }}
+      transition={{ duration: 0.2 }}
       className="about-hero-glass about-hero-project-card"
       style={{
         display: 'block',
@@ -147,13 +152,11 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
       }}
     >
       {/* 썸네일 이미지 */}
-      <div style={{
+      <motion.div initial={false} animate={{ opacity: visible ? 1 : 0 }} transition={{ duration: 0.38, ease: 'easeInOut' }} style={{
         position: 'relative',
         aspectRatio: '16/10',
         overflow: 'hidden',
         background: 'var(--bg-secondary)',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.38s ease',
       }}>
         {project.image ? (
           <img
@@ -185,13 +188,11 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
             {project.award}
           </span>
         )}
-      </div>
+      </motion.div>
 
       {/* 프로젝트 정보 */}
-      <div style={{
+      <motion.div initial={false} animate={{ opacity: visible ? 1 : 0 }} transition={{ duration: 0.38, ease: 'easeInOut' }} style={{
         padding: '1.1rem 1.4rem 1.25rem',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.38s ease',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
           <h3 style={{
@@ -228,20 +229,17 @@ function ProjectSlideshow({ projects }: { projects: NotionProject[] }) {
         {/* 도트 인디케이터 */}
         <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
           {projects.map((_, i) => (
-            <div
+            <motion.div
               key={i}
-              style={{
-                width:  i === activeIdx ? 16 : 6,
-                height: 6,
-                borderRadius: 9999,
-                background: i === activeIdx ? 'var(--accent)' : 'var(--border)',
-                transition: 'width 0.35s, background 0.35s',
-              }}
+              initial={false}
+              animate={{ width: i === activeIdx ? 16 : 6, backgroundColor: i === activeIdx ? 'var(--accent)' : 'var(--border)' }}
+              transition={{ duration: 0.35 }}
+              style={{ height: 6, borderRadius: 9999 }}
             />
           ))}
         </div>
-      </div>
-    </Link>
+      </motion.div>
+    </MotionLink>
   )
 }
 
@@ -262,8 +260,6 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
       }}
     >
       <style>{`
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
         .about-hero-glass {
           background: rgba(255,255,255,0.72);
           backdrop-filter: blur(20px);
@@ -277,15 +273,12 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
           box-shadow: 0 8px 40px rgba(0,0,0,0.36);
         }
 
+        /* 호버 그림자 값 (motion whileHover가 읽어 간다) */
         .about-hero-project-card {
-          transition: transform 0.2s, box-shadow 0.2s;
+          --hero-card-hover-shadow: 0 16px 48px rgba(0,0,0,0.13);
         }
-        .about-hero-project-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 16px 48px rgba(0,0,0,0.13);
-        }
-        .dark .about-hero-project-card:hover {
-          box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+        .dark .about-hero-project-card {
+          --hero-card-hover-shadow: 0 16px 48px rgba(0,0,0,0.5);
         }
 
         .about-hero-btn {
@@ -301,17 +294,12 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
           font-weight: 500;
           font-family: Pretendard, sans-serif;
           text-decoration: none;
-          transition: border-color 0.2s, color 0.2s, background 0.2s;
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
           white-space: nowrap;
         }
         .dark .about-hero-btn {
           background: rgba(255,255,255,0.06);
-        }
-        .about-hero-btn:hover {
-          border-color: var(--accent);
-          color: var(--accent);
         }
 
         .about-hero-grid {
@@ -397,29 +385,20 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
             }}>
               {renderSegments(segments, revealedCount)}
               {showCursor && (
-                <span style={{
-                  display: 'inline-block',
-                  width: 3,
-                  height: '0.85em',
-                  background: 'var(--accent)',
-                  marginLeft: 4,
-                  verticalAlign: 'text-bottom',
-                  borderRadius: 2,
-                  animation: 'blink 0.7s step-end infinite',
-                }} />
+                <BlinkCursor style={{ width: 3, height: '0.85em', background: 'var(--accent)', marginLeft: 4, borderRadius: 2 }} />
               )}
             </h1>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              <Link href="/about/fe" className="about-hero-btn" style={{ width: 'fit-content' }}>
+              <MotionLink href="/about/fe" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
                 프론트엔드 개발자로 만나기 →
-              </Link>
-              <Link href="/about/be" className="about-hero-btn" style={{ width: 'fit-content' }}>
+              </MotionLink>
+              <MotionLink href="/about/be" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
                 백엔드 개발자로 만나기 →
-              </Link>
-              <Link href="/about/pm" className="about-hero-btn" style={{ width: 'fit-content' }}>
+              </MotionLink>
+              <MotionLink href="/about/pm" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
                 프로덕트 매니저로 만나기 →
-              </Link>
+              </MotionLink>
             </div>
           </div>
 

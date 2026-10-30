@@ -1,7 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { motion } from 'motion/react'
+import { fadeUp } from '@/components/motion/presets'
 
+// 화면에 들어오면 아래에서 떠오르며 등장 (한 번만)
 export default function SectionReveal({
   children,
   delay = 0,
@@ -13,27 +15,17 @@ export default function SectionReveal({
   className?: string
   style?: React.CSSProperties
 }) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => el.classList.add('section-reveal--visible'), delay)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.08 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [delay])
-
   return (
-    <div ref={ref} className={`section-reveal${className ? ` ${className}` : ''}`} style={style}>
+    <motion.div
+      className={className}
+      style={style}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ delay: delay / 1000 }}
+    >
       {children}
-    </div>
+    </motion.div>
   )
 }

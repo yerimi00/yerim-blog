@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { FiEdit2, FiX } from 'react-icons/fi'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 
 export default function GuestbookFAB() {
   const [showBubble, setShowBubble] = useState(true)
@@ -27,12 +29,19 @@ export default function GuestbookFAB() {
         gap: '1.0rem',
       }}
     >
-      {/* 말풍선 */}
-        <div
+      {/* 말풍선: --float(0→1→0)를 JS로 돌리고, 방향(세로/모바일 홈은 가로)은 CSS가 정한다 */}
+        <motion.div
           className="fab-bubble"
+          initial={false}
+          // transform은 CSS가 --float로 계산하므로 여기선 opacity만 (motion이 transform을 쓰면 덮어씀)
+          animate={{ '--float': [0, 1, 0], opacity: showBubble ? 1 : 0 }}
+          transition={{
+            '--float': { duration: 2.4, ease: 'easeInOut', repeat: Infinity },
+            opacity: fastTween,
+          }}
           style={{
             position: 'relative',
-            visibility: showBubble ? 'visible' : 'hidden',
+            pointerEvents: showBubble ? 'auto' : 'none',
             background: 'var(--accent)',
             color: '#fff',
             fontSize: '0.75rem',
@@ -41,7 +50,6 @@ export default function GuestbookFAB() {
             borderRadius: '999px',
             whiteSpace: 'nowrap',
             letterSpacing: '0.01em',
-            animation: 'fabFloat 2.4s ease-in-out infinite',
             boxShadow: '0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)',
           }}
         >
@@ -83,41 +91,32 @@ export default function GuestbookFAB() {
           >
             <FiX size={10} />
           </button>
-        </div>
+        </motion.div>
 
       <Link
         href="/guestbook"
+        aria-label="방명록 쓰기"
         style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem' }}
       >
-        <button
-          aria-label="방명록 쓰기"
+        <motion.span
+          whileHover={{ y: -2, boxShadow: '0 8px 24px color-mix(in srgb, var(--accent) 40%, transparent)' }}
+          whileTap={{ scale: 0.94 }}
+          transition={fastTween}
           style={{
             width: '52px',
             height: '52px',
             borderRadius: '50%',
             background: 'var(--accent)',
             color: '#fff',
-            border: 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: '0 4px 16px color-mix(in srgb, var(--accent) 28%, transparent)',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-          onMouseEnter={e => {
-            const btn = e.currentTarget as HTMLButtonElement
-            btn.style.transform = 'translateY(-2px)'
-            btn.style.boxShadow = '0 8px 24px color-mix(in srgb, var(--accent) 40%, transparent)'
-          }}
-          onMouseLeave={e => {
-            const btn = e.currentTarget as HTMLButtonElement
-            btn.style.transform = 'translateY(0)'
-            btn.style.boxShadow = '0 4px 16px color-mix(in srgb, var(--accent) 28%, transparent)'
           }}
         >
           <FiEdit2 size={20} />
-        </button>
+        </motion.span>
       </Link>
     </div>
   )

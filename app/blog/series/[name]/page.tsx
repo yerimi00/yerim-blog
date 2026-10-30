@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import { getPostsBySeries } from '@/lib/notion'
 import { formatDate } from '@/lib/utils'
@@ -51,13 +53,14 @@ export default async function SeriesDetailPage({ params }: { params: { name: str
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {posts.map((post, i) => (
-            <Link
+            <MotionLink
               key={post.id}
               href={`/blog/${post.slug}`}
               style={{ textDecoration: 'none', display: 'block' }}
+              whileHover={{ opacity: 0.65 }}
+              transition={fastTween}
             >
               <div
-                className="post-row"
                 style={{
                   display: 'flex',
                   gap: '1.25rem',
@@ -98,7 +101,7 @@ export default async function SeriesDetailPage({ params }: { params: { name: str
                   <IoIosArrowForward style={{ color: 'var(--accent)', fontSize: '0.9rem' }} />
                 </div>
               </div>
-            </Link>
+            </MotionLink>
           ))}
         </div>
 

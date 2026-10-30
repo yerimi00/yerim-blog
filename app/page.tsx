@@ -5,6 +5,7 @@ import { getPublishedQuestions } from '@/lib/interview'
 import TodayQuestionCard from '@/components/interview/TodayQuestionCard'
 import HomeHero from '@/components/home/HomeHero'
 import TiltCard from '@/components/home/TiltCard'
+import { HoverCardLink } from '@/components/motion/Hover'
 import SectionReveal from '@/components/about/SectionReveal'
 import ContainerScroll from '@/components/home/ContainerScroll'
 import { DEMOS } from '@/app/data/interactions/interactions-data'
@@ -101,14 +102,13 @@ export default async function HomePage() {
             <div className="home-work-grid">
               {works.map((p) => (
                 <TiltCard key={p.id}>
-                  <Link
+                  <HoverCardLink
                     href={`/work/${p.slug}`}
-                    className="card-hover"
                     style={{ display: 'block', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', background: 'var(--surface)' }}
                   >
                     <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.35rem' }}>{p.name}</p>
                     <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{p.description}</p>
-                  </Link>
+                  </HoverCardLink>
                 </TiltCard>
               ))}
             </div>
@@ -118,9 +118,8 @@ export default async function HomePage() {
         {/* Lab 진입 */}
         <SectionReveal>
           <TiltCard>
-            <Link
+            <HoverCardLink
               href="/lab"
-              className="card-hover"
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', textDecoration: 'none', border: '1px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem 1.5rem' }}
             >
               <span>
@@ -128,7 +127,7 @@ export default async function HomePage() {
                 <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>직접 만든 UI 인터랙션 {Object.keys(DEMOS).length}개를 눌러보세요</span>
               </span>
               <span style={{ color: 'var(--accent)' }}>→</span>
-            </Link>
+            </HoverCardLink>
           </TiltCard>
         </SectionReveal>
       </main>

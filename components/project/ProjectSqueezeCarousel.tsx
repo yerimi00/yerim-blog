@@ -1,14 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { motion } from 'motion/react'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import type { NotionProject } from '@/lib/projects'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { ease, fastTween } from '@/components/motion/presets'
 
 const INTERVAL = 5000
+const SQUEEZE = { duration: 0.6, ease: ease.inOut }
 
-// 선택된 프로젝트만 넓게, 나머지는 거리만큼 좁은 띠로 눌린 캐러셀
+// 선택된 프로젝트만 넓게, 나머지는 거리만큼 좁은 띠로 눌린 캐러셀.
+// 폭은 CSS가 --active·--dist·--hover로 계산하고, 그 값을 motion이 애니메이션한다
 export default function ProjectSqueezeCarousel({ projects }: { projects: NotionProject[] }) {
   const router = useRouter()
   const [active, setActive] = useState(0)
@@ -38,21 +42,40 @@ export default function ProjectSqueezeCarousel({ projects }: { projects: NotionP
       <div className="squeeze-head">
         <p className="hand squeeze-kicker">대표 작업</p>
         <div className="squeeze-arrows">
-          <button type="button" onClick={() => go(-1)} aria-label="이전 프로젝트"><IoIosArrowBack /></button>
-          <button type="button" onClick={() => go(1)} aria-label="다음 프로젝트"><IoIosArrowForward /></button>
+          {[
+            { step: -1, label: '이전 프로젝트', Icon: IoIosArrowBack },
+            { step: 1, label: '다음 프로젝트', Icon: IoIosArrowForward },
+          ].map(({ step, label, Icon }) => (
+            <motion.button
+              key={label}
+              type="button"
+              onClick={() => go(step)}
+              aria-label={label}
+              whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
+              whileTap={{ scale: 0.92 }}
+              transition={fastTween}
+            >
+              <Icon />
+            </motion.button>
+          ))}
         </div>
       </div>
 
       <div className="squeeze-track">
         {projects.map((p, i) => {
           const isActive = i === active
+          const dist = Math.abs(i - active)
           return (
-            <button
+            <motion.button
               key={p.id}
               type="button"
               className="squeeze-slide"
               data-active={isActive || undefined}
-              style={{ '--dist': Math.abs(i - active) } as React.CSSProperties}
+              style={{ '--active': isActive ? 1 : 0, '--dist': dist, '--hover': 0 } as React.CSSProperties}
+              initial={false}
+              animate={{ '--active': isActive ? 1 : 0, '--dist': dist, '--hover': 0 }}
+              whileHover={isActive ? undefined : { '--hover': 1 }}
+              transition={{ '--active': SQUEEZE, '--dist': SQUEEZE, '--hover': { duration: 0.3 } }}
               onClick={() => (isActive ? router.push(`/work/${p.slug}`) : setActive(i))}
               aria-label={isActive ? `${p.name} 자세히 보기` : `${p.name} 보기`}
               aria-current={isActive || undefined}
@@ -68,8 +91,15 @@ export default function ProjectSqueezeCarousel({ projects }: { projects: NotionP
               ) : (
                 <span className="squeeze-fallback">{p.name.slice(0, 1)}</span>
               )}
-              <span className="squeeze-label">{p.name}</span>
-            </button>
+              <motion.span
+                className="squeeze-label"
+                initial={false}
+                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+                transition={{ duration: 0.3, delay: isActive ? 0.3 : 0 }}
+              >
+                {p.name}
+              </motion.span>
+            </motion.button>
           )
         })}
       </div>
@@ -78,9 +108,14 @@ export default function ProjectSqueezeCarousel({ projects }: { projects: NotionP
         <p>
           <strong>{current.name}.</strong> {current.description}
         </p>
-        <Link href={`/work/${current.slug}`} className="squeeze-cta">
+        <MotionLink
+          href={`/work/${current.slug}`}
+          className="squeeze-cta"
+          whileHover={{ backgroundColor: 'var(--accent)' }}
+          transition={fastTween}
+        >
           자세히 보기 <IoIosArrowForward />
-        </Link>
+        </MotionLink>
       </div>
     </section>
   )

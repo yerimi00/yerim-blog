@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
 import Image from 'next/image'
 import { Post } from '@/types'
 import { formatDate } from '@/lib/utils'
@@ -20,17 +21,23 @@ export default function RelatedPosts({ posts }: { posts: Post[] }) {
       </h2>
       <div className="related-posts-grid">
         {posts.map((post) => (
-          <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-            <div
-              className="related-post-card"
-              style={{
-                borderRadius: '8px',
-                border: '1px solid var(--border)',
-                overflow: 'hidden',
-                background: 'var(--surface)',
-                transition: 'border-color 0.15s, transform 0.15s',
-              }}
-            >
+          <MotionLink
+            key={post.id}
+            href={`/blog/${post.slug}`}
+            className="related-post-card"
+            whileHover={{ y: -2, borderColor: 'var(--outline-variant)' }}
+            transition={fastTween}
+            style={{
+              textDecoration: 'none',
+              display: 'block',
+              borderRadius: '8px',
+              borderWidth: 1,
+              borderStyle: 'solid',
+              borderColor: 'var(--border)',
+              overflow: 'hidden',
+              background: 'var(--surface)',
+            }}
+          >
               {post.coverImage ? (
                 <div style={{ position: 'relative', height: '110px', background: 'var(--bg-secondary)' }}>
                   <Image src={post.coverImage} alt={post.title} fill style={{ objectFit: 'cover' }} />
@@ -67,8 +74,7 @@ export default function RelatedPosts({ posts }: { posts: Post[] }) {
                   {formatDate(post.date)}
                 </span>
               </div>
-            </div>
-          </Link>
+          </MotionLink>
         ))}
       </div>
     </section>

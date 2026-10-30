@@ -4,6 +4,9 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import TypewriterText from '@/components/about/TypewriterText'
 import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import HandUnderline from '@/components/motion/HandUnderline'
+import { fastTween } from '@/components/motion/presets'
 
 const HERO_LINKS = [
   { label: 'About', href: '/about' },
@@ -120,8 +123,9 @@ export default function HomeHero({ tags }: { tags: string[] }) {
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>안녕하세요,</p>
         <h1 className="hand" style={{ fontSize: '3.2rem', lineHeight: 1.1, color: 'var(--text)', margin: '0 0 0.6rem', minHeight: '1.1em' }}>
           {/* 타이핑(7글자 × 80ms)이 끝난 뒤 밑줄을 긋는다 */}
-          <span className="hand-underline" style={{ '--hand-delay': '0.75s' } as React.CSSProperties}>
+          <span style={{ position: 'relative' }}>
             <TypewriterText text="이예림입니다." />
+            <HandUnderline delay={0.75} />
           </span>
         </h1>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 0.9rem', maxWidth: '420px' }}>
@@ -140,19 +144,21 @@ export default function HomeHero({ tags }: { tags: string[] }) {
 
       <div ref={stageRef} className={`physics-stage home-hero-stage${physics ? ' is-physics' : ''}`}>
         {tags.map((tag) => (
-          <Link
+          <MotionLink
             key={tag}
             data-physics=""
             href={`/blog/tag/${encodeURIComponent(tag)}`}
             className="home-hero-chip"
             draggable={false}
+            whileHover={{ color: 'var(--accent)', borderColor: 'var(--accent)' }}
+            transition={fastTween}
             onClick={(e) => {
               // 드래그로 끝난 경우 이동하지 않는다
               if (draggedRef.current) e.preventDefault()
             }}
           >
             #{tag}
-          </Link>
+          </MotionLink>
         ))}
       </div>
 

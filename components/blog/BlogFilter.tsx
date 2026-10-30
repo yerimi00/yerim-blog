@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import TabButton from '@/components/motion/TabButton'
 import { Post } from '@/types'
 import PostCard from './PostCard'
 
@@ -24,13 +25,9 @@ export default function BlogFilter({
         {allTabs.map((tab) => {
           const isActive = tab === '전체' ? !selected : selected === tab
           return (
-            <button
-              key={tab}
-              onClick={() => setSelected(tab === '전체' ? null : tab === selected ? null : tab)}
-              className={`series-tab-btn${isActive ? ' active' : ''}`}
-            >
+            <TabButton key={tab} active={isActive} onClick={() => setSelected(tab === '전체' ? null : tab === selected ? null : tab)}>
               {tab}
-            </button>
+            </TabButton>
           )
         })}
       </div>

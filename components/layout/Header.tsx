@@ -5,6 +5,9 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SearchModal from '@/components/blog/SearchModal'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import HandUnderline from '@/components/motion/HandUnderline'
+import { fastTween } from '@/components/motion/presets'
 
 // 로고가 Home 역할
 const NAV_LINKS = [
@@ -67,11 +70,25 @@ export default function Header() {
         {/* 데스크탑 네비게이션 */}
         <nav className="header-nav" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <span className="header-nav-links" style={{ display: 'contents' }}>
-            {NAV_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href} className={`nav-link${pathname.startsWith(href) ? ' is-active' : ''}`}>
-                {label}
-              </Link>
-            ))}
+            {NAV_LINKS.map(({ href, label }) => {
+              const active = pathname.startsWith(href)
+              return (
+                <MotionLink
+                  key={href}
+                  href={href}
+                  className="nav-link"
+                  aria-current={active ? 'page' : undefined}
+                  initial={false}
+                  animate={{ color: active ? 'var(--text)' : 'var(--text-muted)' }}
+                  whileHover={{ color: 'var(--text)' }}
+                  transition={fastTween}
+                  style={{ position: 'relative', fontWeight: active ? 600 : 500 }}
+                >
+                  {label}
+                  {active && <HandUnderline />}
+                </MotionLink>
+              )
+            })}
           </span>
 
           {/* 검색 버튼 */}
@@ -88,7 +105,6 @@ export default function Header() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              transition: 'background 0.15s',
             }}
             aria-label="검색"
           >
@@ -117,7 +133,6 @@ export default function Header() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '1rem',
-                transition: 'background 0.15s',
               }}
               aria-label="테마 전환"
             >

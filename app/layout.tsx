@@ -7,6 +7,7 @@ import GuestbookFAB from '@/components/GuestbookFAB'
 import BottomNav from '@/components/layout/BottomNav'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import MotionProvider from '@/components/motion/MotionProvider'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -76,12 +77,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* 헤더·푸터는 레이아웃에 둬서 페이지 전환 시 다시 마운트되지 않게 한다 */}
-          <Header />
-          {children}
-          <Footer />
-          <GuestbookFAB />
-          <BottomNav />
+          <MotionProvider>
+            {/* 헤더·푸터는 레이아웃에 둬서 페이지 전환 시 다시 마운트되지 않게 한다 */}
+            <Header />
+            {children}
+            <Footer />
+            <GuestbookFAB />
+            <BottomNav />
+          </MotionProvider>
         </ThemeProvider>
         <Script
           id="sw-register"

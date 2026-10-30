@@ -185,6 +185,11 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace), Nanum Pen Script (`hand` — 손글씨 포인트 전용)
 - 손글씨 포인트 클래스: `.hand`, `.hand-title`, `.hand-underline` (`--hand-delay`), 활성 `.nav-link.is-active` / `.series-tab-btn.active`는 빨간 손그림 밑줄. 상세는 `docs/domains/styling.md`
 - 하드코딩 색 금지: 강조색은 `var(--accent)`, 옅은 배경은 `color-mix(in srgb, var(--accent) N%, transparent)`
+- **인터랙션·애니메이션은 JS(motion)로**: CSS `transition`·`@keyframes`·`:hover` 효과·`onMouseEnter`로 style 바꾸기 금지. `motion/react`의 `animate`/`whileHover`/`whileInView`/`AnimatePresence`를 쓴다
+  - 공통 값: `components/motion/presets.ts` (`ease`, `duration`, `spring`, `fastTween`, `fadeUp`)
+  - 공용 컴포넌트: `MotionLink`(next/link), `HoverCardLink`·`HoverFade`(서버 컴포넌트에서 사용 가능), `TabButton`, `HandUnderline`(손그림 밑줄 SVG), `Skeleton`, `BlinkCursor`
+  - 앱 전체가 `MotionProvider`(`MotionConfig reducedMotion="user"`)로 감싸져 있어 동작 줄이기 설정을 따른다
+  - CSS로 계산하는 레이아웃 값은 motion이 CSS 변수(`--active` 등)를 애니메이션하고 CSS가 읽는다 (예: `ProjectSqueezeCarousel`, `GuestbookFAB`)
 
 ### Post Rendering
 

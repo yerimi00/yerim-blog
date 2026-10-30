@@ -1,16 +1,20 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { motion } from 'motion/react'
+import { fastTween } from '@/components/motion/presets'
 import { IoIosArrowForward } from 'react-icons/io'
 
 export default function AboutSidebarCard() {
   const router = useRouter()
 
   return (
-    <div
-      className="sidebar-card card-hover"
+    <motion.div
+      className="sidebar-card"
       style={{ cursor: 'pointer' }}
       onClick={() => router.push('/about')}
+      whileHover={{ backgroundColor: 'var(--surface-container)' }}
+      transition={fastTween}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -43,6 +47,6 @@ export default function AboutSidebarCard() {
           </a>
         ))}
       </div>
-    </div>
+    </motion.div>
   )
 }
