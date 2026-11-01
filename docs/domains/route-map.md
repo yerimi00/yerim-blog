@@ -14,7 +14,7 @@
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
 | `/interview` | `app/interview/page.tsx` | 3600 | 오늘의 면접 질문(최신 발행 1개) + 지난 문제 아카이브(카테고리 필터). Interview DB 미설정 시 "준비 중" 안내. |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 3600 | 문제 상세. 답변(Notion 본문)·꼬리질문·참고 링크는 `AnswerReveal`로 가렸다가 30초 타이머 또는 "답 보기"로 공개. 이전/다음 문제, AdSense, Giscus. |
-| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`, 현재 비어 있음 → "준비 중" 안내, 홈 Lab 카드는 숨김). |
+| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`). 현재 면접 위젯 6종(`widget-*`). 비어 있으면 "준비 중" 안내, 홈 Lab 카드는 숨김. |
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 데모 + 같은 slug의 블로그 글 본문(있으면). |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |

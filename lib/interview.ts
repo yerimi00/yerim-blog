@@ -3,6 +3,7 @@ import { Client } from '@notionhq/client'
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { fetchWithRetry, NOTION_TIMEOUT_MS } from './notion-fetch'
 import { getPostContent } from './notion'
+import { extractWidget, type Widget } from './interview-widgets'
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: fetchWithRetry, timeoutMs: NOTION_TIMEOUT_MS })
 
@@ -73,8 +74,7 @@ export async function getQuestionBySlug(slug: string): Promise<InterviewQuestion
   return questions.find((q) => q.slug === slug) ?? null
 }
 
-// 문제 본문(답변). 작성자용 위젯 데이터 토글은 빼고 반환 (검수 메모 콜아웃은 lib/notion에서 제외)
-export async function getQuestionContent(pageId: string): Promise<string> {
-  const md = await getPostContent(pageId)
-  return md.replace(/<details>\s*<summary>[^<]*위젯 데이터[\s\S]*?<\/details>\s*/g, '')
+// 문제 본문(답변)과 위젯. "🎮 위젯 데이터" 토글은 본문에서 떼어 위젯으로 파싱한다 (검수 메모 콜아웃은 lib/notion에서 제외)
+export async function getQuestionContent(pageId: string): Promise<{ content: string; widget: Widget | null }> {
+  return extractWidget(await getPostContent(pageId))
 }

@@ -27,6 +27,8 @@
     --accent: #e5383b;
     --accent-dim: #b3262a;
     --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+    /* 정답 표시 (면접 위젯) */
+    --success: #15803d;
     --primary-container: #fde2e2;
     --on-primary: #ffffff;
 
@@ -68,6 +70,7 @@
     --outline-variant: #4b5563;
 
     --accent: #ff6b6b;
+    --success: #4ade80;
     --accent-dim: #ffa3a3;
     --primary-container: #5c1a1c;
     --on-primary: #2b0506;

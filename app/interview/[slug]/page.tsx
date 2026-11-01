@@ -5,6 +5,7 @@ import PostBody from '@/components/blog/PostBody'
 import GiscusComments from '@/components/blog/GiscusComments'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import AnswerReveal from '@/components/interview/AnswerReveal'
+import InterviewWidget from '@/components/interview/widgets/InterviewWidget'
 import { getPublishedQuestions, getQuestionBySlug, getQuestionContent } from '@/lib/interview'
 import { formatDate } from '@/lib/utils'
 
@@ -31,7 +32,7 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
   const q = await getQuestionBySlug(params.slug)
   if (!q) notFound()
 
-  const [content, all] = await Promise.all([getQuestionContent(q.id), getPublishedQuestions()])
+  const [{ content, widget }, all] = await Promise.all([getQuestionContent(q.id), getPublishedQuestions()])
   const idx = all.findIndex((item) => item.slug === q.slug)
   const prev = all[idx + 1] ?? null
   const next = idx > 0 ? all[idx - 1] : null
@@ -59,6 +60,9 @@ export default async function InterviewDetailPage({ params }: { params: { slug: 
             {q.question}
           </h1>
         </header>
+
+        {/* 답을 보기 전에 직접 풀어보는 위젯 (Notion 본문의 위젯 데이터) */}
+        {widget && <InterviewWidget widget={widget} />}
 
         {/* 꼬리질문·참고 자료는 Notion 본문에 들어 있다 */}
         <AnswerReveal>

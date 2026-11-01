@@ -65,7 +65,7 @@ This is a **Next.js 14 App Router** blog that uses **Notion as a CMS**.
 Four data layer files in `lib/`:
 - `lib/notion.ts` — wraps `@notionhq/client` and `notion-to-md`. All blog post data.
 - `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
-- `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (운영은 상태 `발행`만, 로컬 개발은 `검수중`도 미리보기 / 발행일·번호 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`, `getQuestionContent(pageId)` (본문 Markdown에서 "🎮 위젯 데이터" 토글 제거). 제목에 "검수 메모"가 들어간 콜아웃은 `lib/notion.ts` 콜아웃 변환에서 항상 제외된다.
+- `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (운영은 상태 `발행`만, 로컬 개발은 `검수중`도 미리보기 / 발행일·번호 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`, `getQuestionContent(pageId)` → `{ content, widget }` (본문의 "🎮 위젯 데이터 (타입)" 토글을 떼어 `lib/interview-widgets.ts`의 `extractWidget`으로 검증·파싱, 형식이 틀리면 위젯 없이 표시). 제목에 "검수 메모"가 들어간 콜아웃은 `lib/notion.ts` 콜아웃 변환에서 항상 제외된다.
 - `lib/site.ts` — `SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION` 단일 출처.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
 - `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments, and `getContributionDays()` (About 페이지 GitHub 잔디, 실패 시 `[]` → 섹션 숨김).
@@ -104,7 +104,7 @@ Key functions in `lib/guestbook.ts`:
 
 **Projects** — `Name` (title), `Slug` (rich_text), `Featured` (checkbox), `Description` (rich_text), `Overview` (rich_text), `Status` (select: 완료/진행중), `Period` (rich_text), `UpdatedAt` (rich_text), `Roles` (multi_select), `Tech` (multi_select), `Award` (rich_text), `GitHub` (url), `URL` (url), `Image` (rich_text — 이미지 URL). 담당 기능은 Notion 페이지 본문에 기술.
 
-**Interview** — `질문` (title), `Slug` (rich_text), `카테고리` (select), `난이도` (select: 하/중/상), `한 줄 요약` (rich_text), `꼬리질문` (rich_text), `발행일` (date), `상태` (status: 대기/검수중/발행/보류), `번호` (unique_id), `참고 링크` (url). 답변은 페이지 본문.
+**Interview** — `질문` (title), `Slug` (rich_text), `카테고리` (select), `난이도` (select: 기본/중간/심화), `위젯` (select: predict_output/order/step_diagram/compare_toggle/ox_quiz/sql_table — 데이터는 본문 "🎮 위젯 데이터 (타입)" 토글 안 JSON 코드 블록), `한 줄 요약` (rich_text), `꼬리질문` (rich_text), `발행일` (date), `상태` (status: 대기/검수중/발행/보류), `번호` (unique_id), `참고 링크` (url). 답변은 페이지 본문.
 
 **Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox), `Password` (rich_text, private entries only). Comments stored as paragraph block children in `name|message` format.
 
@@ -119,8 +119,8 @@ Key functions in `lib/guestbook.ts`:
 | `/blog/series` | `app/blog/series/page.tsx` | Posts grouped by series (`interactions` 제외) |
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
 | `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
-| `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
-| `/lab` | `app/lab/page.tsx` | 인터랙션 데모 그리드 (구 "인터랙션 모음") |
+| `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
+| `/lab` | `app/lab/page.tsx` | 인터랙션 실험 그리드. 현재 면접 위젯 6종을 예시 데이터로 등록 (`app/data/interactions/interactions-data.ts`) |
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 데모 + 같은 slug 블로그 본문. `revalidate = 86400` |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
@@ -155,6 +155,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/about/` | About page UI blocks |
 | `components/project/` | Work page UI: ProjectSqueezeCarousel (히어로 — 이미지 있는 프로젝트, Featured 먼저, 선택 카드만 넓고 나머지는 띠), ProjectView |
 | `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
+| `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget`. Lab에서도 같은 컴포넌트 사용 |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
 | `components/home/` | 홈 전용: HomeHero (태그 칩 + 커서 반응 점 배경), TiltCard (3D 틸트), ContainerScroll (스크롤 시 기울어진 카드가 펴짐, 최근 글) |
@@ -171,6 +172,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
   - Text: `--text`, `--text-secondary`, `--text-muted`
   - Borders: `--border`, `--border-subtle`, `--outline`, `--outline-variant`
   - Accent (빨간 펜 `#e5383b` / 다크 `#ff6b6b`): `--accent`, `--accent-dim`, `--accent-soft`, `--secondary`, `--secondary-container`
+  - 정답 표시: `--success` (`#15803d` / 다크 `#4ade80`), 강조색 위 글자: `--on-primary`
   - Fonts: `--font-hand` (Nanum Pen Script, 포인트 전용)
   - Shadows: `--shadow-floating`, `--shadow-card`
   - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
