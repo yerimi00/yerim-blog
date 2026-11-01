@@ -3,7 +3,7 @@ import { DEMOS } from '@/app/data/interactions/interactions-data'
 
 export const metadata = {
   title: 'Lab',
-  description: '직접 만들어 본 UI 인터랙션 모음. 눌러보고 끌어보면서 확인해 보세요.',
+  description: '직접 만들어 본 인터랙션과 실험 모음',
   alternates: { canonical: '/lab' },
 }
 
@@ -16,10 +16,16 @@ export default function LabPage() {
             Lab
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            직접 만들어 본 UI 인터랙션 {Object.keys(DEMOS).length}개. 눌러보고 끌어보면서 확인해 보세요.
+            직접 만들어 본 인터랙션과 실험을 모아요. 눌러보고 끌어보면서 확인해 보세요.
           </p>
         </div>
-        <InteractionSeriesView />
+        {Object.keys(DEMOS).length > 0 ? (
+          <InteractionSeriesView />
+        ) : (
+          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '4rem 0' }}>
+            새 실험을 준비하고 있어요 🧪
+          </p>
+        )}
       </main>
     </>
   )

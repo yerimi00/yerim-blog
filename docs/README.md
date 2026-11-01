@@ -14,7 +14,6 @@ yerim-blog 프론트엔드의 흐름, 도메인, QA 기준을 한곳에서 찾�
 | 컴포넌트 구조 | [domains/components.md](domains/components.md) |
 | SEO · JSON-LD · RSS | [domains/seo.md](domains/seo.md) |
 | 디자인 시스템 · CSS 변수 | [domains/styling.md](domains/styling.md) |
-| 인터랙션 모음 컴포넌트 | [interactions.md](interactions.md) |
 | 배포 전 체크리스트 | [qa/release-checklist.md](qa/release-checklist.md) |
 | 현재 확인된 이슈 | [qa/known-issues.md](qa/known-issues.md) |
 
