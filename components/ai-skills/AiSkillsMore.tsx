@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { IoIosArrowDown } from 'react-icons/io'
 import type { AiSkillCategory } from '@/app/data/ai-skills'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
 import { duration, fastTween } from '@/components/motion/presets'
@@ -18,9 +19,18 @@ export default function AiSkillsMore({ categories }: { categories: AiSkillCatego
         onClick={() => setOpen((v) => !v)}
         whileHover={{ color: 'var(--accent)' }}
         transition={fastTween}
-        style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}
       >
-        평소 쓰는 도구 {open ? '접기 ↑' : '더 보기 ↓'}
+        평소 쓰는 도구
+        <motion.span
+          aria-hidden="true"
+          initial={false}
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          style={{ display: 'flex' }}
+        >
+          <IoIosArrowDown />
+        </motion.span>
       </motion.button>
       <AnimatePresence initial={false}>
         {open && (
