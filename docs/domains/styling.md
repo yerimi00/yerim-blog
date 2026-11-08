@@ -33,7 +33,7 @@ yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다
 | `--accent` | `#e5383b` (다크 `#ff6b6b`) | 빨간 펜 강조 (링크, 배지, 활성 메뉴, 밑줄) |
 | `--accent-dim` | `#b3262a` (다크 `#ffa3a3`) | 진한 빨강 |
 | `--accent-soft` | accent 12% | 배지·pill 배경 |
-| `--band`, `--band-2`, `--band-3`, `--band-text`, `--band-muted` | 어두운 띠 색 | 홈 히어로·카드·하단 |
+| `--band`, `--band-3`, `--band-text`, `--band-muted` | 어두운 띠 색 | 홈 하단 |
 | `--series-1` ~ `--series-9` | 시리즈별 색 | 시리즈 뱃지 (`seriesColor`) |
 | `--shadow-floating` | `0 10px 15px...` | 플로팅 그림자 |
 

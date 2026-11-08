@@ -39,9 +39,8 @@
     --series-7: #a16207;
     --series-8: #e5383b;
     --series-9: #475569;
-    /* 어두운 띠 (홈 히어로·카드·하단) */
+    /* 어두운 띠 (홈 하단) */
     --band: #1a1a1a;
-    --band-2: #3a3a3a;
     --band-3: #7a1f22;
     --band-text: #ffffff;
     --band-muted: #b5b5b5;
@@ -95,7 +94,6 @@
     --series-8: #ff6b6b;
     --series-9: #94a3b8;
     --band: #0b1220;
-    --band-2: #1f2937;
     --band-3: #5c1a1c;
     --band-text: #ffffff;
     --band-muted: #a3acb9;
@@ -755,7 +753,7 @@
   }
 }
 
-/* 홈: 띠 히어로 → 글 카드 줄 → 구분선 섹션 → 흐르는 태그 → 하단 띠 */
+/* 홈: 큰 문장·기록 눈금 → 글 소개+목록 → 구분선 섹션 → 흐르는 태그 → 하단 띠 */
 .home-wrap {
   max-width: 1100px;
   margin: 0 auto;
@@ -784,30 +782,63 @@
   background: var(--text);
 }
 .home-hero {
-  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(3.5rem, 9vw, 6.5rem) 1.5rem 0;
+}
+.home-hero-head {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: clamp(460px, 74vh, 640px);
-  padding: 4rem 1.5rem;
-  overflow: hidden;
-  background: var(--band);
-  text-align: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2.5rem;
 }
-.home-hero-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.home-hero-text {
-  position: relative;
-  z-index: 1;
-  max-width: 760px;
+.home-hero-side {
+  flex: 0 0 320px;
+  padding-bottom: 0.6rem;
 }
 /* 전역 모바일 규칙(main h1, !important)에서 홈 히어로 제목만 제외 */
 main .home-hero h1 {
-  font-size: clamp(2rem, 5.2vw, 3.25rem) !important;
+  font-size: clamp(2.75rem, 8.5vw, 6rem) !important;
+}
+.home-strip {
+  margin-top: clamp(3rem, 7vw, 5rem);
+}
+.home-strip-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 0.88rem;
+}
+.home-strip-title {
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.home-strip-track {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(2px, 0.5vw, 8px);
+  height: 112px;
+  border-bottom: 1px solid var(--border);
+}
+.home-strip-tick {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.home-strip-bar {
+  display: block;
+  width: 100%;
+  max-width: 6px;
+  height: 34px;
+  border-radius: 2px 2px 0 0;
+  transform-origin: center bottom;
 }
 .home-pill {
   display: inline-flex;
@@ -823,71 +854,56 @@ main .home-hero h1 {
   background: var(--band-text);
   color: var(--band);
 }
-.home-pill--ghost {
-  background: color-mix(in srgb, var(--band-text) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--band-text) 18%, transparent);
-  color: var(--band-text);
+.home-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
 }
-.home-carousel {
-  --gutter: max(1.5rem, calc((100% - 1100px) / 2 + 1.5rem));
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 6px var(--gutter);
-  scroll-padding-inline: var(--gutter);
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-}
-.home-carousel::-webkit-scrollbar {
-  display: none;
-}
-.home-carousel-arrows {
-  display: flex;
-  flex-shrink: 0;
-  gap: 0.5rem;
-}
-.home-post-card {
-  position: relative;
-  flex: 0 0 clamp(265px, 30vw, 340px);
-  height: 270px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  scroll-snap-align: start;
-  color: var(--band-text);
+.home-showcase-lead {
+  display: block;
+  min-height: 320px;
   text-decoration: none;
 }
-.home-post-card::after {
-  content: '';
-  position: absolute;
-  right: -80px;
-  bottom: -80px;
-  width: 240px;
-  height: 240px;
-  border: 38px solid color-mix(in srgb, var(--band-text) 8%, transparent);
-  border-radius: 50%;
-}
-.home-post-card-title {
-  position: relative;
+.home-showcase-desc {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.45;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
 }
-.home-post-card--more {
-  justify-content: center;
-  align-items: center;
-  background: var(--surface-container);
-  color: var(--text);
+.home-showcase-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--border);
 }
-.home-post-card--more::after {
-  display: none;
+.home-showcase-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--accent);
+}
+.home-showcase-row {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.95rem 0 0.95rem 1.25rem;
+  text-decoration: none;
+}
+.home-showcase-title {
+  display: block;
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .home-numbered {
   display: grid;
@@ -950,12 +966,49 @@ main .home-hero h1 {
   .home-numbered {
     grid-template-columns: 1fr;
   }
-  .home-carousel-arrows,
   .home-cta-art {
     display: none;
   }
+  .home-hero-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .home-hero-side {
+    flex: none;
+    padding-bottom: 0;
+  }
+  .home-strip-track {
+    height: 72px;
+  }
+  .home-strip-bar {
+    height: 22px;
+  }
+  .home-showcase {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .home-showcase-lead {
+    min-height: 0;
+  }
+  /* 터치 화면은 최신 글을 위에 크게 보여주므로 목록에서 뺀다 */
+  .home-showcase-item:first-child,
+  .home-showcase-bar {
+    display: none;
+  }
+  .home-showcase-list {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .home-showcase-row {
+    padding-left: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .home-showcase-title {
+    white-space: normal;
+  }
 }
-/* 전역 모바일 main 패딩에서 제외: 히어로가 헤더에 붙고 하단 띠가 바텀 네비에 닿게 한다 */
+/* 전역 모바일 main 패딩에서 제외: 하단 띠가 바텀 네비에 닿게 한다 */
 @media (max-width: 480px) {
   main.home-main {
     padding-top: 0 !important;
