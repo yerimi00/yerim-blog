@@ -2,7 +2,6 @@ import FeaturedWork from '@/components/project/FeaturedWork'
 import ProjectArchive from '@/components/project/ProjectArchive'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
 import AiSkillsMore from '@/components/ai-skills/AiSkillsMore'
-import { yearOf } from '@/components/project/project-utils'
 import { getAllProjects } from '@/lib/projects'
 import { aiSkillCategories } from '@/app/data/ai-skills'
 
@@ -35,12 +34,7 @@ export default async function WorkPage() {
   const projects = await getAllProjects()
   const featured = projects.filter((p) => p.featured)
   const archive = projects.filter((p) => !p.featured)
-  const years = projects.map((p) => Number(yearOf(p))).filter(Boolean)
-  const summary = [
-    `프로젝트 ${projects.length}개`,
-    `수상·논문 ${projects.filter((p) => p.award).length}개`,
-    years.length ? `${Math.min(...years)}년부터` : '',
-  ].filter(Boolean).join(' · ')
+  const summary = `프로젝트 ${projects.length}개 · 수상·논문 ${projects.filter((p) => p.award).length}개`
   const [custom, ...others] = aiSkillCategories
 
   return (
