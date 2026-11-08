@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation'
-import { IoIosArrowForward } from 'react-icons/io'
 import { getAllProjects, getProjectBySlug } from '@/lib/projects'
 import { getPostsByProject } from '@/lib/notion'
 import PostCard from '@/components/blog/PostCard'
+import { HoverFade } from '@/components/motion/Hover'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { fastTween } from '@/components/motion/presets'
+import { disciplinesOf, isLead } from '@/components/project/project-utils'
 import type { Post } from '@/types'
 
 export const revalidate = 3600
@@ -22,152 +25,149 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-const sectionStyle: React.CSSProperties = {
-  fontSize: '0.78rem',
+const headingStyle: React.CSSProperties = {
+  fontSize: '1.15rem',
   fontWeight: 700,
-  color: 'var(--text-muted)',
-  letterSpacing: '0.07em',
-  textTransform: 'uppercase',
-  marginBottom: '1rem',
+  color: 'var(--text)',
+  margin: '0 0 1rem',
 }
 
-const groupAccent: Record<string, string> = {
-  '트러블슈팅': '#dc2626',
-  '회고': 'var(--accent)',
+const sectionGap: React.CSSProperties = { marginBottom: '3rem' }
+
+const linkButton: React.CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  height: '38px',
+  padding: '0 1rem',
+  borderRadius: 'var(--radius)',
+  border: '1px solid var(--border)',
+  fontSize: '0.85rem',
+  fontWeight: 600,
+  color: 'var(--text)',
+  textDecoration: 'none',
 }
 
 function PostGroup({ label, posts }: { label: string; posts: Post[] }) {
   if (!posts.length) return null
-  const color = groupAccent[label] ?? 'var(--accent)'
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <div style={{
-        borderLeft: `3px solid ${color}`,
-        paddingLeft: '0.875rem',
-        marginBottom: '0.25rem',
-      }}>
-        <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
-          {label}
-        </p>
-      </div>
-      <div>
-        {posts.map((post) => <PostCard key={post.id} post={post} />)}
-      </div>
+      <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)', margin: '0 0 0.25rem' }}>{label}</p>
+      {posts.map((post) => <PostCard key={post.id} post={post} />)}
     </div>
   )
 }
 
 export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const [project, postGroups] = await Promise.all([
+  const [project, postGroups, projects] = await Promise.all([
     getProjectBySlug(params.slug),
     getPostsByProject(params.slug),
+    getAllProjects(),
   ])
   if (!project) notFound()
 
-  const hasRelatedPosts =
-    postGroups.troubleshooting.length + postGroups.retrospective.length > 0
+  const hasRelatedPosts = postGroups.troubleshooting.length + postGroups.retrospective.length > 0
+  const next = projects[(projects.findIndex((p) => p.slug === project.slug) + 1) % projects.length]
+  const links = [
+    { href: project.github, label: 'GitHub ↗' },
+    { href: project.url, label: '서비스 바로가기 ↗' },
+  ].filter((l) => l.href)
 
   return (
-    <>
-      <main style={{ maxWidth: '960px', margin: '0 auto', padding: '4rem 1.5rem' }}>
+    <main style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(2rem, 5vw, 3.5rem) 1.5rem 0' }}>
+      <MotionLink
+        href="/work"
+        whileHover={{ x: -3, color: 'var(--accent)' }}
+        transition={fastTween}
+        style={{ display: 'inline-block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '1.5rem' }}
+      >
+        ← Work
+      </MotionLink>
 
-        {/* 헤더 */}
-        <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
-              {project.name}
-            </h1>
-            {project.status === '진행중' && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, padding: '3px 12px', borderRadius: '999px', background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)' }}>
-                진행중
-              </span>
-            )}
-          </div>
-
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-            {project.period && (
-              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{project.period}</span>
-            )}
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-              {project.roles.map((role) => (
-                <span key={role} style={{ fontSize: '0.72rem', fontWeight: 500, padding: '2px 9px', borderRadius: '4px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
-                  {role}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {project.award && (
-            <div style={{ fontSize: '0.82rem', color: '#b45309', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: '8px', padding: '5px 14px', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-              🏆 {project.award}
+      <header style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: 'clamp(1.9rem, 5vw, 2.75rem)', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text)', margin: '0 0 0.75rem' }}>
+          {project.name}
+        </h1>
+        {project.description && (
+          <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem' }}>{project.description}</p>
+        )}
+        <dl className="work-feature-meta">
+          {project.period && (
+            <div>
+              <dt>기간</dt>
+              <dd>{project.period}</dd>
             </div>
           )}
-        </div>
-
-        {/* 썸네일 이미지 */}
-        {project.image && (
-          <div style={{ marginBottom: '2.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border)' }}>
-            <img src={project.image} alt={project.name} style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
+          <div>
+            <dt>역할</dt>
+            <dd>{disciplinesOf(project).join(' · ')}{isLead(project) && ' (팀장)'}</dd>
+          </div>
+          {project.status === '진행중' && (
+            <div>
+              <dt>상태</dt>
+              <dd style={{ color: 'var(--accent)' }}>진행중</dd>
+            </div>
+          )}
+        </dl>
+        {project.award && (
+          <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent)', margin: '0.85rem 0 0' }}>🏆 {project.award}</p>
+        )}
+        {links.length > 0 && (
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
+            {links.map(({ href, label }) => (
+              <HoverFade key={label} style={{ display: 'inline-block' }}>
+                <a href={href} target="_blank" rel="noopener noreferrer" style={linkButton}>{label}</a>
+              </HoverFade>
+            ))}
           </div>
         )}
+      </header>
 
-        {/* 프로젝트 개요 */}
-        <section style={{ marginBottom: '2.5rem' }}>
-          <h2 style={sectionStyle}>프로젝트 개요</h2>
-          <p style={{ fontSize: '0.925rem', color: 'var(--text)', lineHeight: 1.8, margin: 0 }}>
-            {project.overview || project.description}
-          </p>
+      {project.image && (
+        <div className="work-feature-mat" style={sectionGap}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={project.image} alt={project.name} />
+        </div>
+      )}
+
+      {project.overview && (
+        <section style={sectionGap}>
+          <h2 style={headingStyle}>프로젝트 개요</h2>
+          <p style={{ fontSize: '0.98rem', lineHeight: 1.8, color: 'var(--text)', margin: 0 }}>{project.overview}</p>
         </section>
+      )}
 
-        <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
+      {project.tech.length > 0 && (
+        <section style={sectionGap}>
+          <h2 style={headingStyle}>사용 기술</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {project.tech.map((t) => (
+              <span key={t} className="tag-badge" style={{ fontSize: '0.82rem', padding: '4px 12px' }}>{t}</span>
+            ))}
+          </div>
+        </section>
+      )}
 
-        {/* 사용 기술 */}
-        {project.tech.length > 0 && (
-          <>
-            <section style={{ marginBottom: '2.5rem' }}>
-              <h2 style={sectionStyle}>사용 기술</h2>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {project.tech.map((t) => (
-                  <span key={t} className="tag-badge" style={{ fontSize: '0.82rem', padding: '4px 12px' }}>{t}</span>
-                ))}
-              </div>
-            </section>
-            <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
-          </>
-        )}
+      {hasRelatedPosts && (
+        <section style={sectionGap}>
+          <h2 style={headingStyle}>관련 블로그 글</h2>
+          <PostGroup label="트러블슈팅" posts={postGroups.troubleshooting} />
+          <PostGroup label="회고" posts={postGroups.retrospective} />
+        </section>
+      )}
 
-        {/* 관련 블로그 글 */}
-        {hasRelatedPosts && (
-          <>
-            <section style={{ marginBottom: '2.5rem' }}>
-              <h2 style={sectionStyle}>관련 블로그 글</h2>
-              <PostGroup label="트러블슈팅" posts={postGroups.troubleshooting} />
-              <PostGroup label="회고" posts={postGroups.retrospective} />
-            </section>
-            <hr style={{ borderColor: 'var(--border)', marginBottom: '2.5rem' }} />
-          </>
-        )}
-
-        {/* 링크 */}
-        {(project.github || project.url) && (
-          <section>
-            <h2 style={sectionStyle}>링크</h2>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              {project.github && (
-                <a href={project.github} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  GitHub <IoIosArrowForward />
-                </a>
-              )}
-              {project.url && (
-                <a href={project.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.875rem', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  서비스 바로가기 <IoIosArrowForward />
-                </a>
-              )}
-            </div>
-          </section>
-        )}
-
-      </main>
-    </>
+      {next && next.slug !== project.slug && (
+        <nav aria-label="다음 프로젝트" style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>다음 프로젝트</p>
+          <MotionLink
+            href={`/work/${next.slug}`}
+            whileHover={{ x: 4, color: 'var(--accent)' }}
+            transition={fastTween}
+            style={{ display: 'inline-block', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)', textDecoration: 'none' }}
+          >
+            {next.name} →
+          </MotionLink>
+        </nav>
+      )}
+    </main>
   )
 }
