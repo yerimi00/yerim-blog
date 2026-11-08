@@ -21,7 +21,7 @@ export default async function SeriesPage() {
           >
             <IoIosArrowBack /> 전체 글
           </Link>
-          <h1 className="hand-title">
+          <h1 className="page-title">
             Series
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>

@@ -14,7 +14,7 @@ const LABELS = {
 
 export type WidgetType = keyof typeof LABELS
 
-// 위젯 공통 틀: 손글씨 제목 + 위젯 종류
+// 위젯 공통 틀: 제목 + 위젯 종류
 export default function WidgetFrame({ type, children }: { type: WidgetType; children: React.ReactNode }) {
   return (
     <section
@@ -28,7 +28,7 @@ export default function WidgetFrame({ type, children }: { type: WidgetType; chil
       }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
-        <p className="hand" style={{ fontSize: '1.5rem', lineHeight: 1, color: 'var(--text)', margin: 0 }}>🎮 직접 풀어보기</p>
+        <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>🎮 직접 풀어보기</p>
         <span className="tag-badge" style={{ padding: '2px 10px', borderRadius: 'var(--radius-full)' }}>{LABELS[type]}</span>
       </div>
       {children}

@@ -114,7 +114,7 @@ The visual narrative prioritizes content over container, utilizing generous whit
 
 ## Colors
 
-The palette is anchored by a high-contrast foundation of deep ink and pure white. **#E5383B (Red Pen)** serves as the primary action color — like a red ballpoint marking up notes — used sparingly for links, active states, hand-drawn underlines and primary call-to-actions. Dark mode uses **#FF6B6B**.
+The palette is anchored by a high-contrast foundation of deep ink and pure white. **#E5383B (Red Pen)** serves as the primary action color — like a red ballpoint marking up notes — used sparingly for links, active states, active underlines and primary call-to-actions. Dark mode uses **#FF6B6B**.
 
 Always reference it through `var(--accent)` (or `color-mix(in srgb, var(--accent) N%, transparent)` for tints, `var(--accent-soft)` for 12% pills); never hardcode the hex.
 
@@ -132,8 +132,7 @@ The design system utilizes **Inter** (as the closest high-quality match to the r
 - **Headlines:** Use heavy weights (700-800) with slight negative letter-spacing to create a strong visual anchor.
 - **Body Text:** Optimized for long-form reading with a generous line-height (1.75) for the large variant.
 - **Data/Labels:** Medium weights are used for small labels to maintain legibility against background colors.
-- **Hand accent:** **Nanum Pen Script** (`var(--font-hand)`, `.hand`, `.hand-title`) is reserved for points of emphasis only — page titles, the home hero name, home section titles, the "오늘의 면접 질문" label. It renders small, so use ~1.6–1.75× the size of the text it replaces. Body text stays Pretendard.
-- **Hand-drawn underline:** `.hand-underline` (plus active `.nav-link.is-active` and `.series-tab-btn.active`) draws a red squiggle left-to-right. Delay with `--hand-delay`; disabled under `prefers-reduced-motion`.
+- **Underline:** active nav links, tabs, and the home hero name use a straight 2px `var(--accent)` line (`components/motion/Underline.tsx`).
 
 ## Layout & Spacing
 

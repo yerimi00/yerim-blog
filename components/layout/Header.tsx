@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SearchModal from '@/components/blog/SearchModal'
 import { MotionLink } from '@/components/motion/MotionProvider'
-import HandUnderline from '@/components/motion/HandUnderline'
+import Underline from '@/components/motion/Underline'
 import { fastTween } from '@/components/motion/presets'
 
 // 로고가 Home 역할
@@ -85,7 +85,7 @@ export default function Header() {
                   style={{ position: 'relative', fontWeight: active ? 600 : 500 }}
                 >
                   {label}
-                  {active && <HandUnderline />}
+                  {active && <Underline />}
                 </MotionLink>
               )
             })}

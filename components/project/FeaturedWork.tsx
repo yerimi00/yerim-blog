@@ -22,12 +22,12 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.image} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
               ) : (
-                <span className="hand" style={{ fontSize: '2.5rem', color: 'var(--text-muted)' }}>{p.name}</span>
+                <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-muted)' }}>{p.name}</span>
               )}
             </MotionLink>
 
             <div>
-              <p className="hand" style={{ fontSize: '2rem', lineHeight: 1, color: 'var(--accent)', margin: '0 0 0.5rem' }}>
+              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.85rem', fontWeight: 500, color: 'var(--accent)', margin: '0 0 0.6rem' }}>
                 {String(i + 1).padStart(2, '0')}
               </p>
               <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text)', margin: '0 0 0.6rem' }}>
@@ -49,7 +49,7 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 </div>
               </dl>
               {p.award && (
-                <p className="hand" style={{ fontSize: '1.3rem', lineHeight: 1.3, color: 'var(--accent)', margin: '0.85rem 0 0' }}>
+                <p style={{ fontSize: '0.88rem', fontWeight: 600, lineHeight: 1.5, color: 'var(--accent)', margin: '0.85rem 0 0' }}>
                   🏆 {p.award}
                 </p>
               )}

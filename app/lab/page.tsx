@@ -12,7 +12,7 @@ export default function LabPage() {
     <>
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         <div style={{ marginBottom: '2.5rem' }}>
-          <h1 className="hand-title">
+          <h1 className="page-title">
             Lab
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>

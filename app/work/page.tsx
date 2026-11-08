@@ -24,9 +24,9 @@ const sectionStyle: React.CSSProperties = { scrollMarginTop: '84px', marginBotto
 
 function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <h2 className="hand" style={{ fontSize: '2.4rem', lineHeight: 1.1, color: 'var(--text)', margin: '0 0 1.5rem' }}>
+    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text)', margin: '0 0 1.5rem' }}>
       {children}
-      {count !== undefined && <span style={{ fontSize: '1.3rem', color: 'var(--accent)', marginLeft: '0.5rem' }}>{count}</span>}
+      {count !== undefined && <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)', marginLeft: '0.5rem' }}>{count}</span>}
     </h2>
   )
 }
@@ -39,7 +39,7 @@ export default async function WorkPage() {
   const stats = [
     { value: projects.length, label: '프로젝트' },
     { value: projects.filter((p) => p.award).length, label: '수상·논문' },
-    { value: years.length ? Math.min(...years) : '-', label: '부터 만들었어요' },
+    { value: years.length ? `${Math.min(...years)}~` : '-', label: '첫 프로젝트' },
   ]
   const [custom, ...others] = aiSkillCategories
 
@@ -47,7 +47,7 @@ export default async function WorkPage() {
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: 'clamp(2.5rem, 6vw, 4.5rem) 1.5rem 0' }}>
       <header className="work-head" style={{ marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
         <div>
-          <h1 className="hand-title" style={{ fontSize: 'clamp(3.5rem, 9vw, 5.5rem)', lineHeight: 1 }}>Work</h1>
+          <h1 className="page-title" style={{ fontSize: 'clamp(2.25rem, 6vw, 3.25rem)', marginBottom: '0.75rem' }}>Work</h1>
           <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem', maxWidth: '460px' }}>
             해커톤부터 운영 중인 서비스까지, 직접 만든 것들을 모았어요.
           </p>

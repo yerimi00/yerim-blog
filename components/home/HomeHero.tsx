@@ -5,7 +5,7 @@ import Link from 'next/link'
 import TypewriterText from '@/components/about/TypewriterText'
 import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
 import { MotionLink } from '@/components/motion/MotionProvider'
-import HandUnderline from '@/components/motion/HandUnderline'
+import Underline from '@/components/motion/Underline'
 import { fastTween } from '@/components/motion/presets'
 
 const HERO_LINKS = [
@@ -121,11 +121,11 @@ export default function HomeHero({ tags }: { tags: string[] }) {
 
       <div className="home-hero-text">
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>안녕하세요,</p>
-        <h1 className="hand" style={{ fontSize: '3.2rem', lineHeight: 1.1, color: 'var(--text)', margin: '0 0 0.6rem', minHeight: '1.1em' }}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text)', margin: '0 0 0.75rem', minHeight: '1.2em' }}>
           {/* 타이핑(7글자 × 80ms)이 끝난 뒤 밑줄을 긋는다 */}
           <span style={{ position: 'relative' }}>
             <TypewriterText text="이예림입니다." />
-            <HandUnderline delay={0.75} />
+            <Underline delay={0.75} style={{ height: 3 }} />
           </span>
         </h1>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 0.9rem', maxWidth: '420px' }}>

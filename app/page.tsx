@@ -14,7 +14,7 @@ export const revalidate = 3600
 
 const HERO_TAG_COUNT = 14
 
-const sectionTitle: React.CSSProperties = { fontFamily: 'var(--font-hand)', fontSize: '1.75rem', fontWeight: 400, lineHeight: 1, color: 'var(--text)', margin: 0 }
+const sectionTitle: React.CSSProperties = { fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', margin: 0 }
 const moreLink: React.CSSProperties = { fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none' }
 
 // '2026-10-30' → '26.10'
@@ -59,7 +59,7 @@ export default async function HomePage() {
         <ContainerScroll
           title={
             <>
-              <p className="hand" style={{ fontSize: '1.5rem', color: 'var(--accent)', margin: '0 0 0.25rem' }}>요즘 쓰고 있는 것들</p>
+              <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)', margin: '0 0 0.35rem' }}>요즘 쓰고 있는 것들</p>
               <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 800, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>
                 배운 건 바로바로 기록해요
               </h2>

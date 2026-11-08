@@ -173,7 +173,6 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
   - Borders: `--border`, `--border-subtle`, `--outline`, `--outline-variant`
   - Accent (빨간 펜 `#e5383b` / 다크 `#ff6b6b`): `--accent`, `--accent-dim`, `--accent-soft`, `--secondary`, `--secondary-container`
   - 정답 표시: `--success` (`#15803d` / 다크 `#4ade80`), 강조색 위 글자: `--on-primary`
-  - Fonts: `--font-hand` (Nanum Pen Script, 포인트 전용)
   - Shadows: `--shadow-floating`, `--shadow-card`
   - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
 - Tailwind theme extensions (`tailwind.config.js`):
@@ -184,12 +183,12 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
 - `.series-tab-bar` / `.series-tab-btn`: `touch-action: pan-x` + `user-select: none` — 모바일 수평 스크롤 중 텍스트 드래그 선택 방지
 - Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid` (grid blowout 방지 `min-width: 0`), `.work-head`·`.work-feature`·`.work-row` (≤768px 1열), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.home-work-grid` (≤768px 1열), `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
-- Fonts: Pretendard (sans), JetBrains Mono (code/monospace), Nanum Pen Script (`hand` — 손글씨 포인트 전용)
-- 손글씨 포인트 클래스: `.hand`, `.hand-title`, `.hand-underline` (`--hand-delay`), 활성 `.nav-link.is-active` / `.series-tab-btn.active`는 빨간 손그림 밑줄. 상세는 `docs/domains/styling.md`
+- Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
+- 페이지 제목은 `.page-title`, 활성 메뉴·탭 밑줄은 직선(`components/motion/Underline.tsx`). 손글씨 폰트는 쓰지 않는다
 - 하드코딩 색 금지: 강조색은 `var(--accent)`, 옅은 배경은 `color-mix(in srgb, var(--accent) N%, transparent)`
 - **인터랙션·애니메이션은 JS(motion)로**: CSS `transition`·`@keyframes`·`:hover` 효과·`onMouseEnter`로 style 바꾸기 금지. `motion/react`의 `animate`/`whileHover`/`whileInView`/`AnimatePresence`를 쓴다
   - 공통 값: `components/motion/presets.ts` (`ease`, `duration`, `spring`, `fastTween`, `fadeUp`)
-  - 공용 컴포넌트: `MotionLink`(next/link), `HoverCardLink`·`HoverFade`(서버 컴포넌트에서 사용 가능), `TabButton`, `HandUnderline`(손그림 밑줄 SVG), `Skeleton`, `BlinkCursor`
+  - 공용 컴포넌트: `MotionLink`(next/link), `HoverCardLink`·`HoverFade`(서버 컴포넌트에서 사용 가능), `TabButton`, `Underline`(직선 밑줄), `Skeleton`, `BlinkCursor`
   - 앱 전체가 `MotionProvider`(`MotionConfig reducedMotion="user"`)로 감싸져 있어 동작 줄이기 설정을 따른다
   - CSS로 계산하는 레이아웃 값은 motion이 CSS 변수(`--active` 등)를 애니메이션하고 CSS가 읽는다 (예: `GuestbookFAB`)
 

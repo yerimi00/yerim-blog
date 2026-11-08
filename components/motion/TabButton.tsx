@@ -1,10 +1,10 @@
 'use client'
 
 import { motion } from 'motion/react'
-import HandUnderline from '@/components/motion/HandUnderline'
+import Underline from '@/components/motion/Underline'
 import { fastTween } from '@/components/motion/presets'
 
-// 시리즈·카테고리 탭. 활성 탭은 손그림 밑줄이 그려진다
+// 시리즈·카테고리 탭. 활성 탭은 직선 밑줄이 그어진다
 export default function TabButton({
   active,
   onClick,
@@ -27,7 +27,7 @@ export default function TabButton({
       style={{ position: 'relative', fontWeight: active ? 700 : 500 }}
     >
       {children}
-      {active && <HandUnderline style={{ left: '12%', width: '76%', bottom: 2, height: 7 }} />}
+      {active && <Underline style={{ bottom: 0 }} />}
     </motion.button>
   )
 }

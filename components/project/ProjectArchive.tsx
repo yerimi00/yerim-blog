@@ -22,6 +22,7 @@ const PREVIEW_H = 175
 const CURSOR_GAP = 20
 
 const titleVariants = { rest: { color: 'var(--text)' }, hover: { color: 'var(--accent)' } }
+const arrowVariants = { rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }
 
 // 대표작 외 프로젝트 색인. 연도는 그룹의 첫 행에만 표시하고, 마우스를 올리면 커서 옆에 이미지가 따라온다
 export default function ProjectArchive({ projects }: { projects: NotionProject[] }) {
@@ -112,12 +113,15 @@ export default function ProjectArchive({ projects }: { projects: NotionProject[]
                     </span>
                   )}
                   {p.award && (
-                    <span className="hand" style={{ display: 'block', marginTop: '0.2rem', fontSize: '1.1rem', lineHeight: 1.25, color: 'var(--accent)' }}>
+                    <span style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.8rem', fontWeight: 600, lineHeight: 1.4, color: 'var(--accent)' }}>
                       🏆 {p.award}
                     </span>
                   )}
                 </span>
-                <span className="work-row-roles">{disciplinesOf(p).join(' · ')}</span>
+                <span className="work-row-roles">
+                  {disciplinesOf(p).join(' · ')}
+                  <motion.span variants={arrowVariants} transition={fastTween} style={{ display: 'inline-block', marginLeft: '0.5rem', color: 'var(--accent)' }}>→</motion.span>
+                </span>
               </MotionLink>
             </motion.li>
           ))}

@@ -32,8 +32,6 @@
     --primary-container: #fde2e2;
     --on-primary: #ffffff;
 
-    /* Fonts */
-    --font-hand: 'Nanum Pen Script', 'Pretendard', cursive;
 
     /* Secondary */
     --secondary: #575e70;
@@ -828,19 +826,12 @@
   height: 100%;
 }
 
-/* ── 손글씨 포인트 (빨간 펜) ── */
-.hand {
-  font-family: var(--font-hand);
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-/* 페이지 제목 손글씨 */
-.hand-title {
-  font-family: var(--font-hand);
-  font-size: 2.75rem;
-  font-weight: 400;
-  line-height: 1.1;
+/* 페이지 제목 */
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--text);
   margin: 0 0 0.5rem;
 }
@@ -1059,7 +1050,7 @@ body:has(.about-hero-grid) .site-footer {
   }
   /* 전역 모바일 규칙(main h1, !important)에서 Work 제목만 제외 */
   main .work-head h1 {
-    font-size: 3.5rem !important;
+    font-size: 2.25rem !important;
   }
   .work-feature,
   .work-feature--flip {

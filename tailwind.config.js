@@ -12,7 +12,6 @@ module.exports = {
         sans: ['Pretendard', 'system-ui', 'sans-serif'],
         serif: ['Pretendard', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
-        hand: ['Nanum Pen Script', 'Pretendard', 'cursive'],
       },
       colors: {
         /* CSS custom property aliases */
