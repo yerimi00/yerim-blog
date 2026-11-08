@@ -1,6 +1,6 @@
 import { getAllPosts, getAllSeries } from '@/lib/notion'
-import Link from 'next/link'
 import BlogFilter from '@/components/blog/BlogFilter'
+import BlogViewSwitch from '@/components/blog/BlogViewSwitch'
 
 export const revalidate = 86400
 
@@ -16,16 +16,16 @@ export default async function BlogPage() {
   return (
     <>
       <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
-        <div style={{ marginBottom: '2.5rem' }}>
-          <h1 className="page-title">
-            Blog
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            총 {posts.length}개의 글 ·{' '}
-            <Link href="/blog/series" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-              시리즈로 모아보기
-            </Link>
-          </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', marginBottom: '2.5rem' }}>
+          <div>
+            <h1 className="page-title">
+              Blog
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+              총 {posts.length}개의 글
+            </p>
+          </div>
+          <BlogViewSwitch active="list" />
         </div>
 
         {/* 시리즈 필터 */}

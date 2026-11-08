@@ -151,7 +151,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | Path | Purpose |
 |---|---|
 | `components/layout/` | `app/layout.tsx`에서 한 번만 렌더 (페이지·loading.tsx에서 렌더 금지 — 전환 시 재마운트 방지). Header (Blog · Interview · Lab · Work · About, 로고=Home), Footer (RSS 링크 포함, `site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비: Home · Blog · Interview · Work · About), MobileFooterLinks (모바일 About 하단 링크) |
-| `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
+| `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, BlogViewSwitch (`/blog`·`/blog/series` 아이콘 전환), HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
 | `components/project/` | Work page UI: FeaturedWork (대표작 지면, 16:10 매트에 이미지 전체 표시), ProjectArchive (client: 직무·수상 필터, 연도별 색인, 커서 미리보기), project-utils (직무/팀 위치 분리, 연도 추출) |
 | `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
@@ -173,6 +173,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
   - Borders: `--border`, `--border-subtle`, `--outline`, `--outline-variant`
   - Accent (빨간 펜 `#e5383b` / 다크 `#ff6b6b`): `--accent`, `--accent-dim`, `--accent-soft`, `--secondary`, `--secondary-container`
   - 정답 표시: `--success` (`#15803d` / 다크 `#4ade80`), 강조색 위 글자: `--on-primary`
+  - 시리즈 뱃지: `--series-1` ~ `--series-9`. `lib/utils.ts`의 `seriesColor(name)`으로 고른다
   - Shadows: `--shadow-floating`, `--shadow-card`
   - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
 - Tailwind theme extensions (`tailwind.config.js`):
