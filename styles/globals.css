@@ -744,7 +744,7 @@
   }
 }
 
-/* 홈: 캐릭터·떨어지는 태그·기록 눈금 → 글 소개+목록 → 구분선 섹션 */
+/* 홈: 캐릭터·떨어지는 태그·기록 눈금 → 글 목록 → 구분선 섹션 */
 .home-wrap {
   max-width: 1100px;
   margin: 0 auto;
@@ -875,56 +875,21 @@
   border-radius: 2px 2px 0 0;
   transform-origin: center bottom;
 }
-.home-showcase {
+.home-post-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 4rem);
-}
-.home-showcase-lead {
-  display: block;
-  min-height: 320px;
-  text-decoration: none;
-}
-.home-showcase-desc {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 0;
-  font-size: 0.98rem;
-  line-height: 1.75;
-  color: var(--text-secondary);
-}
-.home-showcase-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-left: 1px solid var(--border);
-}
-.home-showcase-bar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -1px;
-  width: 2px;
-  background: var(--accent);
-}
-.home-showcase-row {
-  display: grid;
-  grid-template-columns: 3.25rem minmax(0, 1fr);
+  grid-template-columns: 4.5rem minmax(0, 1fr) 7.5rem;
+  grid-template-areas: 'date body series';
+  column-gap: 1.25rem;
   align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.95rem 0 0.95rem 1.25rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
   text-decoration: none;
 }
-.home-showcase-title {
-  display: block;
-  overflow: hidden;
-  font-size: 0.95rem;
+.home-post-series {
+  grid-area: series;
+  font-size: 0.82rem;
   font-weight: 600;
-  line-height: 1.5;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  text-align: right;
 }
 .home-numbered {
   display: grid;
@@ -967,28 +932,17 @@
   .home-strip-bar {
     height: 22px;
   }
-  .home-showcase {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+  .home-post-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'date series'
+      'body body';
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+    padding: 1.25rem 0;
   }
-  .home-showcase-lead {
-    min-height: 0;
-  }
-  /* 터치 화면은 최신 글을 위에 크게 보여주므로 목록에서 뺀다 */
-  .home-showcase-item:first-child,
-  .home-showcase-bar {
-    display: none;
-  }
-  .home-showcase-list {
-    border-left: 0;
-    border-top: 1px solid var(--border);
-  }
-  .home-showcase-row {
-    padding-left: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .home-showcase-title {
-    white-space: normal;
+  .home-post-series {
+    text-align: left;
   }
 }
 /* 전역 모바일 main 상단 패딩에서 제외: 태그가 화면 맨 위에서 떨어지게 한다 */

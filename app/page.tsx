@@ -3,7 +3,7 @@ import { getAllPosts } from '@/lib/notion'
 import { getAllProjects } from '@/lib/projects'
 import { getPublishedQuestions } from '@/lib/interview'
 import HomeHero from '@/components/home/HomeHero'
-import PostShowcase from '@/components/home/PostShowcase'
+import RecentPosts from '@/components/home/RecentPosts'
 import SectionReveal from '@/components/about/SectionReveal'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { spring } from '@/components/motion/presets'
@@ -38,7 +38,7 @@ export default async function HomePage() {
     <main className="home-main">
       <HomeHero tags={tags} posts={posts.map(({ slug, title, date, series }) => ({ slug, title, date, series }))} />
 
-      <PostShowcase posts={posts.slice(0, 6)} total={posts.length} />
+      <RecentPosts posts={posts.slice(0, 5)} total={posts.length} />
 
       {today && (
         <div className="home-wrap">
