@@ -39,11 +39,6 @@
     --series-7: #a16207;
     --series-8: #e5383b;
     --series-9: #475569;
-    /* 어두운 띠 (홈 하단) */
-    --band: #1a1a1a;
-    --band-3: #7a1f22;
-    --band-text: #ffffff;
-    --band-muted: #b5b5b5;
     --primary-container: #fde2e2;
     --on-primary: #ffffff;
 
@@ -93,10 +88,6 @@
     --series-7: #facc15;
     --series-8: #ff6b6b;
     --series-9: #94a3b8;
-    --band: #0b1220;
-    --band-3: #5c1a1c;
-    --band-text: #ffffff;
-    --band-muted: #a3acb9;
     --accent-dim: #ffa3a3;
     --primary-container: #5c1a1c;
     --on-primary: #2b0506;
@@ -753,7 +744,7 @@
   }
 }
 
-/* 홈: 큰 문장·기록 눈금 → 글 소개+목록 → 구분선 섹션 → 흐르는 태그 → 하단 띠 */
+/* 홈: 큰 문장·떨어지는 태그·기록 눈금 → 글 소개+목록 → 구분선 섹션 → 흐르는 태그 */
 .home-wrap {
   max-width: 1100px;
   margin: 0 auto;
@@ -784,7 +775,40 @@
 .home-hero {
   max-width: 1100px;
   margin: 0 auto;
-  padding: clamp(3.5rem, 9vw, 6.5rem) 1.5rem 0;
+  padding-inline: 1.5rem;
+}
+/* 태그가 글자 위로 떨어져 아래 여백에 쌓인다. 바닥은 이 영역의 아래 끝 */
+.home-hero-play {
+  position: relative;
+  padding-top: clamp(3.5rem, 9vw, 6.5rem);
+  padding-bottom: 130px;
+}
+.home-hero-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+.home-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .home-hero-head {
   display: flex;
@@ -801,7 +825,7 @@ main .home-hero h1 {
   font-size: clamp(2.75rem, 8.5vw, 6rem) !important;
 }
 .home-strip {
-  margin-top: clamp(3rem, 7vw, 5rem);
+  margin-top: 1rem;
 }
 .home-strip-label {
   display: flex;
@@ -839,20 +863,6 @@ main .home-hero h1 {
   height: 34px;
   border-radius: 2px 2px 0 0;
   transform-origin: center bottom;
-}
-.home-pill {
-  display: inline-flex;
-  align-items: center;
-  height: 46px;
-  padding: 0 1.35rem;
-  border-radius: var(--radius-full);
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-.home-pill--solid {
-  background: var(--band-text);
-  color: var(--band);
 }
 .home-showcase {
   display: grid;
@@ -940,34 +950,9 @@ main .home-hero h1 {
   color: var(--bg);
   -webkit-text-stroke: 1px var(--outline);
 }
-.home-cta {
-  position: relative;
-  overflow: hidden;
-  background: var(--band);
-}
-.home-cta-art {
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: min(40%, 460px);
-  background: linear-gradient(135deg, var(--band-3), transparent 75%);
-}
-.home-cta-art::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 70%, var(--band-text)), color-mix(in srgb, var(--accent) 45%, var(--band)));
-}
 @media (max-width: 768px) {
   .home-numbered {
     grid-template-columns: 1fr;
-  }
-  .home-cta-art {
-    display: none;
   }
   .home-hero-head {
     flex-direction: column;
@@ -977,6 +962,13 @@ main .home-hero h1 {
   .home-hero-side {
     flex: none;
     padding-bottom: 0;
+  }
+  .home-hero-play {
+    padding-bottom: 170px;
+  }
+  .home-hero-chip {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
   }
   .home-strip-track {
     height: 72px;
@@ -1008,11 +1000,10 @@ main .home-hero h1 {
     white-space: normal;
   }
 }
-/* 전역 모바일 main 패딩에서 제외: 하단 띠가 바텀 네비에 닿게 한다 */
+/* 전역 모바일 main 상단 패딩에서 제외: 태그가 화면 맨 위에서 떨어지게 한다 */
 @media (max-width: 480px) {
   main.home-main {
     padding-top: 0 !important;
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

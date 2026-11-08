@@ -4,6 +4,8 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react'
 import type { Post } from '@/types'
+import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
+import { MotionLink } from '@/components/motion/MotionProvider'
 import Underline from '@/components/motion/Underline'
 import { ease, fastTween, spring } from '@/components/motion/presets'
 import { seriesColor, toYYMM } from '@/lib/utils'
@@ -46,8 +48,10 @@ function Tick({ post, mouseX, active, still, onEnter }: { post: HeroPost; mouseX
   )
 }
 
-// 큰 문장 + 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
-export default function HomeHero({ posts }: { posts: HeroPost[] }) {
+// 큰 문장 위로 태그가 떨어져 쌓이고, 그 아래 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
+export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: string[] }) {
+  const stageRef = useRef<HTMLDivElement>(null)
+  const { active: physics, draggedRef } = usePhysicsStage(stageRef, { dropGap: 45 })
   const ordered = [...posts].reverse()
   const latest = ordered.length - 1
   const [active, setActive] = useState(latest)
@@ -57,6 +61,7 @@ export default function HomeHero({ posts }: { posts: HeroPost[] }) {
 
   return (
     <section className="home-hero">
+      <div className="home-hero-play">
       <motion.div
         className="home-hero-head"
         initial={{ opacity: 0, y: 14 }}
@@ -85,6 +90,27 @@ export default function HomeHero({ posts }: { posts: HeroPost[] }) {
           </div>
         </div>
       </motion.div>
+
+      <div ref={stageRef} className={`physics-stage home-hero-stage${physics ? ' is-physics' : ''}`}>
+        {tags.map((tag) => (
+          <MotionLink
+            key={tag}
+            data-physics=""
+            href={`/blog/tag/${encodeURIComponent(tag)}`}
+            className="home-hero-chip"
+            draggable={false}
+            whileHover={{ color: 'var(--accent)', borderColor: 'var(--accent)' }}
+            transition={fastTween}
+            onClick={(e) => {
+              // 드래그로 끝난 경우 이동하지 않는다
+              if (draggedRef.current) e.preventDefault()
+            }}
+          >
+            #{tag}
+          </MotionLink>
+        ))}
+      </div>
+      </div>
 
       {current && (
         <div className="home-strip">

@@ -37,7 +37,7 @@ export default async function HomePage() {
 
   return (
     <main className="home-main">
-      <HomeHero posts={posts.map(({ slug, title, date, series }) => ({ slug, title, date, series }))} />
+      <HomeHero tags={tags} posts={posts.map(({ slug, title, date, series }) => ({ slug, title, date, series }))} />
 
       <PostShowcase posts={posts.slice(0, 6)} total={posts.length} />
 
@@ -81,20 +81,6 @@ export default async function HomePage() {
       )}
 
       {tags.length > 0 && <TagMarquee tags={tags} />}
-
-      <section className="home-cta">
-        <div className="home-cta-art" aria-hidden="true" />
-        <div className="home-wrap" style={{ position: 'relative', paddingBlock: 'clamp(3.5rem, 8vw, 5.5rem)' }}>
-          <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, lineHeight: 1.4, color: 'var(--band-text)', margin: '0 0 1.5rem' }}>
-            궁금한 점이나 하고 싶은 말이 있다면
-            <br />
-            방명록에 남겨 주세요
-          </h2>
-          <MotionLink href="/guestbook" className="home-pill home-pill--solid" whileHover={{ y: -2 }} transition={spring.soft}>
-            방명록 쓰기
-          </MotionLink>
-        </div>
-      </section>
     </main>
   )
 }
