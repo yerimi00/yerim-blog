@@ -744,7 +744,7 @@
   }
 }
 
-/* 홈: 큰 문장·떨어지는 태그·기록 눈금 → 글 소개+목록 → 구분선 섹션 → 흐르는 태그 */
+/* 홈: 큰 문장·떨어지는 태그·기록 눈금 → 글 소개+목록 → 구분선 섹션 */
 .home-wrap {
   max-width: 1100px;
   margin: 0 auto;
@@ -926,29 +926,6 @@ main .home-hero h1 {
   padding: 1.25rem 0 1.75rem;
   border-top: 1px solid var(--border);
   text-decoration: none;
-}
-.home-marquee {
-  padding-block: 1.25rem;
-  overflow: hidden;
-  border-block: 1px solid var(--border);
-}
-.home-marquee-track {
-  display: flex;
-  width: max-content;
-}
-.home-marquee-set {
-  display: flex;
-  gap: 3rem;
-  padding-right: 3rem;
-}
-.home-marquee-item {
-  font-size: clamp(1.75rem, 4.5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  text-decoration: none;
-  color: var(--bg);
-  -webkit-text-stroke: 1px var(--outline);
 }
 @media (max-width: 768px) {
   .home-numbered {

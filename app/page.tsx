@@ -4,7 +4,6 @@ import { getAllProjects } from '@/lib/projects'
 import { getPublishedQuestions } from '@/lib/interview'
 import HomeHero from '@/components/home/HomeHero'
 import PostShowcase from '@/components/home/PostShowcase'
-import TagMarquee from '@/components/home/TagMarquee'
 import SectionReveal from '@/components/about/SectionReveal'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { spring } from '@/components/motion/presets'
@@ -79,8 +78,6 @@ export default async function HomePage() {
           </SectionReveal>
         </div>
       )}
-
-      {tags.length > 0 && <TagMarquee tags={tags} />}
     </main>
   )
 }
