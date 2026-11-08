@@ -877,19 +877,18 @@
 }
 .home-post-row {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr) 7.5rem;
-  grid-template-areas: 'date body series';
+  grid-template-columns: 4.5rem minmax(0, 1fr) 1.5rem;
+  grid-template-areas: 'date body arrow';
   column-gap: 1.25rem;
   align-items: baseline;
   padding: 1.5rem 0;
   border-top: 1px solid var(--border);
   text-decoration: none;
 }
-.home-post-series {
-  grid-area: series;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-align: right;
+.home-post-arrow {
+  grid-area: arrow;
+  justify-self: end;
+  color: var(--accent);
 }
 .home-numbered {
   display: grid;
@@ -933,16 +932,15 @@
     height: 22px;
   }
   .home-post-row {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'date series'
-      'body body';
-    column-gap: 0.75rem;
+      'date'
+      'body';
     row-gap: 0.5rem;
     padding: 1.25rem 0;
   }
-  .home-post-series {
-    text-align: left;
+  .home-post-arrow {
+    display: none;
   }
 }
 /* 전역 모바일 main 상단 패딩에서 제외: 태그가 화면 맨 위에서 떨어지게 한다 */

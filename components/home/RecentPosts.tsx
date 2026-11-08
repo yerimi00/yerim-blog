@@ -5,7 +5,7 @@ import { motion } from 'motion/react'
 import type { Post } from '@/types'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { fastTween } from '@/components/motion/presets'
-import { seriesColor, toYYMM } from '@/lib/utils'
+import { toYYMM } from '@/lib/utils'
 
 const titleVariants = { rest: { color: 'var(--text)' }, hover: { color: 'var(--accent)' } }
 const arrowVariants = { rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }
@@ -40,10 +40,7 @@ export default function RecentPosts({ posts, total }: { posts: Post[]; total: nu
                     <span style={{ display: 'block', marginTop: '0.35rem', fontSize: '0.92rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{post.description}</span>
                   )}
                 </span>
-                <span className="home-post-series">
-                  {post.series && <span style={{ color: seriesColor(post.series) }}>{post.series}</span>}
-                  <motion.span variants={arrowVariants} transition={fastTween} style={{ display: 'inline-block', marginLeft: '0.5rem', color: 'var(--accent)' }}>→</motion.span>
-                </span>
+                <motion.span className="home-post-arrow" variants={arrowVariants} transition={fastTween}>→</motion.span>
               </MotionLink>
             </li>
           ))}
