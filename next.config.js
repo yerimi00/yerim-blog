@@ -16,7 +16,7 @@ const nextConfig = {
   // IA v2 이전 — 기존 링크 보호 (구체적인 규칙이 위)
   async redirects() {
     return [
-      // Lab 준비 중: 상세는 안내 화면으로 보낸다. 다시 열 때 이 줄을 지운다
+      // Lab 상세 준비 중: 목록으로 보낸다. 다시 열 때 이 줄을 지우고 InteractionSeriesView에 링크를 되살린다
       { source: '/lab/:slug', destination: '/lab', permanent: false },
       { source: '/series/interactions', destination: '/lab', permanent: true },
       { source: '/series/interactions/:slug', destination: '/lab/:slug', permanent: true },

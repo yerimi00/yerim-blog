@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPublishedQuestions(),
   ])
 
-  const staticPaths = ['', '/blog', '/blog/series', '/interview', '/work', '/about/fe', '/about/be', '/about/pm', '/guestbook', '/notices']
+  const staticPaths = ['', '/blog', '/blog/series', '/interview', '/lab', '/work', '/about/fe', '/about/be', '/about/pm', '/guestbook', '/notices']
 
   return [
     ...staticPaths.map((path) => ({ url: `${SITE_URL}${path}` })),

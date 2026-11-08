@@ -112,7 +112,7 @@ Key functions in `lib/guestbook.ts`:
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 + 대표 작업 3. `revalidate = 3600` |
+| `/` | `app/page.tsx` | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 + 대표 작업 3 + Lab 진입. `revalidate = 3600` |
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
@@ -120,7 +120,7 @@ Key functions in `lib/guestbook.ts`:
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
 | `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
-| `/lab` | `app/lab/page.tsx` | 준비 중 안내 화면 (`noindex`, 사이트맵 제외) |
+| `/lab` | `app/lab/page.tsx` | 인터랙션 실험 그리드. 상세를 준비 중이라 카드는 링크 없이 표시 (`app/data/interactions/interactions-data.ts`) |
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
@@ -129,7 +129,7 @@ Key functions in `lib/guestbook.ts`:
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
-| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, work |
+| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, work (Lab은 목록만) |
 | `/robots.txt` | `app/robots.ts` | Allow all except `/api/`, points to sitemap |
 
 Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new routes via `next.config.js` `redirects()`. See `docs/domains/route-map.md`.
