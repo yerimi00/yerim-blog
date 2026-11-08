@@ -1,6 +1,8 @@
-import ProjectView from '@/components/project/ProjectView'
-import ProjectSqueezeCarousel from '@/components/project/ProjectSqueezeCarousel'
+import FeaturedWork from '@/components/project/FeaturedWork'
+import ProjectArchive from '@/components/project/ProjectArchive'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
+import AiSkillsMore from '@/components/ai-skills/AiSkillsMore'
+import { yearOf } from '@/components/project/project-utils'
 import { getAllProjects } from '@/lib/projects'
 import { aiSkillCategories } from '@/app/data/ai-skills'
 
@@ -12,49 +14,79 @@ export const metadata = {
   alternates: { canonical: '/work' },
 }
 
+const JUMPS = [
+  { href: '#featured', label: '대표작' },
+  { href: '#archive', label: '아카이브' },
+  { href: '#ai-skills', label: 'AI Skills' },
+]
+
+const sectionStyle: React.CSSProperties = { scrollMarginTop: '84px', marginBottom: 'clamp(4rem, 9vw, 7rem)' }
+
+function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
+  return (
+    <h2 className="hand" style={{ fontSize: '2.4rem', lineHeight: 1.1, color: 'var(--text)', margin: '0 0 1.5rem' }}>
+      {children}
+      {count !== undefined && <span style={{ fontSize: '1.3rem', color: 'var(--accent)', marginLeft: '0.5rem' }}>{count}</span>}
+    </h2>
+  )
+}
+
 export default async function WorkPage() {
   const projects = await getAllProjects()
-  // 히어로: 이미지 있는 프로젝트, Featured 먼저 (최대 8개)
-  const heroProjects = projects
-    .filter((p) => p.image)
-    .sort((a, b) => Number(b.featured) - Number(a.featured))
-    .slice(0, 8)
+  const featured = projects.filter((p) => p.featured)
+  const archive = projects.filter((p) => !p.featured)
+  const years = projects.map((p) => Number(yearOf(p))).filter(Boolean)
+  const stats = [
+    { value: projects.length, label: '프로젝트' },
+    { value: projects.filter((p) => p.award).length, label: '수상·논문' },
+    { value: years.length ? Math.min(...years) : '-', label: '부터 만들었어요' },
+  ]
+  const [custom, ...others] = aiSkillCategories
 
   return (
-    <>
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
-
-        {heroProjects.length > 0 && (
-          <div style={{ margin: '2rem 0 3rem' }}>
-            <ProjectSqueezeCarousel projects={heroProjects} />
-          </div>
-        )}
-
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.2rem' }}>전체 프로젝트</h2>
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{projects.length}개</span>
-          </div>
-          <ProjectView projects={projects} />
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: 'clamp(2.5rem, 6vw, 4.5rem) 1.5rem 0' }}>
+      <header className="work-head" style={{ marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
+        <div>
+          <h1 className="hand-title" style={{ fontSize: 'clamp(3.5rem, 9vw, 5.5rem)', lineHeight: 1 }}>Work</h1>
+          <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem', maxWidth: '460px' }}>
+            해커톤부터 운영 중인 서비스까지, 직접 만든 것들을 모았어요.
+          </p>
+          <nav aria-label="페이지 내 이동" style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+            {JUMPS.map(({ href, label }) => (
+              <a key={href} href={href} style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{label} ↓</a>
+            ))}
+          </nav>
         </div>
-
-        <section id="ai-skills" style={{ marginTop: '4rem', scrollMarginTop: '80px' }}>
-          <div style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', marginBottom: '0.75rem' }}>
-              AI Skills
-            </h2>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7, maxWidth: '640px' }}>
-              개발 작업에 Claude Code를 활용하면서 실제로 쓰고 있는 스킬과 자동화입니다. 커스텀으로 만든
-              것도 있고, 기본 제공되는 것을 그대로 쓰는 것도 있습니다.
-            </p>
-          </div>
-
-          {aiSkillCategories.map((category) => (
-            <AiSkillSection key={category.title} category={category} />
+        <dl className="work-stats">
+          {stats.map(({ value, label }) => (
+            <div key={label}>
+              <dd>{value}</dd>
+              <dt>{label}</dt>
+            </div>
           ))}
-        </section>
+        </dl>
+      </header>
 
-      </main>
-    </>
+      {featured.length > 0 && (
+        <section id="featured" style={sectionStyle}>
+          <SectionTitle>대표작</SectionTitle>
+          <FeaturedWork projects={featured} />
+        </section>
+      )}
+
+      <section id="archive" style={sectionStyle}>
+        <SectionTitle count={archive.length}>아카이브</SectionTitle>
+        <ProjectArchive projects={archive} />
+      </section>
+
+      <section id="ai-skills" style={sectionStyle}>
+        <SectionTitle>AI Skills</SectionTitle>
+        <p style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--text-secondary)', maxWidth: '640px', margin: '0 0 2rem' }}>
+          개발 작업에 Claude Code를 활용하면서 직접 만들어 쓰는 자동화예요.
+        </p>
+        <AiSkillSection category={custom} />
+        <AiSkillsMore categories={others} />
+      </section>
+    </main>
   )
 }

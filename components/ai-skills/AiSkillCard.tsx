@@ -20,9 +20,9 @@ export default function AiSkillCard({ skill }: { skill: AiSkill }) {
         style={{ textAlign: 'left', cursor: 'pointer', width: '100%', font: 'inherit' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+          <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
             {skill.name}
-          </h3>
+          </h4>
           {hasVariants && (
             <span className="tag-badge" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
               {skill.variants!.length}개 명령어
