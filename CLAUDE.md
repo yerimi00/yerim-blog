@@ -112,7 +112,7 @@ Key functions in `lib/guestbook.ts`:
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | 큰 문장·떨어지는 태그·기록 눈금 히어로 → 최근 글 소개+목록 → 오늘의 면접 질문 → 대표 작업 4. `revalidate = 3600` |
+| `/` | `app/page.tsx` | 사진·떨어지는 태그·기록 눈금 히어로 → 최근 글 소개+목록 → 오늘의 면접 질문 → 대표 작업 4. `revalidate = 3600` |
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
@@ -158,7 +158,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget`. Lab에서도 같은 컴포넌트 사용 |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillsMore (client: 나머지 카테고리 접기), AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
-| `components/home/` | 홈 전용: HomeHero (떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), PostShowcase (client: 목록을 고르면 왼쪽 소개가 바뀌는 최근 글) |
+| `components/home/` | 홈 전용: HomeHero (사진 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), PostShowcase (client: 목록을 고르면 왼쪽 소개가 바뀌는 최근 글) |
 | `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |

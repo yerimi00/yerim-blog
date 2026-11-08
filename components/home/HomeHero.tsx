@@ -1,13 +1,13 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react'
 import type { Post } from '@/types'
 import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
 import { MotionLink } from '@/components/motion/MotionProvider'
-import Underline from '@/components/motion/Underline'
-import { ease, fastTween, spring } from '@/components/motion/presets'
+import { fastTween, spring } from '@/components/motion/presets'
 import { seriesColor, toYYMM } from '@/lib/utils'
 
 export type HeroPost = Pick<Post, 'slug' | 'title' | 'date' | 'series'>
@@ -48,7 +48,7 @@ function Tick({ post, mouseX, active, still, onEnter }: { post: HeroPost; mouseX
   )
 }
 
-// 큰 문장 위로 태그가 떨어져 쌓이고, 그 아래 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
+// 사진 위로 태그가 떨어져 쌓이고, 그 아래 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
 export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: string[] }) {
   const stageRef = useRef<HTMLDivElement>(null)
   const { active: physics, draggedRef } = usePhysicsStage(stageRef, { dropGap: 45 })
@@ -62,23 +62,17 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
   return (
     <section className="home-hero">
       <div className="home-hero-play">
-      <motion.div
-        className="home-hero-head"
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: ease.out }}
-      >
-        <h1 style={{ fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.14, color: 'var(--text)', margin: 0 }}>
-          만들고,
-          <br />
-          배운 것을
-          <br />
-          <span style={{ position: 'relative', display: 'inline-block' }}>
-            기록
-            <Underline delay={0.4} style={{ height: 5, bottom: 4 }} />
-          </span>
-          해요
-        </h1>
+      <div className="home-hero-head">
+        <h1 className="visually-hidden">만들고, 배운 것을 기록해요</h1>
+        <Image
+          src="/hero-photo.jpg"
+          alt="모자를 쓰고 포즈를 취한 이예림"
+          width={1200}
+          height={960}
+          priority
+          sizes="(max-width: 768px) 100vw, 560px"
+          className="home-hero-photo"
+        />
         <div className="home-hero-side">
           <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.5rem' }}>프론트엔드 개발자 이예림</p>
           <p style={{ fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-secondary)', margin: '0 0 1.1rem' }}>
@@ -89,7 +83,7 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
             <Link href="/about" style={heroLink}>About →</Link>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       <div ref={stageRef} className={`physics-stage home-hero-stage${physics ? ' is-physics' : ''}`}>
         {tags.map((tag) => (
