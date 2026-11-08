@@ -8,7 +8,6 @@ import TiltCard from '@/components/home/TiltCard'
 import { HoverCardLink } from '@/components/motion/Hover'
 import SectionReveal from '@/components/about/SectionReveal'
 import ContainerScroll from '@/components/home/ContainerScroll'
-import { DEMOS } from '@/app/data/interactions/interactions-data'
 
 export const revalidate = 3600
 
@@ -115,23 +114,6 @@ export default async function HomePage() {
           </SectionReveal>
         )}
 
-        {/* Lab 진입 (실험이 있을 때만) */}
-        {Object.keys(DEMOS).length > 0 && (
-          <SectionReveal>
-            <TiltCard>
-              <HoverCardLink
-                href="/lab"
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', textDecoration: 'none', border: '1px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem 1.5rem' }}
-              >
-                <span>
-                  <span style={{ display: 'block', fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.2rem' }}>🧪 Lab</span>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>직접 만든 UI 인터랙션 {Object.keys(DEMOS).length}개를 눌러보세요</span>
-                </span>
-                <span style={{ color: 'var(--accent)' }}>→</span>
-              </HoverCardLink>
-            </TiltCard>
-          </SectionReveal>
-        )}
       </main>
     </>
   )

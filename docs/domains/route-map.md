@@ -6,7 +6,7 @@
 
 | 라우트 | 파일 | revalidate | 비고 |
 | --- | --- | --- | --- |
-| `/` | `app/page.tsx` | 3600 | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 (`YY.MM 제목`) + 대표 작업 3 (Featured) + Lab 진입 카드 |
+| `/` | `app/page.tsx` | 3600 | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 (`YY.MM 제목`) + 대표 작업 3 (Featured) |
 | `/blog` | `app/blog/page.tsx` | 86400 | 시리즈 탭 필터 + `/blog/series` 링크 |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | 86400 | 포스트 상세. generateStaticParams. canonical 설정. |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | 3600 | 태그별 포스트 목록. generateStaticParams. |
@@ -14,8 +14,8 @@
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
 | `/interview` | `app/interview/page.tsx` | 3600 | 오늘의 면접 질문(최신 발행 1개) + 지난 문제 아카이브(카테고리 필터). Interview DB 미설정 시 "준비 중" 안내. |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 3600 | 문제 상세. 답변(Notion 본문)·꼬리질문·참고 링크는 `AnswerReveal`로 가렸다가 30초 타이머 또는 "답 보기"로 공개. 이전/다음 문제, AdSense, Giscus. |
-| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`). 현재 면접 위젯 6종(`widget-*`). 비어 있으면 "준비 중" 안내, 홈 Lab 카드는 숨김. |
-| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 데모 + 같은 slug의 블로그 글 본문(있으면). |
+| `/lab` | `app/lab/page.tsx` | — | 준비 중 안내 화면 (`noindex`, 사이트맵 제외). |
+| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 유지. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/work` | `app/work/page.tsx` | 3600 | 헤드(통계·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
@@ -40,7 +40,7 @@
 | 라우트 | 파일 | 설명 |
 | --- | --- | --- |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 피드. `revalidate = 86400`. |
-| `/sitemap.xml` | `app/sitemap.ts` | 정적 페이지 + 글·시리즈·면접 문제·Lab·Work 전체. `revalidate = 3600`. |
+| `/sitemap.xml` | `app/sitemap.ts` | 정적 페이지 + 글·시리즈·면접 문제·Work 전체. `revalidate = 3600`. |
 | `/robots.txt` | `app/robots.ts` | 전체 허용, `/api/` 제외, sitemap 주소 명시. |
 
 ## 리다이렉트 (`next.config.js`, 308 permanent)
