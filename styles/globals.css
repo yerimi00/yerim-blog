@@ -835,7 +835,7 @@
 }
 .home-hero-photo {
   flex: none;
-  width: clamp(140px, 15vw, 180px);
+  width: clamp(130px, 13vw, 165px);
   height: auto;
 }
 .home-strip {
@@ -919,7 +919,7 @@
     padding-bottom: 0;
   }
   .home-hero-photo {
-    width: 130px;
+    width: 120px;
   }
   .home-hero-play {
     padding-bottom: 170px;

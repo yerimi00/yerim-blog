@@ -65,12 +65,12 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
       <div className="home-hero-head">
         <h1 className="visually-hidden">만들고, 배운 것을 기록해요</h1>
         <Image
-          src="/hero-avatar.png"
+          src="/hero-avatar-bust.png"
           alt="모자를 쓴 이예림 캐릭터"
-          width={596}
-          height={780}
+          width={490}
+          height={732}
           priority
-          sizes="(max-width: 768px) 130px, 180px"
+          sizes="(max-width: 768px) 120px, 165px"
           className="home-hero-photo"
         />
         <div className="home-hero-side">
