@@ -52,7 +52,7 @@ typography:
   h1:
     fontFamily: Inter
     fontSize: 36px
-    fontWeight: '800'
+    fontWeight: '700'
     lineHeight: '1.2'
     letterSpacing: -0.02em
   h2:
@@ -129,7 +129,7 @@ The dark mode implementation inverts the hierarchy, using #111827 as the primary
 
 The design system utilizes **Inter** (as the closest high-quality match to the requested Pretendard) to ensure a systematic, utilitarian appearance. The scale is built on a tight ratio to ensure a clear information hierarchy.
 
-- **Headlines:** Use heavy weights (700-800) with slight negative letter-spacing to create a strong visual anchor.
+- **Headlines:** Use weights 600-700 with slight negative letter-spacing to create a strong visual anchor.
 - **Body Text:** Optimized for long-form reading with a generous line-height (1.75) for the large variant.
 - **Data/Labels:** Medium weights are used for small labels to maintain legibility against background colors.
 - **Underline:** active nav links, tabs, and the home hero name use a straight 2px `var(--accent)` line (`components/motion/Underline.tsx`).

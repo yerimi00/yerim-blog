@@ -20,7 +20,7 @@ export default function AiSkillCard({ skill }: { skill: AiSkill }) {
         style={{ textAlign: 'left', cursor: 'pointer', width: '100%', font: 'inherit' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+          <h4 style={{ fontSize: '0.95rem', fontWeight: 500, color: 'var(--text)', margin: 0 }}>
             {skill.name}
           </h4>
           {hasVariants && (

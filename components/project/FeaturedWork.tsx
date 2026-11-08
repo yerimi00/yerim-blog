@@ -22,18 +22,18 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.image} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
               ) : (
-                <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-muted)' }}>{p.name}</span>
+                <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-muted)' }}>{p.name}</span>
               )}
             </MotionLink>
 
             <div>
-              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.85rem', fontWeight: 500, color: 'var(--accent)', margin: '0 0 0.6rem' }}>
+              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.78rem', fontWeight: 400, color: 'var(--text-muted)', margin: '0 0 0.5rem' }}>
                 {String(i + 1).padStart(2, '0')}
               </p>
-              <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text)', margin: '0 0 0.6rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.5rem' }}>
                 {p.name}
               </h3>
-              <p style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1rem' }}>
+              <p style={{ fontSize: '0.92rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1rem' }}>
                 {p.overview || p.description}
               </p>
               <dl className="work-feature-meta">
@@ -49,7 +49,7 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 </div>
               </dl>
               {p.award && (
-                <p style={{ fontSize: '0.88rem', fontWeight: 600, lineHeight: 1.5, color: 'var(--accent)', margin: '0.85rem 0 0' }}>
+                <p style={{ fontSize: '0.85rem', fontWeight: 500, lineHeight: 1.5, color: 'var(--accent)', margin: '0.85rem 0 0' }}>
                   🏆 {p.award}
                 </p>
               )}
@@ -57,7 +57,7 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 href={`/work/${p.slug}`}
                 whileHover={{ x: 4, color: 'var(--accent)' }}
                 transition={fastTween}
-                style={{ display: 'inline-block', marginTop: '1.1rem', fontSize: '0.88rem', fontWeight: 700, color: 'var(--text)', textDecoration: 'none' }}
+                style={{ display: 'inline-block', marginTop: '1.1rem', fontSize: '0.88rem', fontWeight: 500, color: 'var(--text)', textDecoration: 'none' }}
               >
                 자세히 보기 →
               </MotionLink>

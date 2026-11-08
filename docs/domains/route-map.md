@@ -18,7 +18,7 @@
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 유지. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
-| `/work` | `app/work/page.tsx` | 3600 | 헤드(통계·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
+| `/work` | `app/work/page.tsx` | 3600 | 헤드(요약·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
 | `/work/[slug]` | `app/work/[slug]/page.tsx` | 3600 | 프로젝트 상세. 관련 블로그 글 트러블슈팅/회고 섹션 분리. generateStaticParams. |
 | `/notices` | `app/notices/page.tsx` | — | 공지사항 Accordion. Client Component. |
 | `/guestbook` | `app/guestbook/page.tsx` | — | `force-dynamic`. 모바일 허용. |

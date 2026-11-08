@@ -124,7 +124,7 @@ Key functions in `lib/guestbook.ts`:
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
-| `/work` | `app/work/page.tsx` | 헤드(통계·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
+| `/work` | `app/work/page.tsx` | 헤드(요약·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
 | `/work/[slug]` | `app/work/[slug]/page.tsx` | Project detail |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |

@@ -4,7 +4,7 @@ import AiSkillCard from '@/components/ai-skills/AiSkillCard'
 export default function AiSkillSection({ category }: { category: AiSkillCategory }) {
   return (
     <section style={{ marginBottom: '2.5rem' }}>
-      <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>
+      <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)', marginBottom: '1rem' }}>
         {category.title}
       </h3>
       <div
