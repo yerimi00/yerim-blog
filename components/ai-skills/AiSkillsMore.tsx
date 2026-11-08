@@ -18,7 +18,7 @@ export default function AiSkillsMore({ categories }: { categories: AiSkillCatego
         onClick={() => setOpen((v) => !v)}
         whileHover={{ color: 'var(--accent)' }}
         transition={fastTween}
-        style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)' }}
+        style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)' }}
       >
         평소 쓰는 도구 {open ? '접기 ↑' : '더 보기 ↓'}
       </motion.button>

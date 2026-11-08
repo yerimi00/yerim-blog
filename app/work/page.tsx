@@ -2,7 +2,6 @@ import FeaturedWork from '@/components/project/FeaturedWork'
 import ProjectArchive from '@/components/project/ProjectArchive'
 import AiSkillSection from '@/components/ai-skills/AiSkillSection'
 import AiSkillsMore from '@/components/ai-skills/AiSkillsMore'
-import { yearOf } from '@/components/project/project-utils'
 import { getAllProjects } from '@/lib/projects'
 import { aiSkillCategories } from '@/app/data/ai-skills'
 
@@ -24,9 +23,9 @@ const sectionStyle: React.CSSProperties = { scrollMarginTop: '84px', marginBotto
 
 function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text)', margin: '0 0 1.5rem' }}>
+    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 1.25rem' }}>
       {children}
-      {count !== undefined && <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)', marginLeft: '0.5rem' }}>{count}</span>}
+      {count !== undefined && <span style={{ fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-muted)', marginLeft: '0.5rem' }}>{count}</span>}
     </h2>
   )
 }
@@ -35,36 +34,21 @@ export default async function WorkPage() {
   const projects = await getAllProjects()
   const featured = projects.filter((p) => p.featured)
   const archive = projects.filter((p) => !p.featured)
-  const years = projects.map((p) => Number(yearOf(p))).filter(Boolean)
-  const stats = [
-    { value: projects.length, label: '프로젝트' },
-    { value: projects.filter((p) => p.award).length, label: '수상·논문' },
-    { value: years.length ? `${Math.min(...years)}~` : '-', label: '첫 프로젝트' },
-  ]
+  const summary = `프로젝트 ${projects.length}개 · 수상·논문 ${projects.filter((p) => p.award).length}개`
   const [custom, ...others] = aiSkillCategories
 
   return (
-    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: 'clamp(2.5rem, 6vw, 4.5rem) 1.5rem 0' }}>
-      <header className="work-head" style={{ marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem 0' }}>
+      <header className="work-head" style={{ marginBottom: '2.5rem' }}>
         <div>
-          <h1 className="page-title" style={{ fontSize: 'clamp(2.25rem, 6vw, 3.25rem)', marginBottom: '0.75rem' }}>Work</h1>
-          <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem', maxWidth: '460px' }}>
-            해커톤부터 운영 중인 서비스까지, 직접 만든 것들을 모았어요.
-          </p>
-          <nav aria-label="페이지 내 이동" style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
-            {JUMPS.map(({ href, label }) => (
-              <a key={href} href={href} style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{label} ↓</a>
-            ))}
-          </nav>
+          <h1 className="page-title">Work</h1>
+          <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: 0 }}>{summary}</p>
         </div>
-        <dl className="work-stats">
-          {stats.map(({ value, label }) => (
-            <div key={label}>
-              <dd>{value}</dd>
-              <dt>{label}</dt>
-            </div>
+        <nav aria-label="페이지 내 이동" style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+          {JUMPS.map(({ href, label }) => (
+            <a key={href} href={href} style={{ fontSize: '0.88rem', fontWeight: 500, color: 'var(--text-secondary)', textDecoration: 'none' }}>{label}</a>
           ))}
-        </dl>
+        </nav>
       </header>
 
       {featured.length > 0 && (

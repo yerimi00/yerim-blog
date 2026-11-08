@@ -105,6 +105,7 @@
   }
 
   body {
+    margin: 0;
     background-color: var(--bg);
     color: var(--text);
     font-family: "Pretendard", system-ui, sans-serif;
@@ -190,7 +191,10 @@
 
 @layer components {
   .tag-badge {
-    @apply inline-flex items-center text-xs;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    line-height: 1rem;
     color: var(--text-muted);
     background: var(--bg-secondary);
     padding: 3px 12px;
@@ -743,42 +747,44 @@
   }
 }
 
-/* 홈: 대표 작업 3열 → 모바일 1열 */
-.home-work-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+/* 홈: 캐릭터·떨어지는 태그·기록 눈금 → 글 목록 → 구분선 섹션 */
+.home-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-inline: 1.5rem;
 }
-@media (max-width: 768px) {
-  .home-work-grid {
-    grid-template-columns: 1fr;
-  }
+.home-section {
+  padding-block: clamp(3rem, 7vw, 5rem);
 }
-
-/* 홈 히어로: 커서 반응 점 배경 + 물리 태그 칩 */
+.home-rule {
+  border-top: 1px solid var(--border);
+}
+.home-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.home-marker::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text);
+}
 .home-hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-inline: 1.5rem;
+}
+/* 태그가 캐릭터 위로 떨어져 아래 여백에 쌓인다. 바닥은 이 영역의 아래 끝 */
+.home-hero-play {
   position: relative;
-  height: 380px;
-  margin-bottom: 3rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  background: var(--surface);
-}
-.home-hero-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.home-hero-text {
-  position: relative;
-  z-index: 1;
-  padding: 2rem 2rem 0;
-  pointer-events: none;
-}
-.home-hero-text a {
-  pointer-events: auto;
+  padding-top: clamp(3.5rem, 9vw, 6.5rem);
+  padding-bottom: 130px;
 }
 .home-hero-stage {
   position: absolute;
@@ -788,11 +794,7 @@
   flex-wrap: wrap;
   align-content: flex-end;
   gap: 0.5rem;
-  padding: 1.25rem 2rem;
   pointer-events: none;
-}
-.home-hero-stage.is-physics {
-  padding: 0;
 }
 .home-hero-chip {
   display: inline-flex;
@@ -811,44 +813,150 @@
   user-select: none;
   -webkit-user-select: none;
 }
-.home-hero-hint {
+.home-hero-head {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(2rem, 6vw, 4.5rem);
+}
+.home-hero-side {
+  flex: 0 0 320px;
+  padding-bottom: 0.6rem;
+}
+.visually-hidden {
   position: absolute;
-  top: 1rem;
-  right: 1.25rem;
-  z-index: 1;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.home-hero-photo {
+  flex: none;
+  width: clamp(130px, 13vw, 165px);
+  height: auto;
+}
+.home-strip {
+  margin-top: 1rem;
+}
+.home-strip-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
   margin: 0;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  pointer-events: none;
+  font-size: 0.88rem;
+}
+.home-strip-title {
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.home-strip-track {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(2px, 0.5vw, 8px);
+  height: 112px;
+  border-bottom: 1px solid var(--border);
+}
+.home-strip-tick {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.home-strip-bar {
+  display: block;
+  width: 100%;
+  max-width: 6px;
+  height: 34px;
+  border-radius: 2px 2px 0 0;
+  transform-origin: center bottom;
+}
+.home-post-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 1.5rem;
+  grid-template-areas: 'date body arrow';
+  column-gap: 1.25rem;
+  align-items: baseline;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
+}
+.home-post-arrow {
+  grid-area: arrow;
+  justify-self: end;
+  color: var(--accent);
+}
+.home-numbered {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2rem;
+  margin-top: 2rem;
+}
+.home-numbered-item {
+  display: block;
+  padding: 1.25rem 0 1.75rem;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
 }
 @media (max-width: 768px) {
-  .home-hero {
-    height: 420px;
+  .home-numbered {
+    grid-template-columns: 1fr;
   }
-  .home-hero-text {
-    padding: 1.5rem 1.25rem 0;
+  .home-hero-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
-  .home-hero-stage:not(.is-physics) {
-    padding: 1rem 1.25rem;
+  .home-hero-side {
+    flex: none;
+    padding-bottom: 0;
+  }
+  .home-hero-photo {
+    width: 120px;
+  }
+  .home-hero-play {
+    padding-bottom: 170px;
   }
   .home-hero-chip {
     padding: 0.35rem 0.75rem;
     font-size: 0.75rem;
   }
-  .home-hero-hint {
+  .home-strip-track {
+    height: 72px;
+  }
+  .home-strip-bar {
+    height: 22px;
+  }
+  .home-post-row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'date'
+      'body';
+    row-gap: 0.5rem;
+    padding: 1.25rem 0;
+  }
+  .home-post-arrow {
     display: none;
   }
 }
-
-/* 3D 틸트 카드 (기울기·빛은 components/home/TiltCard.tsx) */
-.tilt-card > a {
-  height: 100%;
+/* 전역 모바일 main 상단 패딩에서 제외: 태그가 화면 맨 위에서 떨어지게 한다 */
+@media (max-width: 480px) {
+  main.home-main {
+    padding-top: 0 !important;
+  }
 }
 
 /* 페이지 제목 */
 .page-title {
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
   color: var(--text);
@@ -915,88 +1023,12 @@ body:has(.about-hero-grid) .site-footer {
   }
 }
 
-/* 홈: 컨테이너 스크롤 (기울어진 화면이 스크롤에 따라 펴짐) */
-.container-scroll {
-  padding: 2rem 0 4rem;
-  perspective: 1000px;
-}
-.container-scroll-title {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.container-scroll-card {
-  transform-origin: center top;
-  border: 3px solid var(--outline-variant);
-  border-radius: 24px;
-  padding: 0.6rem;
-  background: var(--surface-container-high);
-  box-shadow:
-    0 0 #0000004d,
-    0 9px 20px #0000004a,
-    0 37px 37px #00000042,
-    0 84px 50px #00000026,
-    0 149px 60px #0000000a;
-}
-.container-scroll-screen {
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--surface);
-}
-.browser-chrome {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-secondary);
-}
-.browser-chrome span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--outline-variant);
-}
-.browser-chrome span:first-child {
-  background: var(--accent);
-}
-.browser-chrome p {
-  margin: 0 auto;
-  padding: 0.15rem 1rem;
-  border-radius: var(--radius-full);
-  background: var(--surface);
-  font-size: 0.72rem;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--text-muted);
-}
-
 /* Work: 헤드·대표작·아카이브 */
 .work-head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 2rem;
-}
-.work-stats {
-  display: flex;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  margin: 0;
-}
-.work-stats dd {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-.work-stats dt {
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-.work-stats > div {
-  display: flex;
-  flex-direction: column;
+  gap: 1rem 2rem;
 }
 .work-featured {
   display: flex;
@@ -1046,7 +1078,7 @@ body:has(.about-hero-grid) .site-footer {
 .work-feature-meta dd {
   margin: 0.1rem 0 0;
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
 }
 .work-row {
@@ -1066,10 +1098,6 @@ body:has(.about-hero-grid) .site-footer {
   .work-head {
     flex-direction: column;
     align-items: flex-start;
-  }
-  /* 전역 모바일 규칙(main h1, !important)에서 Work 제목만 제외 */
-  main .work-head h1 {
-    font-size: 2.25rem !important;
   }
   .work-feature,
   .work-feature--flip {

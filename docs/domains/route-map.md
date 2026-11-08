@@ -6,7 +6,7 @@
 
 | 라우트 | 파일 | revalidate | 비고 |
 | --- | --- | --- | --- |
-| `/` | `app/page.tsx` | 3600 | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 (`YY.MM 제목`) + 대표 작업 3 (Featured) + Lab 진입 카드 |
+| `/` | `app/page.tsx` | 3600 | 캐릭터 이미지·떨어지는 태그·기록 눈금 히어로 + 최근 글 5 + 오늘의 면접 질문 + 대표 작업 4 (Featured) |
 | `/blog` | `app/blog/page.tsx` | 86400 | 시리즈 탭 필터 + `/blog/series` 링크 |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | 86400 | 포스트 상세. generateStaticParams. canonical 설정. |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | 3600 | 태그별 포스트 목록. generateStaticParams. |
@@ -18,7 +18,7 @@
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 유지. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
-| `/work` | `app/work/page.tsx` | 3600 | 헤드(통계·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
+| `/work` | `app/work/page.tsx` | 3600 | 헤드(요약·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
 | `/work/[slug]` | `app/work/[slug]/page.tsx` | 3600 | 프로젝트 상세. 관련 블로그 글 트러블슈팅/회고 섹션 분리. generateStaticParams. |
 | `/notices` | `app/notices/page.tsx` | — | 공지사항 Accordion. Client Component. |
 | `/guestbook` | `app/guestbook/page.tsx` | — | `force-dynamic`. 모바일 허용. |

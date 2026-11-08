@@ -101,11 +101,11 @@ export default function ProjectArchive({ projects }: { projects: NotionProject[]
                   {visible[i - 1]?.year === year ? '' : year}
                 </span>
                 <span style={{ minWidth: 0 }}>
-                  <motion.span variants={titleVariants} transition={fastTween} style={{ display: 'inline', fontSize: '1rem', fontWeight: 700 }}>
+                  <motion.span variants={titleVariants} transition={fastTween} style={{ display: 'inline', fontSize: '0.98rem', fontWeight: 600 }}>
                     {p.name}
                   </motion.span>
                   {p.status === '진행중' && (
-                    <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', fontWeight: 600, color: 'var(--accent)' }}>진행중</span>
+                    <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', fontWeight: 500, color: 'var(--accent)' }}>진행중</span>
                   )}
                   {p.description && (
                     <span style={{ display: 'block', marginTop: '0.15rem', fontSize: '0.84rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
@@ -113,7 +113,7 @@ export default function ProjectArchive({ projects }: { projects: NotionProject[]
                     </span>
                   )}
                   {p.award && (
-                    <span style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.8rem', fontWeight: 600, lineHeight: 1.4, color: 'var(--accent)' }}>
+                    <span style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.8rem', fontWeight: 500, lineHeight: 1.4, color: 'var(--accent)' }}>
                       🏆 {p.award}
                     </span>
                   )}

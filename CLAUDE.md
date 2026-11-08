@@ -112,7 +112,7 @@ Key functions in `lib/guestbook.ts`:
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | 짧은 소개 + 오늘의 면접 질문 + 최근 글 5 + 대표 작업 3 + Lab 진입. `revalidate = 3600` |
+| `/` | `app/page.tsx` | 캐릭터 이미지·떨어지는 태그·기록 눈금 히어로 → 최근 글 5 → 오늘의 면접 질문 → 대표 작업 4. `revalidate = 3600` |
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
@@ -124,7 +124,7 @@ Key functions in `lib/guestbook.ts`:
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
-| `/work` | `app/work/page.tsx` | 헤드(통계·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
+| `/work` | `app/work/page.tsx` | 헤드(요약·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
 | `/work/[slug]` | `app/work/[slug]/page.tsx` | Project detail |
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
@@ -158,7 +158,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget`. Lab에서도 같은 컴포넌트 사용 |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillsMore (client: 나머지 카테고리 접기), AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
-| `components/home/` | 홈 전용: HomeHero (태그 칩 + 커서 반응 점 배경), TiltCard (3D 틸트), ContainerScroll (스크롤 시 기울어진 카드가 펴짐, 최근 글) |
+| `components/home/` | 홈 전용: HomeHero (캐릭터 이미지 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), RecentPosts (client: 제목·설명을 자르지 않는 최근 글 목록) |
 | `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
@@ -183,7 +183,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 - Layout uses inline `style` props (not Tailwind utility classes) throughout most page/component files
 - Reusable CSS classes in `globals.css` `@layer components`: `.tag-badge`, `.card-hover`, `.sidebar-card`, `.series-tab-btn`, `.related-posts-grid`
 - `.series-tab-bar` / `.series-tab-btn`: `touch-action: pan-x` + `user-select: none` — 모바일 수평 스크롤 중 텍스트 드래그 선택 방지
-- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid` (grid blowout 방지 `min-width: 0`), `.work-head`·`.work-feature`·`.work-row` (≤768px 1열), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.home-work-grid` (≤768px 1열), `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
+- Responsive utility classes (media-query-only, not in `@layer components`): `.home-grid`, `.post-grid` (grid blowout 방지 `min-width: 0`), `.work-head`·`.work-feature`·`.work-row` (≤768px 1열), `.hero-section` (≤768px `margin: 0.5rem 0 1rem`), `.hero-banner` (≤768px `height: 240px`), `.hero-banner-content` (≤768px `padding: 1.25rem 1.5rem 3rem`), `.hero-banner-date` (절대 위치 고정 — 슬라이드별 날짜 높이 일관성), `.post-row-date` (≤480px 숨김), `.post-card-title` (≤480px 3줄 clamp), `.guestbook-grid`, `.series-folder-grid`, `.home-numbered` (≤768px 1열), `.about-edu-row` / `.about-activity-row` / `.about-row-period` (≤768px 세로 스택), `.card-stack-mobile` / `.post-list-desktop` (≤480px 카드스택 표시 / 리스트 숨김 토글)
 - Fonts: Pretendard (sans), JetBrains Mono (code/monospace)
 - 페이지 제목은 `.page-title`, 활성 메뉴·탭 밑줄은 직선(`components/motion/Underline.tsx`). 손글씨 폰트는 쓰지 않는다
 - 하드코딩 색 금지: 강조색은 `var(--accent)`, 옅은 배경은 `color-mix(in srgb, var(--accent) N%, transparent)`

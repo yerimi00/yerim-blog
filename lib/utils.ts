@@ -39,6 +39,11 @@ export function getRelatedPosts(current: Post, all: Post[], max = 3): Post[] {
     .map(({ post }) => post)
 }
 
+// '2026-10-30' → '26.10'
+export function toYYMM(date: string): string {
+  return date ? `${date.slice(2, 4)}.${date.slice(5, 7)}` : ''
+}
+
 const SERIES_ORDER = ['Server', 'design', 'AI', 'volunteer', 'Front-end', 'Algorithm', 'PM/PO', 'projects', 'Optimization']
 
 // ponytail: 목록에 없는 시리즈는 이름 해시로 색을 골라 겹칠 수 있다. 새 시리즈가 생기면 SERIES_ORDER와 --series-N을 늘린다

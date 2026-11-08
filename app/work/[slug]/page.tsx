@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: '1.15rem',
-  fontWeight: 700,
+  fontSize: '1.125rem',
+  fontWeight: 600,
   color: 'var(--text)',
   margin: '0 0 1rem',
 }
@@ -42,7 +42,7 @@ const linkButton: React.CSSProperties = {
   borderRadius: 'var(--radius)',
   border: '1px solid var(--border)',
   fontSize: '0.85rem',
-  fontWeight: 600,
+  fontWeight: 500,
   color: 'var(--text)',
   textDecoration: 'none',
 }
@@ -51,7 +51,7 @@ function PostGroup({ label, posts }: { label: string; posts: Post[] }) {
   if (!posts.length) return null
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)', margin: '0 0 0.25rem' }}>{label}</p>
+      <p style={{ fontSize: '0.88rem', fontWeight: 500, color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>{label}</p>
       {posts.map((post) => <PostCard key={post.id} post={post} />)}
     </div>
   )
@@ -84,11 +84,11 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
       </MotionLink>
 
       <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: 'clamp(1.9rem, 5vw, 2.75rem)', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text)', margin: '0 0 0.75rem' }}>
+        <h1 className="page-title" style={{ marginBottom: '0.75rem' }}>
           {project.name}
         </h1>
         {project.description && (
-          <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem' }}>{project.description}</p>
+          <p style={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--text-secondary)', margin: '0 0 1.25rem' }}>{project.description}</p>
         )}
         <dl className="work-feature-meta">
           {project.period && (
@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
           )}
         </dl>
         {project.award && (
-          <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent)', margin: '0.85rem 0 0' }}>🏆 {project.award}</p>
+          <p style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--accent)', margin: '0.85rem 0 0' }}>🏆 {project.award}</p>
         )}
         {links.length > 0 && (
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
@@ -162,7 +162,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             href={`/work/${next.slug}`}
             whileHover={{ x: 4, color: 'var(--accent)' }}
             transition={fastTween}
-            style={{ display: 'inline-block', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)', textDecoration: 'none' }}
+            style={{ display: 'inline-block', fontSize: '1.05rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}
           >
             {next.name} →
           </MotionLink>
