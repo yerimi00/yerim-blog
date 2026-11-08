@@ -6,7 +6,7 @@
 
 | 라우트 | 파일 | revalidate | 비고 |
 | --- | --- | --- | --- |
-| `/` | `app/page.tsx` | 3600 | 사진·떨어지는 태그·기록 눈금 히어로 + 최근 글 소개·목록 + 오늘의 면접 질문 + 대표 작업 4 (Featured) |
+| `/` | `app/page.tsx` | 3600 | 캐릭터 이미지·떨어지는 태그·기록 눈금 히어로 + 최근 글 소개·목록 + 오늘의 면접 질문 + 대표 작업 4 (Featured) |
 | `/blog` | `app/blog/page.tsx` | 86400 | 시리즈 탭 필터 + `/blog/series` 링크 |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | 86400 | 포스트 상세. generateStaticParams. canonical 설정. |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | 3600 | 태그별 포스트 목록. generateStaticParams. |

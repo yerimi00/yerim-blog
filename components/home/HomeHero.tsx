@@ -48,7 +48,7 @@ function Tick({ post, mouseX, active, still, onEnter }: { post: HeroPost; mouseX
   )
 }
 
-// 사진 위로 태그가 떨어져 쌓이고, 그 아래 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
+// 캐릭터 위로 태그가 떨어져 쌓이고, 그 아래 지금까지 쓴 글을 오래된 순으로 늘어놓은 눈금. 커서 근처 눈금이 솟고 그 글 제목이 위에 뜬다
 export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: string[] }) {
   const stageRef = useRef<HTMLDivElement>(null)
   const { active: physics, draggedRef } = usePhysicsStage(stageRef, { dropGap: 45 })
@@ -65,12 +65,12 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
       <div className="home-hero-head">
         <h1 className="visually-hidden">만들고, 배운 것을 기록해요</h1>
         <Image
-          src="/hero-photo.jpg"
-          alt="모자를 쓰고 포즈를 취한 이예림"
-          width={1200}
-          height={960}
+          src="/hero-avatar.png"
+          alt="모자를 쓴 이예림 캐릭터"
+          width={596}
+          height={780}
           priority
-          sizes="(max-width: 768px) 100vw, 560px"
+          sizes="(max-width: 768px) 130px, 180px"
           className="home-hero-photo"
         />
         <div className="home-hero-side">
