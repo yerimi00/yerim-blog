@@ -2,25 +2,20 @@ import Link from 'next/link'
 import { getAllPosts } from '@/lib/notion'
 import { getAllProjects } from '@/lib/projects'
 import { getPublishedQuestions } from '@/lib/interview'
-import TodayQuestionCard from '@/components/interview/TodayQuestionCard'
 import HomeHero from '@/components/home/HomeHero'
-import TiltCard from '@/components/home/TiltCard'
-import { HoverCardLink } from '@/components/motion/Hover'
+import PostCarousel from '@/components/home/PostCarousel'
+import TagMarquee from '@/components/home/TagMarquee'
 import SectionReveal from '@/components/about/SectionReveal'
-import ContainerScroll from '@/components/home/ContainerScroll'
-import { DEMOS } from '@/app/data/interactions/interactions-data'
+import { MotionLink } from '@/components/motion/MotionProvider'
+import { spring } from '@/components/motion/presets'
 
 export const revalidate = 3600
 
-const HERO_TAG_COUNT = 14
+const TAG_COUNT = 12
 
-const sectionTitle: React.CSSProperties = { fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', margin: 0 }
-const moreLink: React.CSSProperties = { fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none' }
-
-// '2026-10-30' → '26.10'
-function toYYMM(date: string) {
-  return date ? `${date.slice(2, 4)}.${date.slice(5, 7)}` : ''
-}
+const sectionHeading: React.CSSProperties = { fontSize: '1.25rem', fontWeight: 700, lineHeight: 1.45, color: 'var(--text)', margin: '0.85rem 0 0' }
+const sectionLead: React.CSSProperties = { fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-secondary)', margin: '0.6rem 0 0' }
+const textLink: React.CSSProperties = { display: 'inline-block', marginTop: '1rem', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }
 
 export default async function HomePage() {
   const [posts, projects, questions] = await Promise.all([
@@ -28,111 +23,78 @@ export default async function HomePage() {
     getAllProjects(),
     getPublishedQuestions(),
   ])
-  const recentPosts = posts.slice(0, 5)
   const featured = projects.filter((p) => p.featured)
-  const works = (featured.length ? featured : projects).slice(0, 3)
+  const works = (featured.length ? featured : projects).slice(0, 4)
   const today = questions[0]
 
-  // 많이 쓴 태그 순으로 히어로 칩 구성
+  // 많이 쓴 태그 순
   const tagCounts = new Map<string, number>()
   posts.forEach((p) => p.tags.forEach((t) => tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1)))
-  const heroTags = Array.from(tagCounts.entries())
+  const tags = Array.from(tagCounts.entries())
     .sort((a, b) => b[1] - a[1])
-    .slice(0, HERO_TAG_COUNT)
+    .slice(0, TAG_COUNT)
     .map(([tag]) => tag)
 
   return (
-    <>
-      <main style={{ maxWidth: '780px', margin: '0 auto', padding: '3rem 1.5rem' }}>
-        <HomeHero tags={heroTags} />
+    <main className="home-main">
+      <HomeHero />
 
-        {/* 오늘의 면접 질문 */}
-        {today && (
-          <SectionReveal style={{ marginBottom: '3rem' }}>
-            <TiltCard>
-              <TodayQuestionCard question={today} />
-            </TiltCard>
-          </SectionReveal>
-        )}
+      <PostCarousel posts={posts.slice(0, 7)} total={posts.length} />
 
-        {/* 최근 글 — 스크롤하면 기울어진 화면이 펴진다 */}
-        <ContainerScroll
-          title={
-            <>
-              <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)', margin: '0 0 0.35rem' }}>요즘 쓰고 있는 것들</p>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 800, color: 'var(--text)', margin: 0, letterSpacing: '-0.02em' }}>
-                배운 건 바로바로 기록해요
-              </h2>
-            </>
-          }
-        >
-          <div className="browser-chrome" aria-hidden="true">
-            <span /><span /><span />
-            <p>yerim.dev/blog</p>
-          </div>
-          <div style={{ padding: '0.5rem 1.25rem 1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '0.75rem 0 0.25rem' }}>
-              <h3 style={sectionTitle}>최근 글</h3>
-              <Link href="/blog" style={moreLink}>전체 {posts.length}개 보기 →</Link>
-            </div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-              {recentPosts.map((post) => (
-                <li key={post.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <Link href={`/blog/${post.slug}`} style={{ display: 'flex', gap: '1rem', alignItems: 'baseline', padding: '0.9rem 0', textDecoration: 'none' }}>
-                    <span style={{ fontSize: '0.78rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--text-muted)', flexShrink: 0 }}>
-                      {toYYMM(post.date)}
-                    </span>
-                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.5 }}>
-                      {post.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </ContainerScroll>
-
-        {/* 대표 작업 */}
-        {works.length > 0 && (
-          <SectionReveal style={{ marginBottom: '3rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-              <h2 style={sectionTitle}>작업</h2>
-              <Link href="/work" style={moreLink}>전체 보기 →</Link>
-            </div>
-            <div className="home-work-grid">
-              {works.map((p) => (
-                <TiltCard key={p.id}>
-                  <HoverCardLink
-                    href={`/work/${p.slug}`}
-                    style={{ display: 'block', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', background: 'var(--surface)' }}
-                  >
-                    <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.35rem' }}>{p.name}</p>
-                    <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{p.description}</p>
-                  </HoverCardLink>
-                </TiltCard>
-              ))}
-            </div>
-          </SectionReveal>
-        )}
-
-        {/* Lab 진입 (실험이 있을 때만) */}
-        {Object.keys(DEMOS).length > 0 && (
+      {today && (
+        <div className="home-wrap">
           <SectionReveal>
-            <TiltCard>
-              <HoverCardLink
-                href="/lab"
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', textDecoration: 'none', border: '1px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem 1.5rem' }}
-              >
-                <span>
-                  <span style={{ display: 'block', fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.2rem' }}>🧪 Lab</span>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>직접 만든 UI 인터랙션 {Object.keys(DEMOS).length}개를 눌러보세요</span>
-                </span>
-                <span style={{ color: 'var(--accent)' }}>→</span>
-              </HoverCardLink>
-            </TiltCard>
+            <section className="home-section home-rule">
+              <p className="home-marker">Today&apos;s Question</p>
+              <h2 style={sectionHeading}>{today.question}</h2>
+              <p style={sectionLead}>
+                {[today.category, today.level && `난이도 ${today.level}`].filter(Boolean).join(' · ')}
+              </p>
+              <Link href={`/interview/${today.slug}`} style={textLink}>먼저 생각해 보고 답 확인하기 →</Link>
+            </section>
           </SectionReveal>
-        )}
-      </main>
-    </>
+        </div>
+      )}
+
+      {works.length > 0 && (
+        <div className="home-wrap">
+          <SectionReveal>
+            <section className="home-section home-rule">
+              <p className="home-marker">Work</p>
+              <h2 style={sectionHeading}>직접 만든 것들</h2>
+              <p style={sectionLead}>해커톤부터 운영 중인 서비스까지, 기획하고 개발한 프로젝트예요.</p>
+              <div className="home-numbered">
+                {works.map((p, i) => (
+                  <MotionLink key={p.id} href={`/work/${p.slug}`} whileHover={{ y: -3 }} transition={spring.soft} className="home-numbered-item">
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <strong style={{ display: 'block', margin: '0.5rem 0 0.4rem', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>{p.name}</strong>
+                    <span style={{ fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{p.description}</span>
+                  </MotionLink>
+                ))}
+              </div>
+              <Link href="/work" style={textLink}>전체 작업 보기 →</Link>
+            </section>
+          </SectionReveal>
+        </div>
+      )}
+
+      {tags.length > 0 && <TagMarquee tags={tags} />}
+
+      <section className="home-cta">
+        <div className="home-cta-art" aria-hidden="true" />
+        <div className="home-wrap" style={{ position: 'relative', paddingBlock: 'clamp(3.5rem, 8vw, 5.5rem)' }}>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, lineHeight: 1.4, color: 'var(--band-text)', margin: '0 0 1.5rem' }}>
+            궁금한 점이나 하고 싶은 말이 있다면
+            <br />
+            방명록에 남겨 주세요
+          </h2>
+          <MotionLink href="/guestbook" className="home-pill home-pill--solid" whileHover={{ y: -2 }} transition={spring.soft}>
+            방명록 쓰기
+          </MotionLink>
+        </div>
+      </section>
+    </main>
   )
 }

@@ -1,23 +1,14 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Link from 'next/link'
-import TypewriterText from '@/components/about/TypewriterText'
-import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
+import { motion } from 'motion/react'
 import { MotionLink } from '@/components/motion/MotionProvider'
-import Underline from '@/components/motion/Underline'
-import { fastTween } from '@/components/motion/presets'
+import { ease, spring } from '@/components/motion/presets'
 
-const HERO_LINKS = [
-  { label: 'About', href: '/about' },
-  { label: 'GitHub', href: 'https://github.com/yerimi00' },
-  { label: 'Velog', href: 'https://velog.io/@yerimi00' },
-]
+const DOT_GAP = 24
+const PUSH_RADIUS = 120
 
-const DOT_GAP = 22
-const PUSH_RADIUS = 110
-
-// 커서 근처 점이 밀려나는 배경. 화면에 보일 때만 그린다
+// 천천히 일렁이는 점 물결. 커서 근처 점은 밀려나며 강조색이 된다. 화면에 보일 때만 그린다
 function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: React.RefObject<HTMLElement>) {
   useEffect(() => {
     const canvas = canvasRef.current
@@ -44,10 +35,11 @@ function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: Rea
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
 
-    const draw = () => {
+    const draw = (now: number) => {
       const styles = getComputedStyle(hero)
-      const muted = styles.getPropertyValue('--text-muted').trim()
+      const muted = styles.getPropertyValue('--band-muted').trim()
       const accent = styles.getPropertyValue('--accent').trim()
+      const time = reduceMotion ? 0 : now / 2400
       eased.x += (pointer.x - eased.x) * 0.15
       eased.y += (pointer.y - eased.y) * 0.15
 
@@ -60,10 +52,11 @@ function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: Rea
           const force = reduceMotion ? 0 : Math.max(0, 1 - dist / PUSH_RADIUS)
           const px = x + (dist ? (dx / dist) * force * 14 : 0)
           const py = y + (dist ? (dy / dist) * force * 14 : 0)
-          ctx.globalAlpha = 0.25 + force * 0.75
+          const wave = Math.max(0, Math.sin(x * 0.009 - y * 0.014 + time))
+          ctx.globalAlpha = Math.min(1, 0.05 + wave ** 3 * 0.8 + force * 0.8)
           ctx.fillStyle = force > 0.05 ? accent : muted
           ctx.beginPath()
-          ctx.arc(px, py, 1.2 + force * 1.8, 0, Math.PI * 2)
+          ctx.arc(px, py, 1.3 + force * 1.8, 0, Math.PI * 2)
           ctx.fill()
         }
       }
@@ -107,62 +100,34 @@ function useDotField(canvasRef: React.RefObject<HTMLCanvasElement>, heroRef: Rea
   }, [canvasRef, heroRef])
 }
 
-export default function HomeHero({ tags }: { tags: string[] }) {
+export default function HomeHero() {
   const heroRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
 
   useDotField(canvasRef, heroRef)
-  const { active: physics, draggedRef } = usePhysicsStage(stageRef, { dropGap: 45 })
 
   return (
     <section ref={heroRef} className="home-hero">
       <canvas ref={canvasRef} className="home-hero-canvas" aria-hidden="true" />
 
-      <div className="home-hero-text">
-        <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>안녕하세요,</p>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.2, color: 'var(--text)', margin: '0 0 0.75rem', minHeight: '1.2em' }}>
-          {/* 타이핑(7글자 × 80ms)이 끝난 뒤 밑줄을 긋는다 */}
-          <span style={{ position: 'relative' }}>
-            <TypewriterText text="이예림입니다." />
-            <Underline delay={0.75} style={{ height: 3 }} />
-          </span>
+      <motion.div
+        className="home-hero-text"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: ease.out }}
+      >
+        <p style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--band-muted)', margin: '0 0 1rem' }}>프론트엔드 개발자 이예림</p>
+        <h1 style={{ fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: 'var(--band-text)', margin: '0 0 1rem' }}>
+          만들고, 배운 것을 기록해요
         </h1>
-        <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7, margin: '0 0 0.9rem', maxWidth: '420px' }}>
-          프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만들고, 배운 것을 기록해요.
+        <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--band-muted)', margin: '0 auto 2rem', maxWidth: '520px', wordBreak: 'keep-all' }}>
+          프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만든 것과 배운 것을 모았어요.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.85rem' }}>
-          {HERO_LINKS.map(({ label, href }) =>
-            href.startsWith('http') ? (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>{label}</a>
-            ) : (
-              <Link key={label} href={href} style={{ color: 'var(--accent)', textDecoration: 'none' }}>{label}</Link>
-            )
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <MotionLink href="/blog" className="home-pill home-pill--solid" whileHover={{ y: -2 }} transition={spring.soft}>블로그 읽기</MotionLink>
+          <MotionLink href="/about" className="home-pill home-pill--ghost" whileHover={{ y: -2 }} transition={spring.soft}>About</MotionLink>
         </div>
-      </div>
-
-      <div ref={stageRef} className={`physics-stage home-hero-stage${physics ? ' is-physics' : ''}`}>
-        {tags.map((tag) => (
-          <MotionLink
-            key={tag}
-            data-physics=""
-            href={`/blog/tag/${encodeURIComponent(tag)}`}
-            className="home-hero-chip"
-            draggable={false}
-            whileHover={{ color: 'var(--accent)', borderColor: 'var(--accent)' }}
-            transition={fastTween}
-            onClick={(e) => {
-              // 드래그로 끝난 경우 이동하지 않는다
-              if (draggedRef.current) e.preventDefault()
-            }}
-          >
-            #{tag}
-          </MotionLink>
-        ))}
-      </div>
-
-      {physics && <p className="home-hero-hint">태그를 잡아서 던져 보세요</p>}
+      </motion.div>
     </section>
   )
 }
