@@ -1,5 +1,6 @@
 import { HoverCardLink } from '@/components/motion/Hover'
 import type { InterviewQuestion } from '@/lib/interview'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 export default function TodayQuestionCard({ question }: { question: InterviewQuestion }) {
   return (
@@ -23,7 +24,7 @@ export default function TodayQuestionCard({ question }: { question: InterviewQue
         {question.question}
       </p>
       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.75rem', marginBottom: 0 }}>
-        먼저 생각해 보고 답 확인하기 →
+        먼저 생각해 보고 답 확인하기 <ArrowRight />
       </p>
     </HoverCardLink>
   )

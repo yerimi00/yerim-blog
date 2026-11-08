@@ -953,6 +953,17 @@
   }
 }
 
+/* 글자 옆 화살표 아이콘 */
+.text-arrow {
+  display: inline-block;
+  margin-left: 0.2em;
+  vertical-align: -0.125em;
+}
+.text-arrow--back {
+  margin-left: 0;
+  margin-right: 0.2em;
+}
+
 /* 페이지 제목 */
 .page-title {
   font-size: 2rem;

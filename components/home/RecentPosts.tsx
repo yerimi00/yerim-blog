@@ -6,6 +6,7 @@ import type { Post } from '@/types'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { fastTween } from '@/components/motion/presets'
 import { toYYMM } from '@/lib/utils'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 const titleVariants = { rest: { color: 'var(--text)' }, hover: { color: 'var(--accent)' } }
 const arrowVariants = { rest: { opacity: 0, x: -4 }, hover: { opacity: 1, x: 0 } }
@@ -20,7 +21,7 @@ export default function RecentPosts({ posts, total }: { posts: Post[]; total: nu
             <p className="home-marker">Blog</p>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, lineHeight: 1.45, color: 'var(--text)', margin: '0.85rem 0 0' }}>요즘 쓰고 있는 글</h2>
           </div>
-          <Link href="/blog" style={{ flexShrink: 0, fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}>전체 {total}개 →</Link>
+          <Link href="/blog" style={{ flexShrink: 0, fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}>전체 {total}개 <ArrowRight /></Link>
         </div>
 
         <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -40,7 +41,7 @@ export default function RecentPosts({ posts, total }: { posts: Post[]; total: nu
                     <span style={{ display: 'block', marginTop: '0.35rem', fontSize: '0.92rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{post.description}</span>
                   )}
                 </span>
-                <motion.span className="home-post-arrow" variants={arrowVariants} transition={fastTween}>→</motion.span>
+                <motion.span className="home-post-arrow" variants={arrowVariants} transition={fastTween}><ArrowRight /></motion.span>
               </MotionLink>
             </li>
           ))}

@@ -9,6 +9,7 @@ import { usePhysicsStage } from '@/components/physics/usePhysicsStage'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { fastTween, spring } from '@/components/motion/presets'
 import { seriesColor, toYYMM } from '@/lib/utils'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 export type HeroPost = Pick<Post, 'slug' | 'title' | 'date' | 'series'>
 
@@ -79,8 +80,8 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
             프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만든 것과 배운 것을 모았어요.
           </p>
           <div style={{ display: 'flex', gap: '1.25rem' }}>
-            <Link href="/blog" style={heroLink}>블로그 →</Link>
-            <Link href="/about" style={heroLink}>About →</Link>
+            <Link href="/blog" style={heroLink}>블로그 <ArrowRight /></Link>
+            <Link href="/about" style={heroLink}>About <ArrowRight /></Link>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import SectionReveal from '@/components/about/SectionReveal'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { fastTween, spring } from '@/components/motion/presets'
 import { disciplinesOf, isLead } from '@/components/project/project-utils'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 // 대표작 지면. 이미지 비율이 제각각이라 같은 크기의 매트 안에 잘리지 않게 넣고, 행마다 좌우를 바꾼다
 export default function FeaturedWork({ projects }: { projects: NotionProject[] }) {
@@ -59,7 +60,7 @@ export default function FeaturedWork({ projects }: { projects: NotionProject[] }
                 transition={fastTween}
                 style={{ display: 'inline-block', marginTop: '1.1rem', fontSize: '0.88rem', fontWeight: 500, color: 'var(--text)', textDecoration: 'none' }}
               >
-                자세히 보기 →
+                자세히 보기 <ArrowRight />
               </MotionLink>
             </div>
           </article>

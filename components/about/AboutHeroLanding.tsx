@@ -8,6 +8,7 @@ import { motion } from 'motion/react'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import BlinkCursor from '@/components/motion/BlinkCursor'
 import { fastTween } from '@/components/motion/presets'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 // 숙련도 → 공 지름(px). 모바일은 CSS --ball-scale로 줄인다
 const LEVEL_SIZE: Record<string, number> = {
@@ -391,13 +392,13 @@ export default function AboutHeroLanding({ featuredProjects }: { featuredProject
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               <MotionLink href="/about/fe" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
-                프론트엔드 개발자로 만나기 →
+                프론트엔드 개발자로 만나기 <ArrowRight />
               </MotionLink>
               <MotionLink href="/about/be" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
-                백엔드 개발자로 만나기 →
+                백엔드 개발자로 만나기 <ArrowRight />
               </MotionLink>
               <MotionLink href="/about/pm" className="about-hero-btn" style={{ width: 'fit-content' }} whileHover={{ borderColor: 'var(--accent)', color: 'var(--accent)' }} transition={{ duration: 0.2 }}>
-                프로덕트 매니저로 만나기 →
+                프로덕트 매니저로 만나기 <ArrowRight />
               </MotionLink>
             </div>
           </div>

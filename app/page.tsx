@@ -7,6 +7,7 @@ import RecentPosts from '@/components/home/RecentPosts'
 import SectionReveal from '@/components/about/SectionReveal'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { spring } from '@/components/motion/presets'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 export const revalidate = 3600
 
@@ -49,7 +50,7 @@ export default async function HomePage() {
               <p style={sectionLead}>
                 {[today.category, today.level && `난이도 ${today.level}`].filter(Boolean).join(' · ')}
               </p>
-              <Link href={`/interview/${today.slug}`} style={textLink}>먼저 생각해 보고 답 확인하기 →</Link>
+              <Link href={`/interview/${today.slug}`} style={textLink}>먼저 생각해 보고 답 확인하기 <ArrowRight /></Link>
             </section>
           </SectionReveal>
         </div>
@@ -73,7 +74,7 @@ export default async function HomePage() {
                   </MotionLink>
                 ))}
               </div>
-              <Link href="/work" style={textLink}>전체 작업 보기 →</Link>
+              <Link href="/work" style={textLink}>전체 작업 보기 <ArrowRight /></Link>
             </section>
           </SectionReveal>
         </div>

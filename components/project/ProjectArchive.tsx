@@ -7,6 +7,7 @@ import { MotionLink } from '@/components/motion/MotionProvider'
 import TabButton from '@/components/motion/TabButton'
 import { fastTween, spring } from '@/components/motion/presets'
 import { disciplinesOf, yearOf } from '@/components/project/project-utils'
+import { ArrowRight } from '@/components/ui/text-arrows'
 
 const FILTERS: { label: string; match: (p: NotionProject) => boolean }[] = [
   { label: '전체', match: () => true },
@@ -120,7 +121,7 @@ export default function ProjectArchive({ projects }: { projects: NotionProject[]
                 </span>
                 <span className="work-row-roles">
                   {disciplinesOf(p).join(' · ')}
-                  <motion.span variants={arrowVariants} transition={fastTween} style={{ display: 'inline-block', marginLeft: '0.5rem', color: 'var(--accent)' }}>→</motion.span>
+                  <motion.span variants={arrowVariants} transition={fastTween} style={{ display: 'inline-block', marginLeft: '0.5rem', color: 'var(--accent)' }}><ArrowRight /></motion.span>
                 </span>
               </MotionLink>
             </motion.li>

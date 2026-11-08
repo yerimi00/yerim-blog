@@ -157,7 +157,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
 | `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget`. Lab에서도 같은 컴포넌트 사용 |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillsMore (client: 나머지 카테고리 접기), AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
-| `components/ui/` | 외부에서 가져온 UI 컴포넌트. `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
+| `components/ui/` | 외부에서 가져온 UI 컴포넌트. `text-arrows.tsx` (글자 옆 화살표 아이콘 `ArrowRight`·`ArrowBack`·`ArrowOut`, 화살표 글자 대신 사용), `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
 | `components/home/` | 홈 전용: HomeHero (캐릭터 이미지 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), RecentPosts (client: 제목·설명을 자르지 않는 최근 글 목록) |
 | `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |

@@ -7,6 +7,7 @@ import { MotionLink } from '@/components/motion/MotionProvider'
 import { fastTween } from '@/components/motion/presets'
 import { disciplinesOf, isLead } from '@/components/project/project-utils'
 import type { Post } from '@/types'
+import { ArrowBack, ArrowOut, ArrowRight } from '@/components/ui/text-arrows'
 
 export const revalidate = 3600
 
@@ -68,8 +69,8 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
   const hasRelatedPosts = postGroups.troubleshooting.length + postGroups.retrospective.length > 0
   const next = projects[(projects.findIndex((p) => p.slug === project.slug) + 1) % projects.length]
   const links = [
-    { href: project.github, label: 'GitHub ↗' },
-    { href: project.url, label: '서비스 바로가기 ↗' },
+    { href: project.github, label: 'GitHub' },
+    { href: project.url, label: '서비스 바로가기' },
   ].filter((l) => l.href)
 
   return (
@@ -80,7 +81,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         transition={fastTween}
         style={{ display: 'inline-block', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '1.5rem' }}
       >
-        ← Work
+        <ArrowBack />Work
       </MotionLink>
 
       <header style={{ marginBottom: '2rem' }}>
@@ -115,7 +116,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
             {links.map(({ href, label }) => (
               <HoverFade key={label} style={{ display: 'inline-block' }}>
-                <a href={href} target="_blank" rel="noopener noreferrer" style={linkButton}>{label}</a>
+                <a href={href} target="_blank" rel="noopener noreferrer" style={linkButton}>{label}<ArrowOut /></a>
               </HoverFade>
             ))}
           </div>
@@ -164,7 +165,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             transition={fastTween}
             style={{ display: 'inline-block', fontSize: '1.05rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}
           >
-            {next.name} →
+            {next.name} <ArrowRight />
           </MotionLink>
         </nav>
       )}
