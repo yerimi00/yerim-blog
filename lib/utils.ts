@@ -38,3 +38,12 @@ export function getRelatedPosts(current: Post, all: Post[], max = 3): Post[] {
     .slice(0, max)
     .map(({ post }) => post)
 }
+
+const SERIES_ORDER = ['Server', 'design', 'AI', 'volunteer', 'Front-end', 'Algorithm', 'PM/PO', 'projects', 'Optimization']
+
+// ponytail: 목록에 없는 시리즈는 이름 해시로 색을 골라 겹칠 수 있다. 새 시리즈가 생기면 SERIES_ORDER와 --series-N을 늘린다
+export function seriesColor(series: string): string {
+  const known = SERIES_ORDER.indexOf(series)
+  const index = known >= 0 ? known : series.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % SERIES_ORDER.length
+  return `var(--series-${index + 1})`
+}

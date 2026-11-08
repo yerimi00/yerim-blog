@@ -11,7 +11,7 @@ import SocialShare from '@/components/blog/SocialShare'
 import RelatedPosts from '@/components/blog/RelatedPosts'
 import MediumZoom from '@/components/blog/MediumZoom'
 import GoogleAdsense from '@/components/GoogleAdsense'
-import { formatDate, calculateReadingTime, getRelatedPosts } from '@/lib/utils'
+import { formatDate, calculateReadingTime, getRelatedPosts, seriesColor } from '@/lib/utils'
 import { buildBlogPostingSchema, buildBreadcrumbSchema } from '@/lib/structured-data'
 import GithubSlugger from 'github-slugger'
 import { SITE_URL } from '@/lib/site'
@@ -121,8 +121,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     style={{
                       fontSize: '0.73rem',
                       fontWeight: 500,
-                      color: 'var(--accent)',
-                      background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
+                      color: seriesColor(post.series),
+                      background: `color-mix(in srgb, ${seriesColor(post.series)} 10%, transparent)`,
                       padding: '2px 10px',
                       borderRadius: '20px',
                       textDecoration: 'none',

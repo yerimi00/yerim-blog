@@ -29,6 +29,16 @@
     --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
     /* 정답 표시 (면접 위젯) */
     --success: #15803d;
+    /* 시리즈 뱃지 (lib/utils.ts seriesColor) */
+    --series-1: #2563eb;
+    --series-2: #db2777;
+    --series-3: #7c3aed;
+    --series-4: #15803d;
+    --series-5: #0e7490;
+    --series-6: #c2410c;
+    --series-7: #a16207;
+    --series-8: #e5383b;
+    --series-9: #475569;
     --primary-container: #fde2e2;
     --on-primary: #ffffff;
 
@@ -69,6 +79,15 @@
 
     --accent: #ff6b6b;
     --success: #4ade80;
+    --series-1: #60a5fa;
+    --series-2: #f472b6;
+    --series-3: #a78bfa;
+    --series-4: #4ade80;
+    --series-5: #22d3ee;
+    --series-6: #fb923c;
+    --series-7: #facc15;
+    --series-8: #ff6b6b;
+    --series-9: #94a3b8;
     --accent-dim: #ffa3a3;
     --primary-container: #5c1a1c;
     --on-primary: #2b0506;

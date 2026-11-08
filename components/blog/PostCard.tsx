@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Post } from '@/types'
-import { formatDate } from '@/lib/utils'
+import { formatDate, seriesColor } from '@/lib/utils'
 import { HiOutlineChatBubbleLeft } from 'react-icons/hi2'
 import { motion } from 'motion/react'
 import { fastTween } from '@/components/motion/presets'
@@ -36,8 +36,8 @@ export default function PostCard({ post, commentCount = 0 }: { post: Post; index
             style={{
               fontSize: '0.73rem',
               fontWeight: 500,
-              color: 'var(--accent)',
-              background: 'color-mix(in srgb, var(--accent) 10%, transparent)',
+              color: seriesColor(post.series),
+              background: `color-mix(in srgb, ${seriesColor(post.series)} 10%, transparent)`,
               padding: '2px 10px',
               borderRadius: '20px',
               textDecoration: 'none',
