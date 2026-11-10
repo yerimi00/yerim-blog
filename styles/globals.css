@@ -834,7 +834,7 @@
   border: 0;
 }
 .home-hero-photo {
-  position: relative;
+  display: block;
   flex: none;
   width: clamp(130px, 13vw, 165px);
 }
@@ -842,12 +842,6 @@
   display: block;
   width: 100%;
   height: auto;
-}
-/* 몸통과 같은 크기로 겹친 손 레이어. 회전은 HomeHero에서 motion으로 */
-.home-hero-hand {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
 }
 .home-strip {
   margin-top: 1rem;
