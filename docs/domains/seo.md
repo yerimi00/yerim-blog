@@ -6,7 +6,7 @@ yerim.dev의 메타데이터, JSON-LD, RSS, OG, robots 설정을 정리합니다
 
 | 변수 | 용도 |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | `lib/site.ts`의 `SITE_URL`. metadataBase, OG url, JSON-LD, RSS, sitemap, robots 절대 URL. 없으면 `https://yerim-blog.vercel.app` 폴백. |
+| `NEXT_PUBLIC_SITE_URL` | `lib/site.ts`의 `SITE_URL`. metadataBase, OG url, JSON-LD, RSS, sitemap, robots 절대 URL. 없으면 `https://www.yerimi00.com` 폴백(가비아 도메인, `yerimi00.com`은 Vercel에서 www로 308). |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | 구글 서치콘솔 소유 확인 메타 (`metadata.verification.google`). 선택. |
 | `NEXT_PUBLIC_NAVER_SITE_VERIFICATION` | 네이버 서치어드바이저 소유 확인 메타 (`naver-site-verification`). 선택. |
 
