@@ -8,6 +8,7 @@ import SectionReveal from '@/components/about/SectionReveal'
 import { MotionLink } from '@/components/motion/MotionProvider'
 import { spring } from '@/components/motion/presets'
 import { ArrowRight } from '@/components/ui/text-arrows'
+import { buildWebSiteSchema } from '@/lib/structured-data'
 
 export const revalidate = 3600
 
@@ -37,6 +38,7 @@ export default async function HomePage() {
 
   return (
     <main className="home-main">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebSiteSchema()) }} />
       <HomeHero tags={tags} posts={posts.map(({ slug, title, date, series }) => ({ slug, title, date, series }))} />
 
       <RecentPosts posts={posts.slice(0, 5)} total={posts.length} />

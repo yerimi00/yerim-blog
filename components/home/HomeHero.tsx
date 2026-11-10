@@ -64,7 +64,7 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
     <section className="home-hero">
       <div className="home-hero-play">
       <div className="home-hero-head">
-        <h1 className="visually-hidden">만들고, 배운 것을 기록해요</h1>
+        <h1 className="visually-hidden">예림 개발 블로그 — 만들고, 배운 것을 기록해요</h1>
         <Image
           src="/hero-avatar-bust.png"
           alt="모자를 쓴 이예림 캐릭터"

@@ -10,14 +10,16 @@ yerim.dev의 메타데이터, JSON-LD, RSS, OG, robots 설정을 정리합니다
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | 구글 서치콘솔 소유 확인 메타 (`metadata.verification.google`). 선택. |
 | `NEXT_PUBLIC_NAVER_SITE_VERIFICATION` | 네이버 서치어드바이저 소유 확인 메타 (`naver-site-verification`). 선택. |
 
-사이트 URL·이름·설명은 `lib/site.ts`(`SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION`) 한 곳에서만 정의한다.
+사이트 URL·이름·설명은 `lib/site.ts`(`SITE_URL`, `SITE_NAME`, `SITE_DOMAIN_NAME`, `AUTHOR_NAME`, `SITE_DESCRIPTION`) 한 곳에서만 정의한다.
+
+브랜드 검색어: `SITE_NAME`은 '예림 개발 블로그'다. 홈 제목(`예림 개발 블로그 | yerim.dev`), 모든 페이지 제목 템플릿, og:site_name, RSS 제목, 홈 숨김 h1, 홈 `WebSite` JSON-LD(`alternateName`: yerim.dev · 이예림 개발 블로그 · yerimi00)에 같은 이름을 써서 '예림 개발 블로그' 검색과 사이트를 연결한다.
 
 ## 기본 메타데이터 (`app/layout.tsx`)
 
 ```typescript
 metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME} | ${SITE_DOMAIN_NAME}`, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   openGraph: { type: 'website', locale: 'ko_KR', url: SITE_URL, siteName: SITE_NAME },
   verification: { google: ..., other: { 'naver-site-verification': ... } },
@@ -62,7 +64,7 @@ RSS 링크 태그 (`app/layout.tsx` `<head>`):
   "datePublished": "ISO 날짜",
   "dateModified": "ISO 날짜",
   "author": { "@type": "Person", "name": "yerim", "url": "SITE_URL" },
-  "publisher": { "@type": "Organization", "name": "yerim.dev", "logo": { "@type": "ImageObject", "url": "SITE_URL/logo.png" } },
+  "publisher": { "@type": "Organization", "name": "예림 개발 블로그", "logo": { "@type": "ImageObject", "url": "SITE_URL/logo.png" } },
   "mainEntityOfPage": { "@type": "WebPage", "@id": "포스트 전체 URL" },
   "keywords": "태그1, 태그2"
 }

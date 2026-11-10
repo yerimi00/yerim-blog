@@ -8,11 +8,11 @@ import BottomNav from '@/components/layout/BottomNav'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import MotionProvider from '@/components/motion/MotionProvider'
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
+import { SITE_URL, SITE_NAME, SITE_DOMAIN_NAME, SITE_DESCRIPTION } from '@/lib/site'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME} | ${SITE_DOMAIN_NAME}`, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   manifest: '/manifest.json',
   appleWebApp: {

@@ -1,8 +1,22 @@
 import type { Post } from '@/types'
 
-import { SITE_URL, SITE_NAME } from '@/lib/site'
+import { SITE_URL, SITE_NAME, SITE_DOMAIN_NAME, SITE_DESCRIPTION, AUTHOR_NAME } from '@/lib/site'
 
-const AUTHOR = 'yerim'
+const AUTHOR = AUTHOR_NAME
+
+// 홈 전용: 검색 결과의 사이트 이름과 '예림 개발 블로그' 같은 브랜드 검색어를 연결한다
+export function buildWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    alternateName: [SITE_DOMAIN_NAME, `${AUTHOR_NAME} 개발 블로그`, 'yerimi00'],
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: 'ko-KR',
+    author: { '@type': 'Person', name: AUTHOR_NAME, url: `${SITE_URL}/about/fe`, sameAs: ['https://github.com/yerimi00'] },
+  }
+}
 
 export function buildBlogPostingSchema(post: Post, postUrl: string) {
   return {
