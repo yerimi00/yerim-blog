@@ -15,6 +15,24 @@ export type HeroPost = Pick<Post, 'slug' | 'title' | 'date' | 'series'>
 const LIFT_RADIUS = 110
 const MAX_LIFT = 2.2
 
+const SAY = ['안녕하세요! 프론트엔드 개발자 이예림이에요.', '프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만든 것과 배운 것을 모았어요.']
+const SAY_DELAY = 0.5
+const TYPE_START = 0.8
+const TYPE_STEP = 0.035
+
+// 글자를 하나씩 보이게 한다. 실제 글자는 처음부터 DOM에 있어 검색·스크린리더에 영향이 없다
+function Typed({ text, from }: { text: string; from: number }) {
+  return (
+    <>
+      {Array.from(text).map((ch, i) => (
+        <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0, delay: TYPE_START + (from + i) * TYPE_STEP }}>
+          {ch}
+        </motion.span>
+      ))}
+    </>
+  )
+}
+
 const heroLink: React.CSSProperties = { fontSize: '0.92rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }
 
 function Tick({ post, mouseX, active, still, onEnter }: { post: HeroPost; mouseX: MotionValue<number>; active: boolean; still: boolean; onEnter: () => void }) {
@@ -67,15 +85,28 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
         {/* 손 흔드는 영상(배경 투명 animated WebP)을 한 번 재생하고 마지막 장면에서 멈춘다. 동작 줄이기 설정이면 정지 이미지 */}
         <picture className="home-hero-photo">
           <source media="(prefers-reduced-motion: reduce)" srcSet="/hero-wave-still.png" />
+          <source media="(max-width: 768px)" srcSet="/hero-wave-sm.webp" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero-wave.webp" alt="손을 흔들며 인사하는 이예림 캐릭터" width={330} height={354} />
+          <img src="/hero-wave.webp" alt="손을 흔들며 인사하는 이예림 캐릭터" width={520} height={558} />
         </picture>
         <div className="home-hero-side">
-          <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.5rem' }}>프론트엔드 개발자 이예림</p>
-          <p style={{ fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-secondary)', margin: '0 0 1.1rem' }}>
-            프론트엔드를 중심으로 백엔드와 기획 사이를 오가며 만든 것과 배운 것을 모았어요.
-          </p>
-          <div style={{ display: 'flex', gap: '1.25rem' }}>
+          {/* PC에서는 캐릭터가 말하는 말풍선. 손을 흔든 뒤 뜨고 글자가 하나씩 찍힌다 */}
+          <motion.div
+            className="home-hero-say"
+            style={{ transformOrigin: '0% 30%' }}
+            initial={{ opacity: 0, scale: 0.85, x: -10 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ ...spring.bouncy, delay: SAY_DELAY }}
+          >
+            <p className="visually-hidden">{SAY.join(' ')}</p>
+            <p aria-hidden="true" style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.6, color: 'var(--text)', margin: '0 0 0.35rem' }}>
+              <Typed text={SAY[0]} from={0} />
+            </p>
+            <p aria-hidden="true" style={{ fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-secondary)', margin: 0 }}>
+              <Typed text={SAY[1]} from={SAY[0].length} />
+            </p>
+          </motion.div>
+          <div style={{ display: 'flex', gap: '1.25rem', marginTop: '1.1rem' }}>
             <Link href="/blog" style={heroLink}>블로그 <ArrowRight /></Link>
             <Link href="/about" style={heroLink}>About <ArrowRight /></Link>
           </div>

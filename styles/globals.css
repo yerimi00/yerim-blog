@@ -815,12 +815,33 @@
 }
 .home-hero-head {
   display: flex;
-  align-items: flex-end;
-  gap: clamp(2rem, 6vw, 4.5rem);
+  align-items: flex-start;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
 }
 .home-hero-side {
-  flex: 0 0 320px;
-  padding-bottom: 0.6rem;
+  flex: 0 1 380px;
+  padding-top: clamp(2rem, 4vw, 3.25rem);
+}
+/* PC: 캐릭터 쪽으로 꼬리가 달린 말풍선 */
+.home-hero-say {
+  position: relative;
+  padding: 1rem 1.25rem;
+  background: var(--surface-container);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  word-break: keep-all;
+}
+.home-hero-say::before {
+  content: '';
+  position: absolute;
+  top: 1.4rem;
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  background: var(--surface-container);
+  border-left: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(45deg);
 }
 .visually-hidden {
   position: absolute;
@@ -836,7 +857,7 @@
 .home-hero-photo {
   display: block;
   flex: none;
-  width: clamp(130px, 13vw, 165px);
+  width: clamp(200px, 20vw, 260px);
 }
 .home-hero-photo img {
   display: block;
@@ -921,7 +942,19 @@
   }
   .home-hero-side {
     flex: none;
-    padding-bottom: 0;
+    padding-top: 0;
+  }
+  /* 모바일은 말풍선·타이핑 없이 글만 */
+  .home-hero-say {
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  .home-hero-say::before {
+    display: none;
+  }
+  .home-hero-say span {
+    opacity: 1 !important;
   }
   .home-hero-photo {
     width: 120px;
