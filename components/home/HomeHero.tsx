@@ -65,7 +65,18 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
       <div className="home-hero-play">
       <div className="home-hero-head">
         <h1 className="visually-hidden">예림 개발 블로그 — 만들고, 배운 것을 기록해요</h1>
-        <div className="home-hero-photo">
+        {/* 들어오면 방방 세 번 뛴다. 착지할 때 살짝 눌렸다 펴진다 */}
+        <motion.div
+          className="home-hero-photo"
+          style={{ transformOrigin: '50% 100%' }}
+          initial={{ y: 0, scaleX: 1, scaleY: 1 }}
+          animate={{
+            y: [0, -22, 0, -16, 0, -8, 0],
+            scaleY: [1, 1.04, 0.9, 1.03, 0.93, 1.01, 1],
+            scaleX: [1, 0.97, 1.07, 0.98, 1.05, 1, 1],
+          }}
+          transition={{ duration: 1.6, delay: 0.3, ease: ['easeOut', 'easeIn', 'easeOut', 'easeIn', 'easeOut', 'easeIn'] }}
+        >
           <Image
             src="/hero-wave-body.png"
             alt="손을 들어 인사하는 이예림 캐릭터"
@@ -84,7 +95,7 @@ export default function HomeHero({ posts, tags }: { posts: HeroPost[]; tags: str
           >
             <Image src="/hero-wave-hand.png" alt="" width={490} height={730} priority sizes="(max-width: 768px) 120px, 165px" />
           </motion.div>
-        </div>
+        </motion.div>
         <div className="home-hero-side">
           <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 0.5rem' }}>프론트엔드 개발자 이예림</p>
           <p style={{ fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-secondary)', margin: '0 0 1.1rem' }}>
