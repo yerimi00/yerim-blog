@@ -61,7 +61,8 @@ IA v2 이전 전 링크 보호용. 구체적인 규칙이 위에 있어야 한�
 | `public/ads.txt` | Google AdSense 인증 |
 | `public/manifest.json` | PWA 매니페스트 |
 | `public/sw.js` | Service Worker |
-| `public/logo.jpg` | 파비콘 · OG 이미지 폴백 |
+| `public/logo.png` | 헤더 로고(캐릭터 누끼, 투명 PNG) · 파비콘 · OG 이미지 폴백 |
+| `public/apple-icon.png` | 애플 터치 아이콘(초록 배경 유지) |
 | `public/profile.jpg` | About 프로필 이미지 |
 
 ## 라우트 추가 시 체크리스트

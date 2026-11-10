@@ -33,8 +33,8 @@ export const metadata: Metadata = {
       : undefined,
   },
   icons: {
-    icon: '/logo.jpg',
-    apple: '/logo.jpg',
+    icon: '/logo.png',
+    apple: '/apple-icon.png',
   },
 }
 

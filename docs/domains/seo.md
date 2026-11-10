@@ -21,7 +21,7 @@ metadata = {
   description: SITE_DESCRIPTION,
   openGraph: { type: 'website', locale: 'ko_KR', url: SITE_URL, siteName: SITE_NAME },
   verification: { google: ..., other: { 'naver-site-verification': ... } },
-  icons: { icon: '/logo.jpg', apple: '/logo.jpg' },
+  icons: { icon: '/logo.png', apple: '/apple-icon.png' },
 }
 ```
 
@@ -58,11 +58,11 @@ RSS 링크 태그 (`app/layout.tsx` `<head>`):
   "@type": "BlogPosting",
   "headline": "포스트 제목",
   "description": "포스트 설명",
-  "image": "커버 이미지 URL 또는 /logo.jpg",
+  "image": "커버 이미지 URL 또는 /logo.png",
   "datePublished": "ISO 날짜",
   "dateModified": "ISO 날짜",
   "author": { "@type": "Person", "name": "yerim", "url": "SITE_URL" },
-  "publisher": { "@type": "Organization", "name": "yerim.dev", "logo": { "@type": "ImageObject", "url": "SITE_URL/logo.jpg" } },
+  "publisher": { "@type": "Organization", "name": "yerim.dev", "logo": { "@type": "ImageObject", "url": "SITE_URL/logo.png" } },
   "mainEntityOfPage": { "@type": "WebPage", "@id": "포스트 전체 URL" },
   "keywords": "태그1, 태그2"
 }

@@ -64,7 +64,7 @@ export default function Header() {
         {/* 로고 */}
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.jpg" alt="yerim.dev" style={{ height: '36px', width: 'auto', objectFit: 'contain' }} />
+          <img src="/logo.png" alt="yerim.dev" style={{ height: '36px', width: 'auto', objectFit: 'contain' }} />
         </Link>
 
         {/* 데스크탑 네비게이션 */}

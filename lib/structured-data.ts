@@ -10,7 +10,7 @@ export function buildBlogPostingSchema(post: Post, postUrl: string) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
-    image: post.coverImage ?? `${SITE_URL}/logo.jpg`,
+    image: post.coverImage ?? `${SITE_URL}/logo.png`,
     datePublished: post.date,
     dateModified: post.date,
     author: {
@@ -23,7 +23,7 @@ export function buildBlogPostingSchema(post: Post, postUrl: string) {
       name: SITE_NAME,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.jpg`,
+        url: `${SITE_URL}/logo.png`,
       },
     },
     mainEntityOfPage: {
