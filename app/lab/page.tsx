@@ -23,13 +23,33 @@ export default function LabPage() {
 
         <section style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>도구</h2>
-          <Link
-            href="/lab/card-news"
-            style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', padding: '1rem 1.25rem', maxWidth: '360px', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', background: 'var(--surface)' }}
-          >
-            <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)' }}>카드뉴스 만들기</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>블로그 글·뉴스 기사를 인스타 카드(PNG)로</span>
-          </Link>
+          <div className="series-folder-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.5rem' }}>
+            <Link
+              href="/lab/card-news"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
+            >
+              {/* 회색 폴더 이미지 위에 같은 모양으로 강조색을 곱해 칠한다 — 명암은 그대로, 색만 바뀐다 */}
+              <span style={{ position: 'relative', display: 'block', width: '96px', aspectRatio: '874 / 736' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/folder.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                <span
+                  aria-hidden
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'var(--accent)',
+                    mixBlendMode: 'multiply',
+                    WebkitMask: 'url(/folder.png) center / contain no-repeat',
+                    mask: 'url(/folder.png) center / contain no-repeat',
+                  }}
+                />
+              </span>
+              <span style={{ textAlign: 'center' }}>
+                <span style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.3 }}>카드뉴스 만들기</span>
+                <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>디자인 19종 · PNG</span>
+              </span>
+            </Link>
+          </div>
         </section>
 
         <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>인터랙션</h2>
