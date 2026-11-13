@@ -2,25 +2,33 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTheme } from 'next-themes'
-import { parseCards, type Card } from '@/lib/card-news'
+import { parseCards, splitHighlight, type Card } from '@/lib/card-news'
 import { SITE_DOMAIN_NAME } from '@/lib/site'
 
 const W = 1080
 const H = 1350
-const PAD = 96
+const X = 90
+const TEXT_W = 800
 const FONT = 'Pretendard, system-ui, sans-serif'
 
-const PLACEHOLDER = `# 표지 제목
-부제나 한 줄 설명
+// 내보내는 이미지는 사이트 테마와 무관하게 "사진 + 아래쪽 어두운 그라데이션 + 흰 글자" 구성이라 색을 고정한다.
+// 포인트 색만 블로그 강조색(--accent)을 따른다
+const PAPER = '#f4f4f4'
+const INK = '#ffffff'
+const INK_SOFT = 'rgba(255,255,255,0.85)'
+const BOX_LINE = '#1f1f1f'
+
+const PLACEHOLDER = `# 표지 **제목**
 ---
 # 두 번째 카드 제목
+> 강조하고 싶은 문장
 본문을 적어요.
 ---
 뉴스 기사는 그대로 붙여넣어도 돼요. --- 가 없으면 문단(빈 줄) 단위로 카드가 나뉘어요.`
 
 type Kind = 'cover' | 'body' | 'outro'
 
-// 단어 단위로 줄바꿈하고, 한 단어가 너무 길면 글자 단위로 자른다
+// 단어 단위로 줄바꿈하고, 한 단어가 너무 길면 글자 단위로 자른다. 각 줄은 원문의 부분 문자열이다
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const lines: string[] = []
   for (const para of text.split('\n')) {
@@ -40,76 +48,135 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): st
   return lines
 }
 
-// y부터 최대 maxLines줄을 그리고, 넘치면 마지막 줄을 말줄임한다. 다음 y를 돌려준다
-function drawLines(ctx: CanvasRenderingContext2D, text: string, y: number, size: number, lineHeight: number, maxLines: number): number {
-  const lines = wrap(ctx, text, W - PAD * 2)
-  const shown = lines.slice(0, maxLines)
-  if (lines.length > maxLines) shown[maxLines - 1] = `${shown[maxLines - 1].slice(0, -1)}…`
-  shown.forEach((l, i) => ctx.fillText(l, PAD, y + i * size * lineHeight))
-  return y + shown.length * size * lineHeight
+function clampLines(lines: string[], max: number): string[] {
+  if (lines.length <= max) return lines
+  const shown = lines.slice(0, max)
+  shown[max - 1] = `${shown[max - 1].slice(0, -1)}…`
+  return shown
 }
 
-function drawCard(canvas: HTMLCanvasElement, card: Card, kind: Kind, page: string) {
+// `**단어**`를 강조색으로 칠하며 여러 줄을 그린다. 줄은 원문에서 위치를 찾아 강조 범위를 맞춘다
+function drawHighlighted(ctx: CanvasRenderingContext2D, lines: string[], segments: { text: string; hi: boolean }[], y: number, lineGap: number, accent: string) {
+  const flags = segments.flatMap((s) => Array.from(s.text, () => s.hi))
+  const plain = segments.map((s) => s.text).join('')
+  let cursor = 0
+  lines.forEach((line, i) => {
+    const body = line.endsWith('…') ? line.slice(0, -1) : line
+    const start = Math.max(0, plain.indexOf(body, cursor))
+    cursor = start + body.length
+    let x = X
+    for (let j = 0; j < line.length; j++) {
+      ctx.fillStyle = flags[start + j] ? accent : INK
+      ctx.fillText(line[j], x, y + i * lineGap)
+      x += ctx.measureText(line[j]).width
+    }
+  })
+}
+
+function drawBackground(ctx: CanvasRenderingContext2D, image: HTMLImageElement | null) {
+  ctx.fillStyle = PAPER
+  ctx.fillRect(0, 0, W, H)
+  if (image) {
+    // object-fit: cover
+    const scale = Math.max(W / image.naturalWidth, H / image.naturalHeight)
+    const w = image.naturalWidth * scale
+    const h = image.naturalHeight * scale
+    ctx.drawImage(image, (W - w) / 2, (H - h) / 2, w, h)
+  }
+  const shade = ctx.createLinearGradient(0, H - 942, 0, H)
+  shade.addColorStop(0, 'rgba(0,0,0,0)')
+  shade.addColorStop(1, 'rgba(0,0,0,0.82)')
+  ctx.fillStyle = shade
+  ctx.fillRect(0, H - 942, W, 942)
+}
+
+function drawFooter(ctx: CanvasRenderingContext2D, withArrow: boolean) {
+  ctx.fillStyle = INK
+  ctx.font = `700 28px ${FONT}`
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(SITE_DOMAIN_NAME, W / 2, 1290)
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'top'
+  if (!withArrow) return
+  ctx.strokeStyle = INK
+  ctx.lineWidth = 3
+  ctx.beginPath()
+  ctx.moveTo(892, 1290)
+  ctx.lineTo(1010, 1290)
+  ctx.moveTo(996, 1280)
+  ctx.lineTo(1010, 1290)
+  ctx.lineTo(996, 1300)
+  ctx.stroke()
+}
+
+// 템플릿 03: 흰 박스 강조 문장을 왼쪽·오른쪽 번갈아 띄운다
+function drawQuotes(ctx: CanvasRenderingContext2D, quotes: string[]) {
+  ctx.font = `500 26px ${FONT}`
+  quotes.slice(0, 3).forEach((q, i) => {
+    const text = clampLines(wrap(ctx, q, 820), 1)[0]
+    const w = ctx.measureText(text).width + 20
+    const x = i % 2 === 0 ? 113 : 1010 - w
+    const y = 377 + i * 272
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(x, y, w, 53)
+    ctx.strokeStyle = BOX_LINE
+    ctx.lineWidth = 1.5
+    ctx.strokeRect(x, y, w, 53)
+    ctx.fillStyle = BOX_LINE
+    ctx.fillText(text, x + 10, y + 12)
+  })
+}
+
+function drawCard(canvas: HTMLCanvasElement, card: Card, kind: Kind, image: HTMLImageElement | null) {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
-  const css = getComputedStyle(document.documentElement)
-  const color = (name: string) => css.getPropertyValue(name).trim()
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
 
-  ctx.fillStyle = color('--bg')
-  ctx.fillRect(0, 0, W, H)
+  drawBackground(ctx, image)
   ctx.textBaseline = 'top'
+  drawQuotes(ctx, card.quotes)
 
-  // 머리: 사이트 이름 + 쪽수
-  ctx.font = `600 32px ${FONT}`
-  ctx.fillStyle = color('--accent')
-  ctx.fillText(SITE_DOMAIN_NAME, PAD, PAD)
-  ctx.fillStyle = color('--text-muted')
-  ctx.textAlign = 'right'
-  ctx.fillText(page, W - PAD, PAD)
-  ctx.textAlign = 'left'
+  // 글 덩어리는 아래(BOTTOM)에 붙이고 위로 쌓는다
+  const BOTTOM = kind === 'cover' ? 1160 : 1190
+  const isCover = kind !== 'body'
+  const titleSize = isCover ? 104 : 60
+  const titleGap = titleSize * 1.26
+  const bodySize = card.title ? 30 : 40
+  const bodyGap = bodySize * 1.4
 
-  if (kind === 'outro') {
-    ctx.fillStyle = color('--text')
-    ctx.font = `700 72px ${FONT}`
-    ctx.fillText('더 많은 이야기는', PAD, H / 2 - 100)
-    ctx.fillStyle = color('--accent')
-    ctx.fillText(SITE_DOMAIN_NAME, PAD, H / 2)
-    return
-  }
+  const segments = splitHighlight(card.title)
+  ctx.font = `700 ${titleSize}px ${FONT}`
+  const titleLines = card.title ? clampLines(wrap(ctx, segments.map((s) => s.text).join(''), TEXT_W), isCover ? 4 : 3) : []
 
-  const isCover = kind === 'cover'
-  let y = isCover ? 380 : 260
-  ctx.fillStyle = color('--accent')
-  ctx.fillRect(PAD, y - 48, 96, 10)
+  ctx.font = `${card.title ? 400 : 600} ${bodySize}px ${FONT}`
+  const bodyLines = card.body ? clampLines(wrap(ctx, card.body, TEXT_W), card.title ? 7 : 9) : []
 
-  if (card.title) {
-    const size = isCover ? 88 : 64
-    ctx.font = `700 ${size}px ${FONT}`
-    ctx.fillStyle = color('--text')
-    y = drawLines(ctx, card.title, y, size, 1.3, isCover ? 5 : 3) + 48
-  }
-  if (card.body) {
-    // 제목 없는 카드(뉴스 문단)는 본문을 조금 크게
-    const size = isCover && !card.title ? 72 : card.title ? 42 : 56
-    ctx.font = `${isCover && !card.title ? 700 : 400} ${size}px ${FONT}`
-    ctx.fillStyle = color(card.title ? '--text-secondary' : '--text')
-    const lineHeight = 1.6
-    const maxLines = Math.max(1, Math.floor((H - PAD - 60 - y) / (size * lineHeight)))
-    drawLines(ctx, card.body, y, size, lineHeight, maxLines)
-  }
+  const between = titleLines.length && bodyLines.length ? 24 : 0
+  let y = BOTTOM - bodyLines.length * bodyGap - between - titleLines.length * titleGap
+
+  ctx.font = `700 ${titleSize}px ${FONT}`
+  drawHighlighted(ctx, titleLines, segments, y, titleGap, accent)
+  y += titleLines.length * titleGap + between
+
+  ctx.font = `${card.title ? 400 : 600} ${bodySize}px ${FONT}`
+  ctx.fillStyle = card.title ? INK_SOFT : INK
+  bodyLines.forEach((l, i) => ctx.fillText(l, X, y + i * bodyGap))
+
+  drawFooter(ctx, kind !== 'outro')
 }
 
-function CardCanvas({ card, kind, page, filename, version }: { card: Card; kind: Kind; page: string; filename: string; version: string }) {
+function CardCanvas({ card, kind, filename, image, version }: { card: Card; kind: Kind; filename: string; image: HTMLImageElement | null; version: string }) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = ref.current
     if (!canvas) return
     // Pretendard가 늦게 로드되면 대체 글꼴로 그려지므로 먼저 기다린다
-    Promise.all([document.fonts.load(`700 64px Pretendard`), document.fonts.load(`400 42px Pretendard`)])
+    Promise.all([document.fonts.load('700 60px Pretendard'), document.fonts.load('400 30px Pretendard')])
       .catch(() => undefined)
-      .then(() => drawCard(canvas, card, kind, page))
-  }, [card, kind, page, version])
+      .then(() => drawCard(canvas, card, kind, image))
+  }, [card, kind, image, version])
 
   const download = () => {
     ref.current?.toBlob((blob) => {
@@ -129,7 +196,7 @@ function CardCanvas({ card, kind, page, filename, version }: { card: Card; kind:
         ref={ref}
         width={W}
         height={H}
-        aria-label={`카드 ${page}: ${card.title || card.body}`}
+        aria-label={`카드: ${card.title || card.body}`}
         style={{ width: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}
       />
       <button type="button" onClick={download} style={buttonStyle}>
@@ -149,11 +216,35 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
 }
 
-export default function CardNewsMaker({ initialText }: { initialText: string }) {
+// crossOrigin으로 불러와야 캔버스가 오염되지 않아 PNG 저장이 된다. CORS를 막는 이미지는 실패 → 배경 없이 그린다
+function loadImage(src: string): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => resolve(img)
+    img.onerror = () => resolve(null)
+    img.src = src
+  })
+}
+
+const OUTRO: Card = { title: `더 많은 이야기는\n**${SITE_DOMAIN_NAME}**에서`, body: '', quotes: [] }
+
+export default function CardNewsMaker({ initialText, initialImage }: { initialText: string; initialImage?: string }) {
   const [text, setText] = useState(initialText)
+  const [image, setImage] = useState<HTMLImageElement | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const { resolvedTheme } = useTheme()
   const cards = parseCards(text)
-  const total = cards.length + 1
+
+  useEffect(() => {
+    if (initialImage) loadImage(initialImage).then(setImage)
+  }, [initialImage])
+
+  const onPickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) loadImage(URL.createObjectURL(file)).then(setImage)
+    e.target.value = ''
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -177,25 +268,31 @@ export default function CardNewsMaker({ initialText }: { initialText: string }) 
         }}
       />
 
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+        <button type="button" onClick={() => fileRef.current?.click()} style={buttonStyle}>
+          배경 이미지 고르기
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" onChange={onPickImage} hidden />
+        {image && (
+          <button type="button" onClick={() => setImage(null)} style={buttonStyle}>
+            이미지 빼기
+          </button>
+        )}
+        <span>`# 제목` · 제목 안 `**포인트**` · `&gt; 강조 박스` · `---` 카드 나누기</span>
+      </div>
+
       {cards.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
-          {cards.map((card, i) => (
+          {[...cards, OUTRO].map((card, i) => (
             <CardCanvas
               key={i}
               card={card}
-              kind={i === 0 ? 'cover' : 'body'}
-              page={`${i + 1} / ${total}`}
+              kind={i === 0 ? 'cover' : i === cards.length ? 'outro' : 'body'}
               filename={`card-${String(i + 1).padStart(2, '0')}.png`}
+              image={image}
               version={resolvedTheme ?? ''}
             />
           ))}
-          <CardCanvas
-            card={{ title: '', body: '' }}
-            kind="outro"
-            page={`${total} / ${total}`}
-            filename={`card-${String(total).padStart(2, '0')}.png`}
-            version={resolvedTheme ?? ''}
-          />
         </div>
       )}
     </div>

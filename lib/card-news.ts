@@ -1,6 +1,6 @@
-// 카드뉴스 텍스트 형식: 카드는 `---` 줄로 나누고, `#`로 시작하는 줄은 카드 제목, 나머지는 본문.
-// `---`가 없으면 빈 줄(문단) 단위로 나눈다 — 뉴스 본문을 그대로 붙여넣는 경우
-export type Card = { title: string; body: string }
+// 카드뉴스 텍스트 형식: 카드는 `---` 줄로 나누고, `#`로 시작하는 줄은 카드 제목, `>`로 시작하는 줄은 강조 박스,
+// 나머지는 본문. 제목 안 `**단어**`는 포인트 색. `---`가 없으면 빈 줄(문단) 단위로 나눈다 — 뉴스 본문을 그대로 붙여넣는 경우
+export type Card = { title: string; body: string; quotes: string[] }
 
 const BODY_LIMIT = 180
 
@@ -12,10 +12,16 @@ export function parseCards(text: string): Card[] {
     .map((chunk) => {
       const lines = chunk.trim().split('\n')
       const title = lines.filter((l) => l.startsWith('#')).map((l) => l.replace(/^#+\s*/, '')).join(' ')
-      const body = lines.filter((l) => !l.startsWith('#')).join('\n').trim()
-      return { title, body }
+      const quotes = lines.filter((l) => l.startsWith('>')).map((l) => l.replace(/^>\s*/, '')).filter(Boolean)
+      const body = lines.filter((l) => !l.startsWith('#') && !l.startsWith('>')).join('\n').trim()
+      return { title, body, quotes }
     })
-    .filter((c) => c.title || c.body)
+    .filter((c) => c.title || c.body || c.quotes.length)
+}
+
+// 제목의 `**단어**`를 [글자, 강조 여부] 조각으로 나눈다
+export function splitHighlight(text: string): { text: string; hi: boolean }[] {
+  return text.split(/\*\*(.+?)\*\*/).map((t, i) => ({ text: t, hi: i % 2 === 1 })).filter((s) => s.text)
 }
 
 // 마크다운 문법을 걷어내고 카드에 쓸 글자만 남긴다. 코드 블록·이미지·표는 버린다

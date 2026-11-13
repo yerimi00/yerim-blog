@@ -52,7 +52,7 @@ export default async function CardNewsPage({ searchParams }: { searchParams: { p
         </button>
       </form>
 
-      <CardNewsMaker key={post?.slug ?? 'blank'} initialText={initialText} />
+      <CardNewsMaker key={post?.slug ?? 'blank'} initialText={initialText} initialImage={post?.coverImage} />
     </main>
   )
 }
