@@ -266,7 +266,8 @@ function pickImage(e: React.ChangeEvent<HTMLInputElement>, set: (img: HTMLImageE
   e.target.value = ''
 }
 
-const OUTRO: Card = { title: `더 많은 이야기는\n**${SITE_DOMAIN_NAME}**에서`, body: '', quotes: [] }
+// "에서"까지 붙이면 104px에서 800px을 넘어 글자 단위로 쪼개진다
+const OUTRO: Card = { title: `더 많은 이야기는\n**${SITE_DOMAIN_NAME}**`, body: '', quotes: [] }
 
 export default function CardNewsMaker({ initialText }: { initialText: string }) {
   const [text, setText] = useState(initialText)

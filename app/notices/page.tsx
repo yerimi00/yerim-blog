@@ -31,7 +31,7 @@ export default function NoticesPage() {
             공지사항
           </p>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, lineHeight: 1.35, margin: 0 }}>
-            yerim.dev의 새로운 소식을 알려드립니다
+            yerimi00.com의 새로운 소식을 알려드립니다
           </h1>
         </div>
 

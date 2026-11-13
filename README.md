@@ -1,4 +1,4 @@
-# yerim.dev
+# yerimi00.com
 
 > 피할 수 없다면 즐..즐입니다 ~ KIN
 

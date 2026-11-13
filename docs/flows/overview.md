@@ -1,6 +1,6 @@
-# yerim.dev 전체 흐름
+# yerimi00.com 전체 흐름
 
-yerim.dev는 Notion을 CMS로 사용하는 Next.js 14 App Router 개인 기술 블로그입니다.
+yerimi00.com는 Notion을 CMS로 사용하는 Next.js 14 App Router 개인 기술 블로그입니다.
 
 ## 핵심 구조
 

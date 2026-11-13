@@ -1,4 +1,4 @@
-# yerim.dev Docs
+# yerimi00.com Docs
 
 yerim-blog 프론트엔드의 흐름, 도메인, QA 기준을 한곳에서 찾기 위한 문서 허브입니다.
 

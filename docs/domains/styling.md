@@ -1,6 +1,6 @@
 # 스타일 시스템
 
-yerim.dev의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다.
+yerimi00.com의 디자인 시스템, CSS 변수, Tailwind 설정을 정리합니다.
 
 ## 디자인 시스템
 

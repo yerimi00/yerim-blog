@@ -6,7 +6,7 @@
 
 | 이슈 | 근거 | 영향 | 권장 조치 |
 | --- | --- | --- | --- |
-| NEXT_PUBLIC_SITE_URL 프로덕션 도메인 미설정 | `.env.local`에서 `http://localhost:3001/`로 설정됨 | JSON-LD `@id`, RSS `<link>` 등 절대 URL이 localhost를 가리킴 | Vercel 환경변수에 `https://yerim.dev` (실제 도메인) 설정 |
+| NEXT_PUBLIC_SITE_URL 프로덕션 도메인 미설정 | `.env.local`에서 `http://localhost:3001/`로 설정됨 | JSON-LD `@id`, RSS `<link>` 등 절대 URL이 localhost를 가리킴 | Vercel 환경변수에 `https://www.yerimi00.com` (실제 도메인) 설정 |
 | NEXT_PUBLIC_ADSENSE_POST_SLOT 미설정 | `.env.local`에 값 없음 | AdSense 광고가 렌더되지 않음 | AdSense 콘솔에서 광고 단위 생성 후 슬롯 ID 입력 |
 
 ## P2 — 가능하면 처리

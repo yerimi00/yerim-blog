@@ -105,7 +105,7 @@ Notion CMS 연동, lib/ 함수, API Routes를 정리합니다.
 | `buildBlogPostingSchema(post, postUrl)` | schema.org BlogPosting JSON-LD. |
 | `buildBreadcrumbSchema(post, postUrl)` | schema.org BreadcrumbList JSON-LD. |
 
-`NEXT_PUBLIC_SITE_URL` 환경변수를 사용. 없으면 `https://yerim.dev` 폴백.
+`NEXT_PUBLIC_SITE_URL` 환경변수를 사용. 없으면 `https://www.yerimi00.com` 폴백.
 
 ## `lib/guestbook.ts` 주요 함수
 

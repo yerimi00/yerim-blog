@@ -24,7 +24,7 @@ Required in `.env.local`:
 - `NEXT_PUBLIC_GISCUS_REPO_ID` — Giscus repository ID
 - `NEXT_PUBLIC_GISCUS_CATEGORY_ID` — Giscus category ID
 - `ADMIN_PIN` — PIN for accessing private guestbook entries and their comments
-- `NEXT_PUBLIC_SITE_URL` — Full site URL for RSS and JSON-LD (e.g. `https://yerim.dev`)
+- `NEXT_PUBLIC_SITE_URL` — Full site URL for RSS and JSON-LD (e.g. `https://www.yerimi00.com`)
 - `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` — Google AdSense publisher ID (`ca-pub-*`)
 - `NEXT_PUBLIC_ADSENSE_POST_SLOT` — AdSense ad unit slot ID for post pages
 - `NOTION_PROJECTS_DATABASE_ID` — ID of the Notion Projects database
@@ -122,7 +122,7 @@ Key functions in `lib/guestbook.ts`:
 | `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
 | `/lab` | `app/lab/page.tsx` | "도구"(카드뉴스 링크) + 인터랙션 실험 그리드. 인터랙션 상세는 준비 중이라 링크 없이 표시 (`app/data/interactions/interactions-data.ts`) |
-| `/lab/card-news` | `app/lab/card-news/page.tsx` | 카드뉴스 만들기 (dynamic). `?post=slug` GET 폼으로 서버가 글 마크다운을 불러와 `lib/card-news.ts`의 `postToCardText`로 카드 텍스트 생성 → `components/lab/CardNewsMaker`(client)가 Canvas 2D로 1080×1350 카드(Figma 커뮤니티 카드뉴스 템플릿 구성: 배경 이미지 + 아래쪽 어두운 그라데이션 + 하단 정렬 흰 글자, 하단 yerim.dev·화살표, 제목 포인트 단어는 `--accent`, `>` 강조 박스)를 그리고 카드별 PNG 저장. 배경 우선순위: 카드별 업로드(카드 순서 기준) → 카드 텍스트의 `![](주소)`(글 불러오면 커버·구간 첫 이미지 자동) → 전체 배경 업로드 → 회색. 원격 이미지는 `/_next/image`(같은 출처)로 받아 캔버스 오염을 피하므로 `next.config.js` `remotePatterns`에 있는 호스트(Notion S3·velog CDN 등)만 확실히 그려진다. 뉴스는 본문 붙여넣기(`---` 없으면 문단 단위 분할) |
+| `/lab/card-news` | `app/lab/card-news/page.tsx` | 카드뉴스 만들기 (dynamic). `?post=slug` GET 폼으로 서버가 글 마크다운을 불러와 `lib/card-news.ts`의 `postToCardText`로 카드 텍스트 생성 → `components/lab/CardNewsMaker`(client)가 Canvas 2D로 1080×1350 카드(Figma 커뮤니티 카드뉴스 템플릿 구성: 배경 이미지 + 아래쪽 어두운 그라데이션 + 하단 정렬 흰 글자, 하단 yerimi00.com·화살표, 제목 포인트 단어는 `--accent`, `>` 강조 박스)를 그리고 카드별 PNG 저장. 배경 우선순위: 카드별 업로드(카드 순서 기준) → 카드 텍스트의 `![](주소)`(글 불러오면 커버·구간 첫 이미지 자동) → 전체 배경 업로드 → 회색. 원격 이미지는 `/_next/image`(같은 출처)로 받아 캔버스 오염을 피하므로 `next.config.js` `remotePatterns`에 있는 호스트(Notion S3·velog CDN 등)만 확실히 그려진다. 뉴스는 본문 붙여넣기(`---` 없으면 문단 단위 분할) |
 | `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트 (`card-news`는 제외). 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |

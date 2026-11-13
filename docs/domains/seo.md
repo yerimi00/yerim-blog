@@ -1,6 +1,6 @@
 # SEO
 
-yerim.dev의 메타데이터, JSON-LD, RSS, OG, robots 설정을 정리합니다.
+yerimi00.com의 메타데이터, JSON-LD, RSS, OG, robots 설정을 정리합니다.
 
 ## 환경변수
 
@@ -12,7 +12,7 @@ yerim.dev의 메타데이터, JSON-LD, RSS, OG, robots 설정을 정리합니다
 
 사이트 URL·이름·설명은 `lib/site.ts`(`SITE_URL`, `SITE_NAME`, `SITE_DOMAIN_NAME`, `AUTHOR_NAME`, `SITE_DESCRIPTION`) 한 곳에서만 정의한다.
 
-브랜드 검색어: `SITE_NAME`은 '예림 개발 블로그'다. 홈 제목(`예림 개발 블로그 | yerim.dev`), 모든 페이지 제목 템플릿, og:site_name, RSS 제목, 홈 숨김 h1, 홈 `WebSite` JSON-LD(`alternateName`: yerim.dev · 이예림 개발 블로그 · yerimi00)에 같은 이름을 써서 '예림 개발 블로그' 검색과 사이트를 연결한다.
+브랜드 검색어: `SITE_NAME`은 '예림 개발 블로그'다. 홈 제목(`예림 개발 블로그 | yerimi00.com`), 모든 페이지 제목 템플릿, og:site_name, RSS 제목, 홈 숨김 h1, 홈 `WebSite` JSON-LD(`alternateName`: yerimi00.com · 이예림 개발 블로그 · yerimi00)에 같은 이름을 써서 '예림 개발 블로그' 검색과 사이트를 연결한다.
 
 ## 기본 메타데이터 (`app/layout.tsx`)
 
@@ -36,7 +36,7 @@ metadata = {
 
 RSS 링크 태그 (`app/layout.tsx` `<head>`):
 ```html
-<link rel="alternate" type="application/rss+xml" title="yerim.dev RSS" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="yerimi00.com RSS" href="/rss.xml" />
 ```
 
 ## 포스트 상세 메타데이터 (`app/blog/[slug]/page.tsx`)
