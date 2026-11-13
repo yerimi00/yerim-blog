@@ -113,17 +113,16 @@ Key functions in `lib/guestbook.ts`:
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | 손 흔드는 캐릭터·떨어지는 태그·기록 눈금 히어로 → 최근 글 5 → 오늘의 면접 질문 → 대표 작업 4. `revalidate = 3600` |
+| `/` | `app/page.tsx` | 손 흔드는 캐릭터·떨어지는 태그·기록 눈금 히어로 → 최근 글 5 → 대표 작업 4 (오늘의 면접 질문 섹션은 Interview 숨김 중이라 주석 처리). `revalidate = 3600` |
 | `/blog` | `app/blog/page.tsx` | Series-tab post list. `revalidate = 86400` |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Post detail: TOC, reading time, social share, related posts, JSON-LD, Giscus, AdSense. `revalidate = 86400` |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | Posts filtered by tag (URL-based). `revalidate = 3600` |
 | `/blog/series` | `app/blog/series/page.tsx` | Posts grouped by series (`interactions` 제외) |
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
-| `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
+| `/interview` | `app/interview/page.tsx` | **숨김 중**: `next.config.js`에서 `/interview`·`/interview/:slug`를 홈으로 임시 리다이렉트, 헤더·하단 네비·홈 섹션·sitemap은 주석 처리. 페이지 코드는 유지. 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
-| `/lab` | `app/lab/page.tsx` | "도구"(카드뉴스: 회색 `folder.png`에 `--lab-folder`(하늘색)를 CSS mask + `mix-blend-mode: color`로 입힌 파스텔 하늘색 폴더 링크) + 인터랙션 실험 그리드. 인터랙션 상세는 준비 중이라 링크 없이 표시 (`app/data/interactions/interactions-data.ts`) |
+| `/lab` | `app/lab/page.tsx` | "도구"(카드뉴스: 회색 `folder.png`에 `--lab-folder`(하늘색)를 CSS mask + `mix-blend-mode: color`로 입힌 파스텔 하늘색 폴더 링크). 인터랙션 데모는 삭제 |
 | `/lab/card-news` | `app/lab/card-news/page.tsx` | 카드뉴스 만들기 (dynamic). `?post=slug` GET 폼으로 서버가 글 마크다운을 불러와 `lib/card-news.ts`의 `postToCardText`로 카드 텍스트 생성 → `components/lab/CardNewsMaker`(client)가 디자인 19종(`components/lab/card-designs.ts` 9종: 포토 오버레이·프레임 카드·다크 터미널(코드 블록 표시)·트윗형·메모앱형·스프링 노트·블랙+네온·메신저 대화형·레트로 포스터 / `card-designs-feed.ts` 10종: 박스 정리형·말풍선 포토·센터 매거진·기록 로그(본문 `왼쪽 | 오른쪽` 줄=시간표·표지 수치 칸)·데스크톱 창·형광펜 메모·카메라 UI·글자 타일·블로그 글·태그 포토) 중 하나를 골라 Canvas 2D로 1080×1350 카드를 그리고 카드별 PNG 저장. 제목 포인트 단어는 `--accent`(터미널은 초록). 배경 우선순위: 카드별 업로드(카드 순서 기준) → 카드 텍스트의 `![](주소)`(글 불러오면 커버·구간 첫 이미지 자동) → 전체 배경 업로드 → 회색. 원격 이미지는 `/_next/image`(같은 출처)로 받아 캔버스 오염을 피하므로 `next.config.js` `remotePatterns`에 있는 호스트(Notion S3·velog CDN 등)만 확실히 그려진다. 뉴스는 본문 붙여넣기(`---` 없으면 문단 단위 분할) |
-| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트 (`card-news`는 제외). 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/work` | `app/work/page.tsx` | 헤드(요약·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
@@ -131,7 +130,7 @@ Key functions in `lib/guestbook.ts`:
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
-| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, work (Lab은 목록 + `/lab/card-news`) |
+| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, work, `/lab`·`/lab/card-news` (interview는 숨김 중이라 주석) |
 | `/robots.txt` | `app/robots.ts` | Allow all except `/api/`, points to sitemap |
 
 Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new routes via `next.config.js` `redirects()`. See `docs/domains/route-map.md`.
@@ -152,12 +151,12 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 
 | Path | Purpose |
 |---|---|
-| `components/layout/` | `app/layout.tsx`에서 한 번만 렌더 (페이지·loading.tsx에서 렌더 금지 — 전환 시 재마운트 방지). Header (Blog · Interview · Lab · Work · About, 로고=Home), Footer (RSS 링크 포함, `site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비: Home · Blog · Interview · Work · About), MobileFooterLinks (모바일 About 하단 링크) |
+| `components/layout/` | `app/layout.tsx`에서 한 번만 렌더 (페이지·loading.tsx에서 렌더 금지 — 전환 시 재마운트 방지). Header (Blog · Lab · Work · About, 로고=Home — Interview는 숨김 중이라 주석), Footer (RSS 링크 포함, `site-footer` — 모바일 숨김), BottomNav (모바일 ≤480px 하단 네비: Home · Blog · Work · About — Interview 주석), MobileFooterLinks (모바일 About 하단 링크) |
 | `components/blog/` | Post-related UI: PostCard, PostBody, BlogFilter, BlogViewSwitch (`/blog`·`/blog/series` 아이콘 전환), HeroBanner, TableOfContents, SocialShare, RelatedPosts, ReadingProgress, CopyButton, MediumZoom, MermaidBlock |
 | `components/about/` | About page UI blocks |
 | `components/project/` | Work page UI: FeaturedWork (대표작 지면, 16:10 매트에 이미지 전체 표시), ProjectArchive (client: 직무·수상 필터, 연도별 색인, 커서 미리보기), project-utils (직무/팀 위치 분리, 연도 추출) |
 | `components/interview/` | AnswerReveal (client: 30초 타이머 + 답 보기), InterviewArchive (client: 카테고리 필터 목록), TodayQuestionCard (홈·/interview 공용) |
-| `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget`. Lab에서도 같은 컴포넌트 사용 |
+| `components/interview/widgets/` | 면접 위젯 6종 (client, motion): PredictOutput, OrderWidget(`Reorder` 드래그), StepDiagram, CompareToggle, OxQuiz, SqlTable + 공통 `WidgetFrame`·`WidgetButton`·`Explain`, 타입 분기 `InterviewWidget` |
 | `components/ai-skills/` | `/work#ai-skills` 섹션 UI: AiSkillSection, AiSkillsMore (client: 나머지 카테고리 접기), AiSkillCard (skills with `variants` open AiSkillModal on click), AiSkillCommandBox (reuses `components/blog/CopyButton`), AiSkillModal (modal pattern copied from `components/blog/SearchModal`) |
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `text-arrows.tsx` (글자 옆 화살표 아이콘 `ArrowRight`·`ArrowBack`·`ArrowOut`, 화살표 글자 대신 사용), `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
 | `components/home/` | 홈 전용: HomeHero (캐릭터: 손 흔드는 영상을 배경 투명 animated WebP로 `<picture>`에 넣고 한 번 재생 후 마지막 장면 정지 — PC `hero-wave.webp`(520px, 크게 표시), ≤768px `hero-wave-sm.webp`(330px), 동작 줄이기면 `hero-wave-still.png`. PC는 소개 글이 캐릭터 쪽 꼬리 달린 말풍선(`.home-hero-say`)에 1인칭으로 뜨고 글자가 하나씩 찍힘, 모바일은 말풍선 없이 글만 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), RecentPosts (client: 제목·설명을 자르지 않는 최근 글 목록) |

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   HiOutlineHome, HiHome,
   HiOutlineDocumentText, HiDocumentText,
-  HiOutlineChatBubbleLeftRight, HiChatBubbleLeftRight,
+  // HiOutlineChatBubbleLeftRight, HiChatBubbleLeftRight, (Interview 숨김 중)
   HiOutlineBriefcase, HiBriefcase,
   HiOutlineUser, HiUser,
 } from 'react-icons/hi2'
@@ -14,7 +14,8 @@ import {
 const NAV_ITEMS = [
   { href: '/',        label: 'Home',    Icon: HiOutlineHome,         ActiveIcon: HiHome },
   { href: '/blog',    label: 'Blog',    Icon: HiOutlineDocumentText, ActiveIcon: HiDocumentText },
-  { href: '/interview', label: 'Interview', Icon: HiOutlineChatBubbleLeftRight, ActiveIcon: HiChatBubbleLeftRight },
+  // Interview 숨김 중 — 다시 열 때 주석 해제 (아이콘 import도 함께)
+  // { href: '/interview', label: 'Interview', Icon: HiOutlineChatBubbleLeftRight, ActiveIcon: HiChatBubbleLeftRight },
   { href: '/work',    label: 'Work',    Icon: HiOutlineBriefcase,    ActiveIcon: HiBriefcase },
   { href: '/about',   label: 'About',   Icon: HiOutlineUser,         ActiveIcon: HiUser },
 ]

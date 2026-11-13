@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { getAllPosts } from '@/lib/notion'
 import { getAllProjects } from '@/lib/projects'
-import { getPublishedQuestions } from '@/lib/interview'
+// Interview 숨김 중 — 다시 열 때 아래 주석들과 함께 해제
+// import { getPublishedQuestions } from '@/lib/interview'
 import HomeHero from '@/components/home/HomeHero'
 import RecentPosts from '@/components/home/RecentPosts'
 import SectionReveal from '@/components/about/SectionReveal'
@@ -19,14 +20,14 @@ const sectionLead: React.CSSProperties = { fontSize: '0.95rem', lineHeight: 1.75
 const textLink: React.CSSProperties = { display: 'inline-block', marginTop: '1rem', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }
 
 export default async function HomePage() {
-  const [posts, projects, questions] = await Promise.all([
+  const [posts, projects] = await Promise.all([
     getAllPosts(),
     getAllProjects(),
-    getPublishedQuestions(),
+    // getPublishedQuestions(),
   ])
   const featured = projects.filter((p) => p.featured)
   const works = (featured.length ? featured : projects).slice(0, 4)
-  const today = questions[0]
+  // const today = questions[0]
 
   // 많이 쓴 태그 순
   const tagCounts = new Map<string, number>()
@@ -43,6 +44,7 @@ export default async function HomePage() {
 
       <RecentPosts posts={posts.slice(0, 5)} total={posts.length} />
 
+      {/* Interview 숨김 중 — 오늘의 면접 질문
       {today && (
         <div className="home-wrap">
           <SectionReveal>
@@ -57,6 +59,7 @@ export default async function HomePage() {
           </SectionReveal>
         </div>
       )}
+      */}
 
       {works.length > 0 && (
         <div className="home-wrap">

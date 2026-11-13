@@ -12,7 +12,8 @@ import { fastTween } from '@/components/motion/presets'
 // 로고가 Home 역할
 const NAV_LINKS = [
   { href: '/blog', label: 'Blog' },
-  { href: '/interview', label: 'Interview' },
+  // Interview 숨김 중 — 다시 열 때 주석 해제 (next.config.js 리다이렉트도 함께 지운다)
+  // { href: '/interview', label: 'Interview' },
   { href: '/lab', label: 'Lab' },
   { href: '/work', label: 'Work' },
   { href: '/about', label: 'About' },

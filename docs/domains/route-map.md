@@ -6,17 +6,16 @@
 
 | 라우트 | 파일 | revalidate | 비고 |
 | --- | --- | --- | --- |
-| `/` | `app/page.tsx` | 3600 | 손 흔드는 캐릭터·떨어지는 태그·기록 눈금 히어로 + 최근 글 5 + 오늘의 면접 질문 + 대표 작업 4 (Featured) |
+| `/` | `app/page.tsx` | 3600 | 손 흔드는 캐릭터·떨어지는 태그·기록 눈금 히어로 + 최근 글 5 + 대표 작업 4 (Featured). 오늘의 면접 질문은 Interview 숨김 중이라 주석 |
 | `/blog` | `app/blog/page.tsx` | 86400 | 시리즈 탭 필터 + `/blog/series` 링크 |
 | `/blog/[slug]` | `app/blog/[slug]/page.tsx` | 86400 | 포스트 상세. generateStaticParams. canonical 설정. |
 | `/blog/tag/[tag]` | `app/blog/tag/[tag]/page.tsx` | 3600 | 태그별 포스트 목록. generateStaticParams. |
 | `/blog/series` | `app/blog/series/page.tsx` | 86400 | 시리즈 폴더 목록. `interactions` 시리즈는 제외 (`/lab`으로 승격). |
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
-| `/interview` | `app/interview/page.tsx` | 3600 | 오늘의 면접 질문(최신 발행 1개) + 지난 문제 아카이브(카테고리 필터). Interview DB 미설정 시 "준비 중" 안내. |
-| `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 3600 | 문제 상세. 답변(Notion 본문)·꼬리질문·참고 링크는 `AnswerReveal`로 가렸다가 30초 타이머 또는 "답 보기"로 공개. 이전/다음 문제, AdSense, Giscus. |
-| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`) + 위쪽 "도구" 줄(카드뉴스). 인터랙션 상세를 준비 중이라 카드는 링크 없이 표시. |
+| `/interview` | `app/interview/page.tsx` | 3600 | **숨김 중** — 홈으로 임시 리다이렉트(`next.config.js`), 코드는 유지. 오늘의 면접 질문(최신 발행 1개) + 지난 문제 아카이브(카테고리 필터). Interview DB 미설정 시 "준비 중" 안내. |
+| `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 3600 | **숨김 중** — 홈으로 임시 리다이렉트. 문제 상세. 답변(Notion 본문)·꼬리질문·참고 링크는 `AnswerReveal`로 가렸다가 30초 타이머 또는 "답 보기"로 공개. 이전/다음 문제, AdSense, Giscus. |
+| `/lab` | `app/lab/page.tsx` | — | "도구" 폴더(카드뉴스 만들기). 인터랙션 데모는 삭제, 예전 `/lab/:slug` 주소는 `/lab`으로 임시 리다이렉트(`card-news` 제외). |
 | `/lab/card-news` | `app/lab/card-news/page.tsx` | dynamic | 카드뉴스 만들기. `?post=slug`로 블로그 글을 카드로 나누거나 뉴스 본문 붙여넣기 → 디자인 19종 중 선택(기본 9종 + 참고 템플릿 10종: 박스 정리·말풍선 포토·센터 매거진·기록 로그·데스크톱 창·형광펜 메모·카메라 UI·글자 타일·블로그 글·태그 포토), 글 이미지·코드 자동 사용 카드별 PNG(1080×1350). |
-| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트 (`card-news` 제외). 데모 코드는 유지. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/work` | `app/work/page.tsx` | 3600 | 헤드(요약·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
@@ -41,7 +40,7 @@
 | 라우트 | 파일 | 설명 |
 | --- | --- | --- |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 피드. `revalidate = 86400`. |
-| `/sitemap.xml` | `app/sitemap.ts` | 정적 페이지 + 글·시리즈·면접 문제·Work 전체, Lab은 목록만. `revalidate = 3600`. |
+| `/sitemap.xml` | `app/sitemap.ts` | 정적 페이지 + 글·시리즈·Work 전체, Lab은 목록·카드뉴스 (면접 문제는 숨김 중이라 주석). `revalidate = 3600`. |
 | `/robots.txt` | `app/robots.ts` | 전체 허용, `/api/` 제외, sitemap 주소 명시. |
 
 ## 리다이렉트 (`next.config.js`, 308 permanent)
@@ -50,7 +49,8 @@ IA v2 이전 전 링크 보호용. 구체적인 규칙이 위에 있어야 한�
 
 | 기존 | 새 주소 |
 | --- | --- |
-| `/series/interactions`, `/series/interactions/:slug` | `/lab`, `/lab/:slug` |
+| `/series/interactions`, `/series/interactions/:slug` | `/lab` |
+| `/interview`, `/interview/:slug` (숨김 중, 임시) | `/` |
 | `/series`, `/series/:name` | `/blog/series`, `/blog/series/:name` |
 | `/project`, `/project/:slug` | `/work`, `/work/:slug` |
 | `/ai-skills` | `/work#ai-skills` |
