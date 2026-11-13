@@ -18,11 +18,11 @@ const nextConfig = {
   // IA v2 이전 — 기존 링크 보호 (구체적인 규칙이 위)
   async redirects() {
     return [
-      // Lab 상세 준비 중: 목록으로 보낸다. 다시 열 때 이 줄을 지우고 InteractionSeriesView에 링크를 되살린다
-      // 완성된 도구(card-news)는 제외
+      // 예전 Lab 인터랙션 상세 주소는 목록으로 보낸다 (인터랙션 데모는 삭제됨). 도구(card-news)는 제외.
+      // 나중에 /lab/새도구 를 열 수 있게 임시(307)로 둔다
       { source: '/lab/:slug((?!card-news$).*)', destination: '/lab', permanent: false },
       { source: '/series/interactions', destination: '/lab', permanent: true },
-      { source: '/series/interactions/:slug', destination: '/lab/:slug', permanent: true },
+      { source: '/series/interactions/:slug', destination: '/lab', permanent: true },
       { source: '/series', destination: '/blog/series', permanent: true },
       { source: '/series/:name', destination: '/blog/series/:name', permanent: true },
       { source: '/project', destination: '/work', permanent: true },

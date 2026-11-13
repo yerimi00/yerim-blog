@@ -1,10 +1,8 @@
 import Link from 'next/link'
-import InteractionSeriesView from '@/components/blog/InteractionSeriesView'
-import { DEMOS } from '@/app/data/interactions/interactions-data'
 
 export const metadata = {
   title: 'Lab',
-  description: '직접 만들어 본 인터랙션과 실험 모음',
+  description: '직접 만들어 본 도구와 실험 모음',
   alternates: { canonical: '/lab' },
 }
 
@@ -17,7 +15,7 @@ export default function LabPage() {
             Lab
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            직접 만들어 본 인터랙션과 실험을 모아요.
+            직접 만들어 본 도구와 실험을 모아요.
           </p>
         </div>
 
@@ -52,14 +50,6 @@ export default function LabPage() {
           </div>
         </section>
 
-        <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>인터랙션</h2>
-        {Object.keys(DEMOS).length > 0 ? (
-          <InteractionSeriesView />
-        ) : (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '4rem 0' }}>
-            새 실험을 준비하고 있어요 🧪
-          </p>
-        )}
       </main>
     </>
   )
