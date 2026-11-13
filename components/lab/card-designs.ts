@@ -1,13 +1,15 @@
-// 카드뉴스 캔버스 디자인. 외부 템플릿을 베끼지 않고 흔한 레이아웃 패턴(사진 오버레이·프레임·터미널·트윗·메모앱·스프링 노트·네온 포스터·메신저·레트로 포스터)만 참고했다.
+// 카드뉴스 캔버스 디자인(기본 9종 + card-designs-feed.ts 10종). 외부 템플릿을 베끼지 않고 흔한 레이아웃 패턴만 참고했다.
 // 내보내는 이미지는 사이트 테마와 무관하므로 디자인별 색을 여기서 고정하고, 포인트 색만 블로그 강조색(--accent)을 받는다
-import { splitHighlight, type Card } from '@/lib/card-news'
+import { splitHighlight } from '@/lib/card-news'
 import { AUTHOR_NAME, SITE_DOMAIN_NAME } from '@/lib/site'
+import {
+  H, MONO, SANS, W, X, arrow, box, clampLines, countLines, drawImage, drawText, drawTitle, fit, pad, pageLabel, wrap,
+  type Ctx, type DrawInput,
+} from './card-canvas'
+import { FEED_DESIGNS, FEED_RENDERERS } from './card-designs-feed'
 
-export const W = 1080
-export const H = 1350
-const X = 90
-const SANS = 'Pretendard, system-ui, sans-serif'
-const MONO = '"JetBrains Mono", ui-monospace, monospace'
+export { H, W } from './card-canvas'
+export type { Kind } from './card-canvas'
 
 export const DESIGNS = {
   photo: '포토 오버레이',
@@ -19,130 +21,9 @@ export const DESIGNS = {
   neon: '블랙 + 네온',
   chat: '메신저 대화형',
   retro: '레트로 포스터',
+  ...FEED_DESIGNS,
 } as const
 export type DesignId = keyof typeof DESIGNS
-export type Kind = 'cover' | 'body' | 'outro'
-
-export type DrawInput = {
-  card: Card
-  kind: Kind
-  index: number
-  total: number
-  image: HTMLImageElement | null
-  avatar: HTMLImageElement | null
-  accent: string
-}
-
-type Ctx = CanvasRenderingContext2D
-
-// ---------- 글자 도구 ----------
-
-// 단어 단위로 줄바꿈하고, 한 단어가 너무 길면 글자 단위로 자른다. 각 줄은 원문의 부분 문자열이다
-function wrap(ctx: Ctx, text: string, maxWidth: number): string[] {
-  const lines: string[] = []
-  for (const para of text.split('\n')) {
-    let line = ''
-    for (const word of para.split(' ')) {
-      const next = line ? `${line} ${word}` : word
-      if (ctx.measureText(next).width <= maxWidth) { line = next; continue }
-      if (line) lines.push(line)
-      line = ''
-      for (const ch of word) {
-        if (ctx.measureText(line + ch).width > maxWidth) { lines.push(line); line = '' }
-        line += ch
-      }
-    }
-    lines.push(line)
-  }
-  return lines
-}
-
-function clampLines(lines: string[], max: number): string[] {
-  if (max <= 0) return []
-  if (lines.length <= max) return lines
-  const shown = lines.slice(0, max)
-  shown[max - 1] = `${shown[max - 1].slice(0, -1)}…`
-  return shown
-}
-
-// 남은 높이에 들어가는 줄 수
-const fit = (space: number, gap: number, cap: number) => Math.max(0, Math.min(cap, Math.floor(space / gap)))
-
-// 제목: `**단어**`는 hi 색으로 칠한다. 그린 높이를 돌려준다
-function drawTitle(ctx: Ctx, title: string, x: number, y: number, maxW: number, size: number, maxLines: number, base: string, hi: string): number {
-  if (!title) return 0
-  const segments = splitHighlight(title)
-  const flags = segments.flatMap((s) => Array.from(s.text, () => s.hi))
-  const plain = segments.map((s) => s.text).join('')
-  ctx.font = `700 ${size}px ${SANS}`
-  const lines = clampLines(wrap(ctx, plain, maxW), maxLines)
-  const gap = size * 1.25
-  let cursor = 0
-  lines.forEach((line, i) => {
-    const body = line.endsWith('…') ? line.slice(0, -1) : line
-    const start = Math.max(0, plain.indexOf(body, cursor))
-    cursor = start + body.length
-    let cx = x
-    for (let j = 0; j < line.length; j++) {
-      ctx.fillStyle = flags[start + j] ? hi : base
-      ctx.fillText(line[j], cx, y + i * gap)
-      cx += ctx.measureText(line[j]).width
-    }
-  })
-  return lines.length * gap
-}
-
-function drawText(ctx: Ctx, text: string, x: number, y: number, maxW: number, font: string, color: string, gap: number, maxLines: number): number {
-  if (!text) return 0
-  ctx.font = font
-  ctx.fillStyle = color
-  const lines = clampLines(wrap(ctx, text, maxW), maxLines)
-  lines.forEach((l, i) => ctx.fillText(l, x, y + i * gap))
-  return lines.length * gap
-}
-
-function countLines(ctx: Ctx, text: string, font: string, maxW: number): number {
-  ctx.font = font
-  return text ? wrap(ctx, text, maxW).length : 0
-}
-
-// ---------- 도형·이미지 도구 ----------
-
-function box(ctx: Ctx, x: number, y: number, w: number, h: number, r: number, fill: string) {
-  ctx.fillStyle = fill
-  ctx.beginPath()
-  ctx.roundRect(x, y, w, h, r)
-  ctx.fill()
-}
-
-// cover: 꽉 채우고 넘치는 부분 자르기 / contain: 전부 보이게 넣고 남는 곳은 bg
-function drawImage(ctx: Ctx, img: HTMLImageElement, x: number, y: number, w: number, h: number, r: number, mode: 'cover' | 'contain', bg?: string) {
-  ctx.save()
-  ctx.beginPath()
-  ctx.roundRect(x, y, w, h, r)
-  ctx.clip()
-  if (bg) { ctx.fillStyle = bg; ctx.fillRect(x, y, w, h) }
-  const scale = (mode === 'cover' ? Math.max : Math.min)(w / img.naturalWidth, h / img.naturalHeight)
-  const iw = img.naturalWidth * scale
-  const ih = img.naturalHeight * scale
-  ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih)
-  ctx.restore()
-}
-
-function arrow(ctx: Ctx, y: number, color: string, width = 3) {
-  ctx.strokeStyle = color
-  ctx.lineWidth = width
-  ctx.beginPath()
-  ctx.moveTo(892, y)
-  ctx.lineTo(1010, y)
-  ctx.moveTo(996, y - 10)
-  ctx.lineTo(1010, y)
-  ctx.lineTo(996, y + 10)
-  ctx.stroke()
-}
-
-const pad = (n: number) => String(n).padStart(2, '0')
-const pageLabel = (d: DrawInput) => `${pad(d.index + 1)} / ${pad(d.total)}`
 
 // ---------- 포토 오버레이: 사진 + 아래쪽 어두운 그라데이션 + 하단 흰 글자 ----------
 
@@ -775,7 +656,7 @@ function retro(ctx: Ctx, d: DrawInput) {
   if (kind !== 'outro') arrow(ctx, 1278, INK, 5)
 }
 
-const RENDERERS: Record<DesignId, (ctx: Ctx, d: DrawInput) => void> = { photo, frame, terminal, tweet, memo, notebook, neon, chat, retro }
+const RENDERERS: Record<DesignId, (ctx: Ctx, d: DrawInput) => void> = { photo, frame, terminal, tweet, memo, notebook, neon, chat, retro, ...FEED_RENDERERS }
 
 export function drawCard(canvas: HTMLCanvasElement, design: DesignId, d: DrawInput) {
   const ctx = canvas.getContext('2d')
