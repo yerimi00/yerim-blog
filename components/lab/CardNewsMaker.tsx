@@ -22,6 +22,7 @@ const PLACEHOLDER = `# 표지 **제목**
 ---
 # 두 번째 카드 제목
 > 강조하고 싶은 문장
+![](https://이미지-주소.png)
 본문을 적어요.
 ---
 뉴스 기사는 그대로 붙여넣어도 돼요. --- 가 없으면 문단(빈 줄) 단위로 카드가 나뉘어요.`
@@ -166,8 +167,20 @@ function drawCard(canvas: HTMLCanvasElement, card: Card, kind: Kind, image: HTML
   drawFooter(ctx, kind !== 'outro')
 }
 
-function CardCanvas({ card, kind, filename, image, version }: { card: Card; kind: Kind; filename: string; image: HTMLImageElement | null; version: string }) {
+function CardCanvas({ card, kind, filename, sharedImage, version }: { card: Card; kind: Kind; filename: string; sharedImage: HTMLImageElement | null; version: string }) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+  // ponytail: 카드별 업로드는 카드 순서(이 컴포넌트의 key=index)에 붙는다. 카드를 옮기면 이미지는 자리에 남음
+  const [uploaded, setUploaded] = useState<HTMLImageElement | null>(null)
+  const [textImage, setTextImage] = useState<HTMLImageElement | null>(null)
+  const image = uploaded ?? textImage ?? sharedImage
+
+  useEffect(() => {
+    let alive = true
+    setTextImage(null)
+    if (card.image) loadImage(card.image).then((img) => alive && setTextImage(img))
+    return () => { alive = false }
+  }, [card.image])
 
   useEffect(() => {
     const canvas = ref.current
@@ -199,9 +212,19 @@ function CardCanvas({ card, kind, filename, image, version }: { card: Card; kind
         aria-label={`카드: ${card.title || card.body}`}
         style={{ width: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}
       />
-      <button type="button" onClick={download} style={buttonStyle}>
-        PNG 저장
-      </button>
+      <div style={{ display: 'flex', gap: '0.4rem' }}>
+        <button type="button" onClick={download} style={{ ...buttonStyle, flex: 1 }}>
+          PNG 저장
+        </button>
+        <button
+          type="button"
+          onClick={() => (uploaded ? setUploaded(null) : fileRef.current?.click())}
+          style={buttonStyle}
+        >
+          {uploaded ? '이미지 빼기' : '이미지'}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setUploaded)} />
+      </div>
     </div>
   )
 }
@@ -216,8 +239,8 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
 }
 
-// crossOrigin으로 불러와야 캔버스가 오염되지 않아 PNG 저장이 된다. CORS를 막는 이미지는 실패 → 배경 없이 그린다
-function loadImage(src: string): Promise<HTMLImageElement | null> {
+// crossOrigin으로 불러와야 캔버스가 오염되지 않아 PNG 저장이 된다. CORS를 막는 이미지는 실패 → null
+function loadDirect(src: string): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -227,24 +250,30 @@ function loadImage(src: string): Promise<HTMLImageElement | null> {
   })
 }
 
+// 원격 이미지는 먼저 Next 이미지 최적화(/_next/image, 같은 출처)로 받는다 — next.config.js remotePatterns(Notion S3 등)에 있는 호스트만 통과.
+// 거기 없는 호스트는 직접 시도, 그것도 CORS로 막히면 배경 없이 그린다
+async function loadImage(src: string): Promise<HTMLImageElement | null> {
+  if (/^https?:\/\//.test(src)) {
+    const viaNext = await loadDirect(`/_next/image?url=${encodeURIComponent(src)}&w=1080&q=85`)
+    if (viaNext) return viaNext
+  }
+  return loadDirect(src)
+}
+
+function pickImage(e: React.ChangeEvent<HTMLInputElement>, set: (img: HTMLImageElement | null) => void) {
+  const file = e.target.files?.[0]
+  if (file) loadDirect(URL.createObjectURL(file)).then(set)
+  e.target.value = ''
+}
+
 const OUTRO: Card = { title: `더 많은 이야기는\n**${SITE_DOMAIN_NAME}**에서`, body: '', quotes: [] }
 
-export default function CardNewsMaker({ initialText, initialImage }: { initialText: string; initialImage?: string }) {
+export default function CardNewsMaker({ initialText }: { initialText: string }) {
   const [text, setText] = useState(initialText)
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const { resolvedTheme } = useTheme()
   const cards = parseCards(text)
-
-  useEffect(() => {
-    if (initialImage) loadImage(initialImage).then(setImage)
-  }, [initialImage])
-
-  const onPickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) loadImage(URL.createObjectURL(file)).then(setImage)
-    e.target.value = ''
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -270,15 +299,15 @@ export default function CardNewsMaker({ initialText, initialImage }: { initialTe
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
         <button type="button" onClick={() => fileRef.current?.click()} style={buttonStyle}>
-          배경 이미지 고르기
+          전체 배경 이미지
         </button>
-        <input ref={fileRef} type="file" accept="image/*" onChange={onPickImage} hidden />
+        <input ref={fileRef} type="file" accept="image/*" onChange={(e) => pickImage(e, setImage)} hidden />
         {image && (
           <button type="button" onClick={() => setImage(null)} style={buttonStyle}>
             이미지 빼기
           </button>
         )}
-        <span>`# 제목` · 제목 안 `**포인트**` · `&gt; 강조 박스` · `---` 카드 나누기</span>
+        <span>`# 제목` · 제목 안 `**포인트**` · `&gt; 강조 박스` · `![](이미지 주소)` 카드 배경 · `---` 카드 나누기</span>
       </div>
 
       {cards.length > 0 && (
@@ -289,7 +318,7 @@ export default function CardNewsMaker({ initialText, initialImage }: { initialTe
               card={card}
               kind={i === 0 ? 'cover' : i === cards.length ? 'outro' : 'body'}
               filename={`card-${String(i + 1).padStart(2, '0')}.png`}
-              image={image}
+              sharedImage={image}
               version={resolvedTheme ?? ''}
             />
           ))}

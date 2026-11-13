@@ -11,6 +11,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com' },
       { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' },
+      // 글 본문 이미지 일부가 velog CDN에 있다 — 카드뉴스가 /_next/image로 받아 캔버스에 그린다
+      { protocol: 'https', hostname: 'velog.velcdn.com' },
     ],
   },
   // IA v2 이전 — 기존 링크 보호 (구체적인 규칙이 위)

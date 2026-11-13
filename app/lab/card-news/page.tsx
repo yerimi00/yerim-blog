@@ -13,7 +13,7 @@ export const metadata = {
 export default async function CardNewsPage({ searchParams }: { searchParams: { post?: string } }) {
   const posts = await getAllPosts()
   const post = searchParams.post ? await getPostBySlug(searchParams.post) : null
-  const initialText = post ? postToCardText(post.title, post.description, await getPostContent(post.id)) : ''
+  const initialText = post ? postToCardText(post.title, post.description, await getPostContent(post.id), post.coverImage) : ''
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
@@ -52,7 +52,7 @@ export default async function CardNewsPage({ searchParams }: { searchParams: { p
         </button>
       </form>
 
-      <CardNewsMaker key={post?.slug ?? 'blank'} initialText={initialText} initialImage={post?.coverImage} />
+      <CardNewsMaker key={post?.slug ?? 'blank'} initialText={initialText} />
     </main>
   )
 }
