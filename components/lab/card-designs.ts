@@ -1,4 +1,4 @@
-// 카드뉴스 캔버스 디자인. 외부 템플릿을 베끼지 않고 흔한 레이아웃 패턴(사진 오버레이·프레임·터미널·트윗)만 참고했다.
+// 카드뉴스 캔버스 디자인. 외부 템플릿을 베끼지 않고 흔한 레이아웃 패턴(사진 오버레이·프레임·터미널·트윗·메모앱·스프링 노트·네온 포스터·메신저·레트로 포스터)만 참고했다.
 // 내보내는 이미지는 사이트 테마와 무관하므로 디자인별 색을 여기서 고정하고, 포인트 색만 블로그 강조색(--accent)을 받는다
 import { splitHighlight, type Card } from '@/lib/card-news'
 import { AUTHOR_NAME, SITE_DOMAIN_NAME } from '@/lib/site'
@@ -14,6 +14,11 @@ export const DESIGNS = {
   frame: '프레임 카드',
   terminal: '다크 터미널',
   tweet: '트윗형',
+  memo: '메모앱형',
+  notebook: '스프링 노트',
+  neon: '블랙 + 네온',
+  chat: '메신저 대화형',
+  retro: '레트로 포스터',
 } as const
 export type DesignId = keyof typeof DESIGNS
 export type Kind = 'cover' | 'body' | 'outro'
@@ -124,9 +129,9 @@ function drawImage(ctx: Ctx, img: HTMLImageElement, x: number, y: number, w: num
   ctx.restore()
 }
 
-function arrow(ctx: Ctx, y: number, color: string) {
+function arrow(ctx: Ctx, y: number, color: string, width = 3) {
   ctx.strokeStyle = color
-  ctx.lineWidth = 3
+  ctx.lineWidth = width
   ctx.beginPath()
   ctx.moveTo(892, y)
   ctx.lineTo(1010, y)
@@ -388,7 +393,389 @@ function tweet(ctx: Ctx, d: DrawInput) {
   if (kind !== 'outro') arrow(ctx, 1250, MUTED)
 }
 
-const RENDERERS: Record<DesignId, (ctx: Ctx, d: DrawInput) => void> = { photo, frame, terminal, tweet }
+// ---------- 메모앱형: 휴대폰 메모 화면 + 체크리스트 ----------
+
+function memo(ctx: Ctx, d: DrawInput) {
+  const { card, kind, image, accent } = d
+  const INK = '#1c1c1e'
+  const MUTED = '#9a9488'
+  const TINT = '#d9a400'
+  const MX = 80
+  const textW = W - MX * 2
+  const bottom = 1220
+  ctx.fillStyle = '#fbf8f1'
+  ctx.fillRect(0, 0, W, H)
+
+  ctx.font = `600 34px ${SANS}`
+  ctx.fillStyle = TINT
+  ctx.fillText('‹ 메모', 56, 76)
+  ctx.textAlign = 'right'
+  ctx.fillText('완료', W - 56, 76)
+  ctx.font = `400 26px ${SANS}`
+  ctx.fillStyle = MUTED
+  ctx.textAlign = 'center'
+  ctx.fillText(`${SITE_DOMAIN_NAME} · ${pageLabel(d)}`, W / 2, 170)
+  ctx.textAlign = 'left'
+
+  let y = 240
+  const big = kind !== 'body'
+  y += drawTitle(ctx, card.title, MX, y, textW, big ? 84 : 62, big ? 5 : 3, INK, accent)
+  if (card.title) y += 36
+
+  if (kind === 'cover') {
+    y += drawText(ctx, card.body, MX, y, textW, `400 38px ${SANS}`, MUTED, 58, 4)
+  } else if (kind === 'body') {
+    // 본문 줄마다 체크박스 한 칸
+    ctx.font = `400 38px ${SANS}`
+    for (const raw of card.body.split('\n').filter(Boolean)) {
+      const item = raw.replace(/^•\s*/, '')
+      const lines = clampLines(wrap(ctx, item, textW - 64), fit(bottom - y, 58, 4))
+      if (!lines.length) break
+      ctx.strokeStyle = '#c7c2b8'
+      ctx.lineWidth = 3
+      ctx.beginPath()
+      ctx.roundRect(MX, y + 4, 36, 36, 9)
+      ctx.stroke()
+      ctx.fillStyle = INK
+      lines.forEach((l, i) => ctx.fillText(l, MX + 64, y + i * 58))
+      y += lines.length * 58 + 22
+    }
+  }
+
+  // 강조 문장: 형광펜
+  ctx.font = `600 36px ${SANS}`
+  for (const q of card.quotes.slice(0, 3)) {
+    if (y + 60 > bottom) break
+    const text = clampLines(wrap(ctx, q, textW - 20), 1)[0]
+    box(ctx, MX - 6, y + 14, ctx.measureText(text).width + 12, 30, 4, '#ffe58a')
+    ctx.fillStyle = INK
+    ctx.fillText(text, MX, y)
+    y += 64
+  }
+
+  if (image && bottom - y > 220) drawImage(ctx, image, MX, y + 20, textW, Math.min(bottom - y - 20, 560), 20, 'contain', '#f1ede4')
+  if (kind !== 'outro') arrow(ctx, 1280, MUTED)
+}
+
+// ---------- 스프링 노트: 색 바탕 + 스프링 달린 줄노트 ----------
+
+function notebook(ctx: Ctx, d: DrawInput) {
+  const { card, kind, index, image, accent } = d
+  const INK = '#1f2937'
+  const PX = 150
+  const textW = 780
+  const top = 170
+  const bottom = 1200
+  const LINE_GAP = 64
+  ctx.fillStyle = '#8fb3e6'
+  ctx.fillRect(0, 0, W, H)
+  ctx.save()
+  ctx.shadowColor = 'rgba(0,0,0,0.15)'
+  ctx.shadowBlur = 30
+  ctx.shadowOffsetY = 10
+  box(ctx, 90, top, 900, bottom - top, 18, '#ffffff')
+  ctx.restore()
+
+  // 줄 + 왼쪽 여백선
+  ctx.fillStyle = '#e3e9f3'
+  for (let ly = 330; ly < bottom - 30; ly += LINE_GAP) ctx.fillRect(110, ly + 50, 860, 2)
+  ctx.fillStyle = '#f6c1c1'
+  ctx.fillRect(130, top + 60, 2, bottom - top - 80)
+
+  // 스프링
+  for (let i = 0; i < 13; i++) {
+    const rx = 140 + i * 64
+    ctx.fillStyle = '#d6dde8'
+    ctx.beginPath()
+    ctx.arc(rx, top + 34, 9, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.strokeStyle = '#3a3f4a'
+    ctx.lineWidth = 6
+    ctx.beginPath()
+    ctx.roundRect(rx - 8, top - 34, 16, 70, 8)
+    ctx.stroke()
+  }
+
+  // 탭 라벨
+  const label = kind === 'cover' ? 'NOTE' : kind === 'outro' ? 'END' : `NOTE ${pad(index)}`
+  ctx.font = `700 26px ${SANS}`
+  box(ctx, PX, top + 80, ctx.measureText(label).width + 40, 48, 24, accent)
+  ctx.fillStyle = '#ffffff'
+  ctx.fillText(label, PX + 20, top + 91)
+
+  let y = 330
+  const big = kind !== 'body'
+  y += drawTitle(ctx, card.title, PX, y, textW, big ? 76 : 56, big ? 4 : 2, INK, accent) + 16
+  y = Math.ceil((y - 330) / LINE_GAP) * LINE_GAP + 330 + 12
+  y += drawText(ctx, card.body, PX, y, textW, `400 36px ${SANS}`, '#374151', LINE_GAP, fit(bottom - 60 - y, LINE_GAP, image ? 4 : 11))
+
+  // 강조 문장: 강조색 밑줄
+  ctx.font = `600 36px ${SANS}`
+  for (const q of card.quotes.slice(0, 2)) {
+    if (y + LINE_GAP > bottom - 60) break
+    const text = clampLines(wrap(ctx, q, textW), 1)[0]
+    ctx.fillStyle = INK
+    ctx.fillText(text, PX, y)
+    ctx.fillStyle = accent
+    ctx.fillRect(PX, y + 44, ctx.measureText(text).width, 6)
+    y += LINE_GAP
+  }
+
+  if (image && bottom - 60 - y > 200) drawImage(ctx, image, PX, y + 10, textW, Math.min(bottom - 70 - y, 500), 12, 'contain', '#f3f6fb')
+
+  ctx.font = `700 28px ${SANS}`
+  ctx.fillStyle = '#ffffff'
+  ctx.fillText(SITE_DOMAIN_NAME, X, 1262)
+  if (kind !== 'outro') arrow(ctx, 1278, '#ffffff')
+}
+
+// ---------- 블랙 + 네온: 검은 바탕, 라임 포인트, 라벨 줄, 큰 번호 ----------
+
+function neon(ctx: Ctx, d: DrawInput) {
+  const { card, kind, index, image } = d
+  const LIME = '#c6ff3d'
+  const MUTED = '#8a8a8a'
+  const NX = 80
+  const textW = W - NX * 2
+  const bottom = 1180
+  ctx.fillStyle = '#0a0a0a'
+  ctx.fillRect(0, 0, W, H)
+
+  ctx.font = `500 22px ${MONO}`
+  ctx.fillStyle = MUTED
+  ctx.fillText('CARD NEWS', NX, 70)
+  ctx.textAlign = 'center'
+  ctx.fillText(SITE_DOMAIN_NAME.toUpperCase(), W / 2, 70)
+  ctx.textAlign = 'right'
+  ctx.fillText(pageLabel(d), W - NX, 70)
+  ctx.textAlign = 'left'
+  ctx.fillStyle = '#2a2a2a'
+  ctx.fillRect(NX, 116, textW, 2)
+  ctx.fillRect(NX, 1220, textW, 2)
+
+  let y: number
+  if (kind === 'body') {
+    ctx.font = `700 240px ${SANS}`
+    ctx.fillStyle = LIME
+    ctx.fillText(pad(index), NX - 10, 140)
+    y = 450 + drawTitle(ctx, card.title, NX, 450, textW, 64, 3, '#ffffff', LIME) + 28
+  } else {
+    y = kind === 'outro' ? 480 : 300
+    y += drawTitle(ctx, card.title, NX, y, textW, kind === 'outro' ? 100 : 108, 5, '#ffffff', LIME) + 30
+    if (kind === 'cover') {
+      ctx.fillStyle = LIME
+      ctx.fillRect(NX, y, 140, 12)
+      y += 50
+    }
+  }
+  y += drawText(ctx, card.body, NX, y, textW, `400 34px ${SANS}`, '#bdbdbd', 54, fit(bottom - y, 54, image ? 4 : 10))
+
+  // 강조 문장: 라임 테두리 상자
+  ctx.font = `600 30px ${SANS}`
+  for (const q of card.quotes.slice(0, 2)) {
+    if (y + 90 > bottom) break
+    y += 24
+    const text = clampLines(wrap(ctx, q, textW - 48), 1)[0]
+    ctx.strokeStyle = LIME
+    ctx.lineWidth = 2
+    ctx.strokeRect(NX, y, ctx.measureText(text).width + 48, 60)
+    ctx.fillStyle = LIME
+    ctx.fillText(text, NX + 24, y + 15)
+    y += 60
+  }
+
+  if (image && bottom - y > 220) drawImage(ctx, image, NX, y + 30, textW, Math.min(bottom - y - 30, 520), 0, 'contain', '#151515')
+
+  ctx.font = `500 22px ${MONO}`
+  ctx.fillStyle = MUTED
+  ctx.fillText(`© ${SITE_DOMAIN_NAME}`, NX, 1262)
+  if (kind !== 'outro') arrow(ctx, 1274, LIME)
+}
+
+// ---------- 메신저 대화형: 제목은 질문 말풍선, 본문은 답 말풍선 ----------
+
+function bubbleLines(ctx: Ctx, text: string, font: string, maxW: number, maxLines: number) {
+  ctx.font = font
+  const lines = clampLines(wrap(ctx, text, maxW), maxLines)
+  return { lines, width: Math.max(0, ...lines.map((l) => ctx.measureText(l).width)) }
+}
+
+function chat(ctx: Ctx, d: DrawInput) {
+  const { card, kind, image, avatar, accent } = d
+  const INK = '#111827'
+  const MUTED = '#6b7280'
+  const PAD = 32
+  const maxBubble = 700
+  const bottom = 1200
+  ctx.fillStyle = '#e9edf2'
+  ctx.fillRect(0, 0, W, H)
+
+  // 상단 대화방 바
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, W, 150)
+  ctx.font = `400 48px ${SANS}`
+  ctx.fillStyle = INK
+  ctx.fillText('‹', 40, 46)
+  ctx.font = `700 34px ${SANS}`
+  ctx.textAlign = 'center'
+  ctx.fillText(SITE_DOMAIN_NAME, W / 2, 40)
+  ctx.font = `400 24px ${SANS}`
+  ctx.fillStyle = MUTED
+  ctx.fillText(`카드뉴스 ${pageLabel(d)}`, W / 2, 88)
+  ctx.textAlign = 'left'
+
+  let y = 210
+  const left = 150
+  // 질문(제목): 왼쪽 흰 말풍선 + 프로필
+  if (card.title) {
+    const size = kind === 'body' ? 46 : 60
+    const plain = splitHighlight(card.title).map((s) => s.text).join('')
+    const { lines, width } = bubbleLines(ctx, plain, `700 ${size}px ${SANS}`, maxBubble - PAD * 2, kind === 'body' ? 3 : 4)
+    const h = lines.length * size * 1.25 + PAD * 2 - 8
+    if (avatar) drawImage(ctx, avatar, 50, y, 76, 76, 38, 'cover', '#ffffff')
+    else box(ctx, 50, y, 76, 76, 38, accent)
+    box(ctx, left, y, width + PAD * 2, h, 32, '#ffffff')
+    drawTitle(ctx, card.title, left + PAD, y + PAD, maxBubble - PAD * 2, size, lines.length, INK, accent)
+    y += h + 28
+  }
+
+  // 답(본문): 오른쪽 강조색 말풍선
+  if (card.body) {
+    const { lines, width } = bubbleLines(ctx, card.body, `400 36px ${SANS}`, maxBubble - PAD * 2, fit(bottom - y - PAD * 2, 52, image ? 5 : 9))
+    if (lines.length) {
+      const w = width + PAD * 2
+      const h = lines.length * 52 + PAD * 2 - 6
+      box(ctx, W - 60 - w, y, w, h, 32, accent)
+      ctx.fillStyle = '#ffffff'
+      lines.forEach((l, i) => ctx.fillText(l, W - 60 - w + PAD, y + PAD + i * 52))
+      y += h + 28
+    }
+  }
+
+  // 강조 문장: 왼쪽 작은 말풍선
+  for (const q of card.quotes.slice(0, 2)) {
+    const { lines, width } = bubbleLines(ctx, q, `500 32px ${SANS}`, maxBubble - PAD * 2, 1)
+    if (y + 100 > bottom || !lines.length) break
+    box(ctx, left, y, width + PAD * 2, 92, 28, '#ffffff')
+    ctx.fillStyle = INK
+    ctx.fillText(lines[0], left + PAD, y + 28)
+    y += 120
+  }
+
+  // 사진: 오른쪽 이미지 말풍선
+  if (image && bottom - y > 220) {
+    const h = Math.min(bottom - y, 460)
+    drawImage(ctx, image, W - 60 - 620, y, 620, h, 32, 'contain', '#ffffff')
+  }
+
+  // 하단 입력창 + 보내기(=다음) 버튼
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 1230, W, 120)
+  box(ctx, 40, 1252, kind === 'outro' ? 1000 : 880, 76, 38, '#f1f3f6')
+  ctx.font = `400 30px ${SANS}`
+  ctx.fillStyle = MUTED
+  ctx.fillText('메시지 입력', 80, 1274)
+  if (kind !== 'outro') {
+    box(ctx, 944, 1252, 96, 76, 38, accent)
+    ctx.strokeStyle = '#ffffff'
+    ctx.lineWidth = 5
+    ctx.beginPath()
+    ctx.moveTo(970, 1290)
+    ctx.lineTo(1014, 1290)
+    ctx.moveTo(998, 1274)
+    ctx.lineTo(1014, 1290)
+    ctx.lineTo(998, 1306)
+    ctx.stroke()
+  }
+}
+
+// ---------- 레트로 포스터: 크림 바탕, 굵은 테두리, 밀린 그림자, 별 스티커 ----------
+
+function star(ctx: Ctx, cx: number, cy: number, r: number, fill: string) {
+  ctx.beginPath()
+  for (let i = 0; i < 10; i++) {
+    const rad = i % 2 === 0 ? r : r * 0.45
+    const a = (Math.PI / 5) * i - Math.PI / 2
+    ctx.lineTo(cx + rad * Math.cos(a), cy + rad * Math.sin(a))
+  }
+  ctx.closePath()
+  ctx.fillStyle = fill
+  ctx.fill()
+  ctx.strokeStyle = '#111111'
+  ctx.lineWidth = 5
+  ctx.stroke()
+}
+
+function retro(ctx: Ctx, d: DrawInput) {
+  const { card, kind, index, image, accent } = d
+  const INK = '#111111'
+  const BOXES = ['#ffd23f', '#ffffff', '#a8d1ff', '#ffb3c7']
+  const BX = 80
+  const top = 180
+  const bw = 920
+  const bh = 990
+  const IX = 130
+  const innerW = 820
+  const bottom = top + bh - 50
+  ctx.fillStyle = '#f6efe1'
+  ctx.fillRect(0, 0, W, H)
+
+  // 밀린 그림자 + 굵은 테두리 상자
+  box(ctx, BX + 18, top + 18, bw, bh, 28, INK)
+  box(ctx, BX, top, bw, bh, 28, kind === 'cover' ? BOXES[0] : BOXES[index % BOXES.length])
+  ctx.strokeStyle = INK
+  ctx.lineWidth = 6
+  ctx.beginPath()
+  ctx.roundRect(BX, top, bw, bh, 28)
+  ctx.stroke()
+
+  // 위쪽 검은 알약 라벨 + 별 스티커
+  const label = `CARD NEWS · ${pageLabel(d)}`
+  ctx.font = `800 26px ${SANS}`
+  box(ctx, BX, 86, ctx.measureText(label).width + 48, 58, 29, INK)
+  ctx.fillStyle = '#f6efe1'
+  ctx.fillText(label, BX + 24, 101)
+  star(ctx, 950, 150, 70, accent)
+
+  let y = top + 70
+  const big = kind !== 'body'
+  y += drawTitle(ctx, card.title, IX, y, innerW, big ? 96 : 68, big ? 5 : 3, INK, accent) + 30
+  y += drawText(ctx, card.body, IX, y, innerW, `500 36px ${SANS}`, INK, 56, fit(bottom - y, 56, image ? 4 : 10))
+
+  // 강조 문장: 살짝 기운 검은 스티커
+  ctx.font = `700 30px ${SANS}`
+  card.quotes.slice(0, 2).forEach((q, i) => {
+    if (y + 100 > bottom) return
+    y += 30
+    const text = clampLines(wrap(ctx, q, innerW - 60), 1)[0]
+    const w = ctx.measureText(text).width + 48
+    ctx.save()
+    ctx.translate(IX + w / 2, y + 32)
+    ctx.rotate(((i % 2 === 0 ? -2 : 2) * Math.PI) / 180)
+    box(ctx, -w / 2, -32, w, 64, 12, INK)
+    ctx.fillStyle = '#ffffff'
+    ctx.fillText(text, -w / 2 + 24, -16)
+    ctx.restore()
+    y += 64
+  })
+
+  if (image && bottom - y > 220) {
+    const h = Math.min(bottom - y - 30, 500)
+    drawImage(ctx, image, IX, y + 30, innerW, h, 16, 'contain', '#ffffff')
+    ctx.strokeStyle = INK
+    ctx.lineWidth = 4
+    ctx.beginPath()
+    ctx.roundRect(IX, y + 30, innerW, h, 16)
+    ctx.stroke()
+  }
+
+  ctx.font = `800 28px ${SANS}`
+  ctx.fillStyle = INK
+  ctx.fillText(SITE_DOMAIN_NAME, BX, 1262)
+  if (kind !== 'outro') arrow(ctx, 1278, INK, 5)
+}
+
+const RENDERERS: Record<DesignId, (ctx: Ctx, d: DrawInput) => void> = { photo, frame, terminal, tweet, memo, notebook, neon, chat, retro }
 
 export function drawCard(canvas: HTMLCanvasElement, design: DesignId, d: DrawInput) {
   const ctx = canvas.getContext('2d')
