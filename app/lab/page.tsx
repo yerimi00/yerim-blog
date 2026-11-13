@@ -28,7 +28,7 @@ export default function LabPage() {
               href="/lab/card-news"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
             >
-              {/* 회색 폴더 이미지 위에 같은 모양으로 강조색을 곱해 칠한다 — 명암은 그대로, 색만 바뀐다 */}
+              {/* 회색 폴더 이미지 위에 같은 모양으로 파랑(--series-1)을 곱해 칠한다 — 명암은 그대로, 색만 바뀐다 */}
               <span style={{ position: 'relative', display: 'block', width: '96px', aspectRatio: '874 / 736' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/folder.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
@@ -37,7 +37,7 @@ export default function LabPage() {
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'var(--accent)',
+                    background: 'var(--series-1)',
                     mixBlendMode: 'multiply',
                     WebkitMask: 'url(/folder.png) center / contain no-repeat',
                     mask: 'url(/folder.png) center / contain no-repeat',
