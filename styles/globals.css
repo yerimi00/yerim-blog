@@ -39,6 +39,8 @@
     --series-7: #a16207;
     --series-8: #e5383b;
     --series-9: #475569;
+    /* Lab 도구 폴더 (회색 folder.png 위에 color 블렌드로 입히는 하늘색) */
+    --lab-folder: #3a9bec;
     --primary-container: #fde2e2;
     --on-primary: #ffffff;
 
