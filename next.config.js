@@ -17,7 +17,8 @@ const nextConfig = {
   async redirects() {
     return [
       // Lab 상세 준비 중: 목록으로 보낸다. 다시 열 때 이 줄을 지우고 InteractionSeriesView에 링크를 되살린다
-      { source: '/lab/:slug', destination: '/lab', permanent: false },
+      // 완성된 도구(card-news)는 제외
+      { source: '/lab/:slug((?!card-news$).*)', destination: '/lab', permanent: false },
       { source: '/series/interactions', destination: '/lab', permanent: true },
       { source: '/series/interactions/:slug', destination: '/lab/:slug', permanent: true },
       { source: '/series', destination: '/blog/series', permanent: true },

@@ -66,6 +66,7 @@ Four data layer files in `lib/`:
 - `lib/notion.ts` — wraps `@notionhq/client` and `notion-to-md`. All blog post data.
 - `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
 - `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (운영은 상태 `발행`만, 로컬 개발은 `검수중`도 미리보기 / 발행일·번호 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`, `getQuestionContent(pageId)` → `{ content, widget }` (본문의 "🎮 위젯 데이터 (타입)" 토글을 떼어 `lib/interview-widgets.ts`의 `extractWidget`으로 검증·파싱, 형식이 틀리면 위젯 없이 표시). 제목에 "검수 메모"가 들어간 콜아웃은 `lib/notion.ts` 콜아웃 변환에서 항상 제외된다.
+- `lib/card-news.ts` — 카드뉴스 순수 로직: `parseCards(text)` (`---`/`#` 형식, 없으면 문단 분할), `postToCardText(title, description, md)` (소제목 단위, 마크다운 제거·180자 자르기)
 - `lib/site.ts` — `SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION` 단일 출처.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
 - `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments, and `getContributionDays()` (About 페이지 GitHub 잔디, 실패 시 `[]` → 섹션 숨김).
@@ -120,8 +121,9 @@ Key functions in `lib/guestbook.ts`:
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
 | `/interview` | `app/interview/page.tsx` | 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
-| `/lab` | `app/lab/page.tsx` | 인터랙션 실험 그리드. 상세를 준비 중이라 카드는 링크 없이 표시 (`app/data/interactions/interactions-data.ts`) |
-| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 다시 열 때를 위해 유지 |
+| `/lab` | `app/lab/page.tsx` | "도구"(카드뉴스 링크) + 인터랙션 실험 그리드. 인터랙션 상세는 준비 중이라 링크 없이 표시 (`app/data/interactions/interactions-data.ts`) |
+| `/lab/card-news` | `app/lab/card-news/page.tsx` | 카드뉴스 만들기 (dynamic). `?post=slug` GET 폼으로 서버가 글 마크다운을 불러와 `lib/card-news.ts`의 `postToCardText`로 카드 텍스트 생성 → `components/lab/CardNewsMaker`(client)가 Canvas 2D로 1080×1350 카드를 그리고 카드별 PNG 저장. 뉴스는 본문 붙여넣기(`---` 없으면 문단 단위 분할) |
+| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트 (`card-news`는 제외). 데모 코드는 다시 열 때를 위해 유지 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/work` | `app/work/page.tsx` | 헤드(요약·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
@@ -129,7 +131,7 @@ Key functions in `lib/guestbook.ts`:
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
-| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, work (Lab은 목록만) |
+| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, interview, work (Lab은 목록 + `/lab/card-news`) |
 | `/robots.txt` | `app/robots.ts` | Allow all except `/api/`, points to sitemap |
 
 Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new routes via `next.config.js` `redirects()`. See `docs/domains/route-map.md`.
@@ -160,6 +162,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/ui/` | 외부에서 가져온 UI 컴포넌트. `text-arrows.tsx` (글자 옆 화살표 아이콘 `ArrowRight`·`ArrowBack`·`ArrowOut`, 화살표 글자 대신 사용), `activity-heatmap.tsx` (잔디 히트맵, `motion` 사용, 스타일은 `activity-heatmap-utils/*.module.css`) |
 | `components/home/` | 홈 전용: HomeHero (캐릭터: 손 흔드는 영상을 배경 투명 animated WebP로 `<picture>`에 넣고 한 번 재생 후 마지막 장면 정지 — PC `hero-wave.webp`(520px, 크게 표시), ≤768px `hero-wave-sm.webp`(330px), 동작 줄이기면 `hero-wave-still.png`. PC는 소개 글이 캐릭터 쪽 꼬리 달린 말풍선(`.home-hero-say`)에 1인칭으로 뜨고 글자가 하나씩 찍힘, 모바일은 말풍선 없이 글만 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), RecentPosts (client: 제목·설명을 자르지 않는 최근 글 목록) |
 | `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
+| `components/lab/` | CardNewsMaker (client: 텍스트 편집 → 캔버스 카드 미리보기·PNG 저장, 색은 현재 테마의 CSS 변수) |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 

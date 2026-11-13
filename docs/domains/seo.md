@@ -31,7 +31,7 @@ metadata = {
 
 ## sitemap · robots
 
-- `app/sitemap.ts` → `/sitemap.xml`. 정적 페이지 + `/blog/[slug]` + `/blog/series/[name]` + `/interview/[slug]` + `/lab/[slug]` + `/work/[slug]`. 새 글은 revalidate(1시간) 후 자동 반영.
+- `app/sitemap.ts` → `/sitemap.xml`. 정적 페이지(`/lab/card-news` 포함) + `/blog/[slug]` + `/blog/series/[name]` + `/interview/[slug]` + `/lab/[slug]` + `/work/[slug]`. 새 글은 revalidate(1시간) 후 자동 반영.
 - `app/robots.ts` → `/robots.txt`. `/api/` 제외, sitemap 주소 명시.
 
 RSS 링크 태그 (`app/layout.tsx` `<head>`):
@@ -99,6 +99,7 @@ RSS 링크 태그 (`app/layout.tsx` `<head>`):
 | `/blog/tag/[tag]` | `#태그명` | `태그명 태그가 달린 글 모음` |
 | `/blog/series/[name]` | `시리즈명 — Series` | `시리즈명 시리즈 글 모음` |
 | `/interview/[slug]` | 질문 | `한 줄 요약` (없으면 질문) |
+| `/lab/card-news` | `카드뉴스 만들기 — Lab` | 블로그 글·뉴스 → 카드뉴스 PNG |
 | `/lab/[slug]` | `데모명 — Lab` | 데모 설명 |
 | `/work/[slug]` | `프로젝트명 — Work` | 프로젝트 Description |
 

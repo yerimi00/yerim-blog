@@ -14,8 +14,9 @@
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | 86400 | 시리즈별 포스트. encodeURIComponent 처리. |
 | `/interview` | `app/interview/page.tsx` | 3600 | 오늘의 면접 질문(최신 발행 1개) + 지난 문제 아카이브(카테고리 필터). Interview DB 미설정 시 "준비 중" 안내. |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 3600 | 문제 상세. 답변(Notion 본문)·꼬리질문·참고 링크는 `AnswerReveal`로 가렸다가 30초 타이머 또는 "답 보기"로 공개. 이전/다음 문제, AdSense, Giscus. |
-| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`). 상세를 준비 중이라 카드는 링크 없이 표시. |
-| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트. 데모 코드는 유지. |
+| `/lab` | `app/lab/page.tsx` | — | 인터랙션 실험 그리드 (`app/data/interactions/interactions-data.ts`의 `DEMOS`) + 위쪽 "도구" 줄(카드뉴스). 인터랙션 상세를 준비 중이라 카드는 링크 없이 표시. |
+| `/lab/card-news` | `app/lab/card-news/page.tsx` | dynamic | 카드뉴스 만들기. `?post=slug`로 블로그 글을 카드로 나누거나 뉴스 본문 붙여넣기 → 카드별 PNG(1080×1350). |
+| `/lab/[slug]` | `app/lab/[slug]/page.tsx` | 86400 | 준비 중이라 `next.config.js`에서 `/lab`으로 임시 리다이렉트 (`card-news` 제외). 데모 코드는 유지. |
 | `/about` | `app/about/page.tsx` | — | `/about/fe` 리다이렉트 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | — | `fe`, `be`, `pm` 버전. 섹션 순서: About → Philosophy → Awards → Education → Activities → Tech Stack → Contact. Contact에 전화·이메일·GitHub·Velog 통합. |
 | `/work` | `app/work/page.tsx` | 3600 | 헤드(요약·바로가기), 대표작 지면(Featured), 나머지 아카이브(직무·수상 필터, 커서 미리보기), `#ai-skills` (직접 만든 자동화만 기본 표시). |
