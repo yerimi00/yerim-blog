@@ -18,9 +18,9 @@ const nextConfig = {
   // IA v2 이전 — 기존 링크 보호 (구체적인 규칙이 위)
   async redirects() {
     return [
-      // 예전 Lab 인터랙션 상세 주소는 목록으로 보낸다 (인터랙션 데모는 삭제됨). 도구(card-news)는 제외.
+      // 예전 Lab 인터랙션 상세 주소는 목록으로 보낸다 (인터랙션 데모는 삭제됨). 도구(card-news·meme)는 제외.
       // 나중에 /lab/새도구 를 열 수 있게 임시(307)로 둔다
-      { source: '/lab/:slug((?!card-news$).*)', destination: '/lab', permanent: false },
+      { source: '/lab/:slug((?!card-news$|meme$).*)', destination: '/lab', permanent: false },
       // Interview 숨김 중: 페이지 코드는 남겨 두고 주소만 홈으로 보낸다. 다시 열 때 이 두 줄을 지운다
       { source: '/interview', destination: '/', permanent: false },
       { source: '/interview/:slug', destination: '/', permanent: false },

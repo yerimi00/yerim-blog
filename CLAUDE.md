@@ -30,6 +30,8 @@ Required in `.env.local`:
 - `NOTION_PROJECTS_DATABASE_ID` — ID of the Notion Projects database
 - `NOTION_ACTIVITIES_DATABASE_ID` — ID of the Notion Activities database (`cc1bc9501c2546e580c4efa5a6e05cab`)
 - `NOTION_INTERVIEW_DATABASE_ID` — ID of the Notion interview-question database (`28aa639a33784ebfb210339075d39e17`). Optional: unset → `/interview` shows an empty state
+- `NOTION_MEME_DATABASE_ID` — ID of the Notion "짤 모음" DB (`4197b85b35ce812fa531dcc54b4fd767`, `yerim.dev` 페이지 아래). Optional: unset → `/lab/meme`은 GIPHY 결과만
+- `GIPHY_API_KEY` — GIPHY API key (server only, `/api/memes/giphy`). Optional: unset → GIPHY 칸 숨김
 - `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_NAVER_SITE_VERIFICATION` — Search Console / Search Advisor ownership meta. Optional
 
 ## Core Principles
@@ -67,6 +69,8 @@ Four data layer files in `lib/`:
 - `lib/projects.ts` — Projects Notion DB 조회. `getAllProjects`, `getProjectBySlug`.
 - `lib/interview.ts` — interview-question Notion DB 조회. `getPublishedQuestions()` (운영은 상태 `발행`만, 로컬 개발은 `검수중`도 미리보기 / 발행일·번호 desc, React cache, 실패 시 `[]`), `getQuestionBySlug(slug)`, `getQuestionContent(pageId)` → `{ content, widget }` (본문의 "🎮 위젯 데이터 (타입)" 토글을 떼어 `lib/interview-widgets.ts`의 `extractWidget`으로 검증·파싱, 형식이 틀리면 위젯 없이 표시). 제목에 "검수 메모"가 들어간 콜아웃은 `lib/notion.ts` 콜아웃 변환에서 항상 제외된다.
 - `lib/card-news.ts` — 카드뉴스 순수 로직: `parseCards(text)` (`---`로 카드, `#` 제목, `>` 강조 박스, `![](주소)` 카드 이미지, ``` 코드, 없으면 문단 분할), `splitHighlight(title)` (제목 `**단어**` 포인트), `postToCardText(title, description, md, cover?)` (소제목 단위 — 코드 안 `#` 주석으로는 나누지 않음, 구간 첫 이미지·첫 코드 블록(10줄) 유지, 마크다운 제거·180자 자르기)
+- `lib/memes.ts` — 짤 추천 데이터: `getMemes()` (Notion "짤 모음" DB에서 `공개` 체크만, `이미지` 첫 파일(업로드·링크)·`태그`·`키워드`(쉼표), React cache, 실패 시 `[]`), `searchGiphy(q, offset, limit)` (키 없거나 실패 시 `null`)
+- `lib/meme-match.ts` — 짤 추천 순수 로직: `EMOTIONS`(감정 태그 10종 + 비슷한 말 + GIPHY 영어 검색어), `detectTags(text)`, `rankMemes(memes, tags, text)` (태그 3점·키워드 2점·제목 1점, 같은 점수는 섞음), `giphyQuery(tags, text)` (첫 감정의 영어 검색어, 없으면 문장)
 - `lib/site.ts` — `SITE_URL`, `SITE_NAME`, `SITE_DESCRIPTION` 단일 출처.
 - `lib/guestbook.ts` — guestbook entries and comments via Notion API (separate DB).
 - `lib/github.ts` — GitHub GraphQL API for Giscus comment counts and recent comments, and `getContributionDays()` (About 페이지 GitHub 잔디, 실패 시 `[]` → 섹션 숨김).
@@ -107,6 +111,8 @@ Key functions in `lib/guestbook.ts`:
 
 **Interview** — `질문` (title), `Slug` (rich_text), `카테고리` (select), `난이도` (select: 기본/중간/심화), `위젯` (select: predict_output/order/step_diagram/compare_toggle/ox_quiz/sql_table — 데이터는 본문 "🎮 위젯 데이터 (타입)" 토글 안 JSON 코드 블록), `한 줄 요약` (rich_text), `꼬리질문` (rich_text), `발행일` (date), `상태` (status: 대기/검수중/발행/보류), `번호` (unique_id), `참고 링크` (url). 답변은 페이지 본문.
 
+**짤 모음** — `제목` (title), `이미지` (files, 1장), `태그` (multi_select: 기쁨·슬픔·화남·피곤·놀람·당황·감사·축하·응원·퇴근 + 자유 추가), `키워드` (rich_text, 쉼표 구분), `공개` (checkbox — 체크해야 노출).
+
 **Guestbook** — `Message` (title), `Name` (rich_text), `Public` (checkbox), `Password` (rich_text, private entries only). Comments stored as paragraph block children in `name|message` format.
 
 ### Pages
@@ -121,8 +127,9 @@ Key functions in `lib/guestbook.ts`:
 | `/blog/series/[name]` | `app/blog/series/[name]/page.tsx` | Posts in a specific series |
 | `/interview` | `app/interview/page.tsx` | **숨김 중**: `next.config.js`에서 `/interview`·`/interview/:slug`를 홈으로 임시 리다이렉트, 헤더·하단 네비·홈 섹션·sitemap은 주석 처리. 페이지 코드는 유지. 오늘의 면접 질문 + 아카이브(카테고리 필터). `revalidate = 3600` |
 | `/interview/[slug]` | `app/interview/[slug]/page.tsx` | 문제 상세. 질문 아래 "🎮 직접 풀어보기" 위젯 → `AnswerReveal`(30초 타이머/답 보기)로 답변·꼬리질문 가림 |
-| `/lab` | `app/lab/page.tsx` | "도구"(카드뉴스: 회색 `folder.png`에 `--lab-folder`(하늘색)를 CSS mask + `mix-blend-mode: color`로 입힌 파스텔 하늘색 폴더 링크). 인터랙션 데모는 삭제 |
+| `/lab` | `app/lab/page.tsx` | "도구" 폴더 목록(`TOOLS` 배열): 회색 `folder.png`에 도구 색을 CSS mask + `mix-blend-mode: color`로 입힌 파스텔 폴더 — 카드뉴스 `--lab-folder`(하늘색)·짤 추천 `--lab-folder-meme`(주황). 인터랙션 데모는 삭제 |
 | `/lab/card-news` | `app/lab/card-news/page.tsx` | 카드뉴스 만들기 (dynamic). `?post=slug` GET 폼으로 서버가 글 마크다운을 불러와 `lib/card-news.ts`의 `postToCardText`로 카드 텍스트 생성 → `components/lab/CardNewsMaker`(client)가 디자인 19종(`components/lab/card-designs.ts` 9종: 포토 오버레이·프레임 카드·다크 터미널(코드 블록 표시)·트윗형·메모앱형·스프링 노트·블랙+네온·메신저 대화형·레트로 포스터 / `card-designs-feed.ts` 10종: 박스 정리형·말풍선 포토·센터 매거진·기록 로그(본문 `왼쪽 | 오른쪽` 줄=시간표·표지 수치 칸)·데스크톱 창·형광펜 메모·카메라 UI·글자 타일·블로그 글·태그 포토) 중 하나를 골라 Canvas 2D로 1080×1350 카드를 그리고 카드별 PNG 저장. 제목 포인트 단어는 `--accent`(터미널은 초록) — 상단 색 고르기로 바꾸면 터미널 포함 19종 모두 그 색. 이미지가 있는 카드는 오른쪽 위 자르기 아이콘 → `ImageEditor` 편집 화면(사진 편집 앱의 자르기 화면 패턴: 칸 위 3분할 격자, 드래그로 위치·휠/슬라이더로 크기 50~300%·90° 회전·각도 슬라이더로 -45~45° 미세 회전(칸 모서리가 비지 않게 자동 확대)·좌우 반전·초기화, 위쪽 취소(ESC)/완료 — 완료해야 반영) (`card-canvas.ts` `drawImage`가 `drawCard`가 넘긴 `view`를 해당 카드 이미지에만 적용하고 그린 칸을 돌려준다, 프로필 사진 제외). 배경 우선순위: 카드별 업로드(카드 순서 기준) → 카드 텍스트의 `![](주소)`(글 불러오면 커버·구간 첫 이미지 자동) → 전체 배경 업로드 → 회색. 원격 이미지는 `/_next/image`(같은 출처)로 받아 캔버스 오염을 피하므로 `next.config.js` `remotePatterns`에 있는 호스트(Notion S3·velog CDN 등)만 확실히 그려진다. 뉴스는 본문 붙여넣기(`---` 없으면 문단 단위 분할) |
+| `/lab/meme` | `app/lab/meme/page.tsx` | 짤 추천. `revalidate = 1800`(Notion 업로드 이미지 주소 1시간 만료보다 짧게). 서버가 `getMemes()`로 내 짤을 넘기고 `components/lab/MemeFinder`(client)가 상황 문장·감정 칩으로 `rankMemes` → 12칸이 안 차면 `/api/memes/giphy`로 채움("Powered by GIPHY" 표기). 카드별 복사(클립보드는 PNG만 → GIF는 첫 장면)·저장(원본)·다시 추천(내 짤 다시 섞기 + GIPHY 다음 묶음). 원본 주소가 CORS로 막히면 `/_next/image` 프록시로 받는다 |
 | `/about` | `app/about/page.tsx` | 전체 화면 랜딩 `AboutHeroLanding`. 레이아웃 헤더·푸터는 CSS `body:has(.about-hero-grid)`로 숨김 |
 | `/about/[version]` | `app/about/[version]/page.tsx` | Version-specific intro: `fe`, `be`, `pm`. 섹션: About · Philosophy · Awards · Education · Activities · Tech Stack · GitHub(잔디) · Contact (GitHub·Velog 포함). `AboutToc` 목차 연동. |
 | `/work` | `app/work/page.tsx` | 헤드(요약·바로가기) → `#featured` 대표작(Featured) → `#archive` 나머지 색인(필터·커서 미리보기) → `#ai-skills` (직접 만든 자동화만 펼침, static `app/data/ai-skills.ts`) |
@@ -130,7 +137,7 @@ Key functions in `lib/guestbook.ts`:
 | `/guestbook` | `app/guestbook/page.tsx` | Guestbook. `force-dynamic`. Mobile access allowed. |
 | `/notices` | `app/notices/page.tsx` | Notice board. Accordion. Client component. |
 | `/rss.xml` | `app/rss.xml/route.ts` | RSS 2.0 feed. `revalidate = 86400` |
-| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, work, `/lab`·`/lab/card-news` (interview는 숨김 중이라 주석) |
+| `/sitemap.xml` | `app/sitemap.ts` | All public pages, posts, series, work, `/lab`·`/lab/card-news`·`/lab/meme` (interview는 숨김 중이라 주석) |
 | `/robots.txt` | `app/robots.ts` | Allow all except `/api/`, points to sitemap |
 
 Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new routes via `next.config.js` `redirects()`. See `docs/domains/route-map.md`.
@@ -140,6 +147,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | Route | Method | Description |
 |---|---|---|
 | `/api/search` | GET | Returns all published posts as JSON for client-side search |
+| `/api/memes/giphy` | GET | 짤 추천 GIPHY 검색 (`q`, `offset`, `limit` ≤24) → `{ enabled, items }`. 키는 서버에만 |
 | `/api/views/[slug]` | POST | Increments view count in Notion |
 | `/api/guestbook` | GET, POST | List / create guestbook entries |
 | `/api/guestbook/[id]/comments` | GET, POST | List / add comments |
@@ -162,6 +170,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
 | `components/home/` | 홈 전용: HomeHero (캐릭터: 손 흔드는 영상을 배경 투명 animated WebP로 `<picture>`에 넣고 한 번 재생 후 마지막 장면 정지 — PC `hero-wave.webp`(520px, 크게 표시), ≤768px `hero-wave-sm.webp`(330px), 동작 줄이기면 `hero-wave-still.png`. PC는 소개 글이 캐릭터 쪽 꼬리 달린 말풍선(`.home-hero-say`)에 1인칭으로 뜨고 글자가 하나씩 찍힘, 모바일은 말풍선 없이 글만 + 떨어지는 태그 칩 + 전체 글 눈금, 커서 근처가 솟고 제목 표시), RecentPosts (client: 제목·설명을 자르지 않는 최근 글 목록) |
 | `components/physics/` | `usePhysicsStage` — `[data-physics]` 요소를 matter-js로 떨어뜨리고 드래그로 던지기. 홈 칩·About 랜딩 공용 |
 | `components/lab/` | CardNewsMaker (client: 디자인 선택·포인트 색 고르기·텍스트 편집·전체/카드별 이미지 → 캔버스 카드 미리보기·PNG 저장), card-designs·card-designs-feed (디자인별 캔버스 렌더러, `drawCard`·`DESIGNS`), ImageEditor (client: 카드 이미지 편집 화면 — 포털·드래그·휠 확대·회전·반전), card-canvas (공용 도구: 줄바꿈·`drawTitle`(포인트 색/형광펜·가운데 정렬)·이미지·사진 배경·자리표시 아이콘). 이미지 색은 테마와 무관하게 디자인별 고정, 포인트만 `--accent` |
+| `components/lab/MemeFinder.tsx` | 짤 추천 (client): 문장 입력·감정 칩·결과 격자(내 짤/GIPHY 배지)·복사·저장·다시 추천 |
 | `components/GoogleAdsense.tsx` | AdSense ad unit (client component) |
 | `components/GuestbookFAB.tsx` | 방명록 FAB. 웹: 전 페이지. 모바일(≤480px): 홈(`/`)에서만 가로 레이아웃으로 표시. |
 
@@ -176,7 +185,7 @@ Legacy URLs (`/series*`, `/project*`, `/ai-skills`) 308-redirect to the new rout
   - Accent (빨간 펜 `#e5383b` / 다크 `#ff6b6b`): `--accent`, `--accent-dim`, `--accent-soft`, `--secondary`, `--secondary-container`
   - 정답 표시: `--success` (`#15803d` / 다크 `#4ade80`), 강조색 위 글자: `--on-primary`
   - 시리즈 뱃지: `--series-1` ~ `--series-9`. `lib/utils.ts`의 `seriesColor(name)`으로 고른다
-  - Lab 도구 폴더: `--lab-folder` (하늘색, 다크 공용)
+  - Lab 도구 폴더: `--lab-folder` (하늘색)·`--lab-folder-meme` (주황), 다크 공용
   - Shadows: `--shadow-floating`, `--shadow-card`
   - Radii: `--radius-sm` (2px), `--radius` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-xl` (12px), `--radius-full` (9999px)
 - Tailwind theme extensions (`tailwind.config.js`):
