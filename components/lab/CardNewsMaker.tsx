@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTheme } from 'next-themes'
 import { parseCards, type Card } from '@/lib/card-news'
 import { SITE_DOMAIN_NAME } from '@/lib/site'
-import { DESIGNS, H, W, drawCard, type DesignId, type Kind } from './card-designs'
+import { DEFAULT_VIEW, DESIGNS, H, W, drawCard, type DesignId, type ImageView, type Kind } from './card-designs'
 
 const PLACEHOLDER = `# 표지 **제목**
 ---
@@ -26,16 +26,21 @@ type CardCanvasProps = {
   design: DesignId
   sharedImage: HTMLImageElement | null
   avatar: HTMLImageElement | null
+  /** 직접 고른 포인트 색. null이면 블로그 강조색(--accent) */
+  pickedAccent: string | null
   version: string
 }
 
-function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, version }: CardCanvasProps) {
+function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, pickedAccent, version }: CardCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   // ponytail: 카드별 업로드는 카드 순서(이 컴포넌트의 key=index)에 붙는다. 카드를 옮기면 이미지는 자리에 남음
   const [uploaded, setUploaded] = useState<HTMLImageElement | null>(null)
   const [textImage, setTextImage] = useState<HTMLImageElement | null>(null)
   const image = uploaded ?? textImage ?? sharedImage
+  const [view, setView] = useState<ImageView>(DEFAULT_VIEW)
+  const [adjusting, setAdjusting] = useState(false)
+  const patch = (p: Partial<ImageView>) => setView((v) => ({ ...v, ...p }))
 
   useEffect(() => {
     let alive = true
@@ -55,10 +60,10 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, ver
     ])
       .catch(() => undefined)
       .then(() => {
-        const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
-        drawCard(canvas, design, { card, kind, index, total, image, avatar, accent })
+        const accent = pickedAccent ?? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
+        drawCard(canvas, design, { card, kind, index, total, image, avatar, accent, customAccent: !!pickedAccent, view })
       })
-  }, [card, kind, index, total, design, image, avatar, version])
+  }, [card, kind, index, total, design, image, avatar, pickedAccent, view, version])
 
   const download = () => {
     ref.current?.toBlob((blob) => {
@@ -92,9 +97,41 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, ver
         >
           {uploaded ? '이미지 빼기' : '이미지'}
         </button>
+        {image && (
+          <button type="button" aria-expanded={adjusting} onClick={() => setAdjusting((a) => !a)} style={buttonStyle}>
+            조절
+          </button>
+        )}
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setUploaded)} />
       </div>
+      {image && adjusting && (
+        <div role="group" aria-label={`카드 ${index + 1} 이미지 조절`} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          <Slider label="크기" min={0.5} max={3} step={0.05} value={view.zoom} onChange={(zoom) => patch({ zoom })} />
+          <Slider label="가로" min={-0.5} max={0.5} step={0.01} value={view.x} onChange={(x) => patch({ x })} />
+          <Slider label="세로" min={-0.5} max={0.5} step={0.01} value={view.y} onChange={(y) => patch({ y })} />
+          <div style={{ display: 'flex', gap: '0.4rem' }}>
+            <button type="button" onClick={() => patch({ rotate: (view.rotate + 90) % 360 })} style={{ ...buttonStyle, flex: 1 }}>
+              회전 {view.rotate}°
+            </button>
+            <button type="button" aria-pressed={view.flip} onClick={() => patch({ flip: !view.flip })} style={{ ...buttonStyle, flex: 1 }}>
+              좌우 반전
+            </button>
+            <button type="button" onClick={() => setView(DEFAULT_VIEW)} style={buttonStyle}>
+              초기화
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+function Slider({ label, min, max, step, value, onChange }: { label: string; min: number; max: number; step: number; value: number; onChange: (v: number) => void }) {
+  return (
+    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <span style={{ width: '2.2rem', flexShrink: 0 }}>{label}</span>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ flex: 1, minWidth: 0, accentColor: 'var(--accent)' }} />
+    </label>
   )
 }
 
@@ -143,6 +180,9 @@ export default function CardNewsMaker({ initialText }: { initialText: string }) 
   const [design, setDesign] = useState<DesignId>('photo')
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   const [avatar, setAvatar] = useState<HTMLImageElement | null>(null)
+  const [pickedAccent, setPickedAccent] = useState<string | null>(null)
+  // 색 고르기 칸에 보여 줄 기본 포인트 색 (테마마다 다름)
+  const [themeAccent, setThemeAccent] = useState('#e5383b')
   const fileRef = useRef<HTMLInputElement>(null)
   const { resolvedTheme } = useTheme()
   const cards = parseCards(text)
@@ -152,6 +192,11 @@ export default function CardNewsMaker({ initialText }: { initialText: string }) 
   useEffect(() => {
     loadDirect('/logo.png').then(setAvatar)
   }, [])
+
+  useEffect(() => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
+    if (/^#[0-9a-f]{6}$/i.test(v)) setThemeAccent(v)
+  }, [resolvedTheme])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -172,6 +217,23 @@ export default function CardNewsMaker({ initialText }: { initialText: string }) 
             {DESIGNS[id]}
           </button>
         ))}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          포인트 색
+          <input
+            type="color"
+            value={pickedAccent ?? themeAccent}
+            onChange={(e) => setPickedAccent(e.target.value)}
+            style={{ width: '2.5rem', height: '2rem', padding: 0, border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface)', cursor: 'pointer' }}
+          />
+        </label>
+        {pickedAccent && (
+          <button type="button" onClick={() => setPickedAccent(null)} style={buttonStyle}>
+            기본색
+          </button>
+        )}
       </div>
 
       <textarea
@@ -219,6 +281,7 @@ export default function CardNewsMaker({ initialText }: { initialText: string }) 
               design={design}
               sharedImage={image}
               avatar={avatar}
+              pickedAccent={pickedAccent}
               version={resolvedTheme ?? ''}
             />
           ))}

@@ -4,12 +4,13 @@ import { splitHighlight } from '@/lib/card-news'
 import { AUTHOR_NAME, SITE_DOMAIN_NAME } from '@/lib/site'
 import {
   H, MONO, SANS, W, X, arrow, box, clampLines, countLines, drawImage, drawText, drawTitle, fit, pad, pageLabel, wrap,
-  type Ctx, type DrawInput,
+  DEFAULT_VIEW, setImageView, type Ctx, type DrawInput,
 } from './card-canvas'
 import { FEED_DESIGNS, FEED_RENDERERS } from './card-designs-feed'
 
 export { H, W } from './card-canvas'
-export type { Kind } from './card-canvas'
+export type { Kind, ImageView } from './card-canvas'
+export { DEFAULT_VIEW } from './card-canvas'
 
 export const DESIGNS = {
   photo: '포토 오버레이',
@@ -136,7 +137,8 @@ function terminal(ctx: Ctx, d: DrawInput) {
   const { card, kind, index, total, image } = d
   const TEXT = '#e6edf3'
   const MUTED = '#7d8590'
-  const GREEN = '#3fb950'
+  // 색을 직접 고르면 터미널 초록 대신 그 색
+  const GREEN = d.customAccent ? d.accent : '#3fb950'
   const YELLOW = '#e3b341'
   const TX = 110
   const innerW = 860
@@ -664,5 +666,7 @@ export function drawCard(canvas: HTMLCanvasElement, design: DesignId, d: DrawInp
   ctx.clearRect(0, 0, W, H)
   ctx.textBaseline = 'top'
   ctx.textAlign = 'left'
+  setImageView(d.image, d.view)
   RENDERERS[design](ctx, d)
+  setImageView(null, DEFAULT_VIEW)
 }

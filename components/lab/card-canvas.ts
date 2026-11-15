@@ -19,6 +19,21 @@ export type DrawInput = {
   image: HTMLImageElement | null
   avatar: HTMLImageElement | null
   accent: string
+  /** 사용자가 포인트 색을 직접 골랐는지 (터미널처럼 고유 색을 쓰는 디자인도 이 색을 따른다) */
+  customAccent?: boolean
+  view?: ImageView
+}
+
+// 카드 이미지 조절값: zoom 배율, x·y는 칸 크기 대비 이동(-0.5~0.5), rotate 0/90/180/270, flip 좌우 반전
+export type ImageView = { zoom: number; x: number; y: number; rotate: number; flip: boolean }
+export const DEFAULT_VIEW: ImageView = { zoom: 1, x: 0, y: 0, rotate: 0, flip: false }
+
+// ponytail: 19종 렌더러에 값을 넘기지 않으려고 drawCard가 그리는 동안만 모듈 변수에 둔다. 이 이미지에만 적용(프로필 사진 제외)
+let viewImage: HTMLImageElement | null = null
+let view: ImageView = DEFAULT_VIEW
+export function setImageView(img: HTMLImageElement | null, v: ImageView = DEFAULT_VIEW) {
+  viewImage = img
+  view = v
 }
 
 export const pad = (n: number) => String(n).padStart(2, '0')
@@ -156,10 +171,18 @@ export function drawImage(ctx: Ctx, img: HTMLImageElement, x: number, y: number,
   ctx.roundRect(x, y, w, h, r)
   ctx.clip()
   if (bg) { ctx.fillStyle = bg; ctx.fillRect(x, y, w, h) }
-  const scale = (mode === 'cover' ? Math.max : Math.min)(w / img.naturalWidth, h / img.naturalHeight)
+  const v = img === viewImage ? view : DEFAULT_VIEW
+  // 90°·270°로 돌리면 가로·세로가 바뀐 상태로 칸에 맞춘다
+  const side = v.rotate % 180 !== 0
+  const nw = side ? img.naturalHeight : img.naturalWidth
+  const nh = side ? img.naturalWidth : img.naturalHeight
+  const scale = (mode === 'cover' ? Math.max : Math.min)(w / nw, h / nh) * v.zoom
   const iw = img.naturalWidth * scale
   const ih = img.naturalHeight * scale
-  ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih)
+  ctx.translate(x + w / 2 + v.x * w, y + h / 2 + v.y * h)
+  ctx.rotate((v.rotate * Math.PI) / 180)
+  if (v.flip) ctx.scale(-1, 1)
+  ctx.drawImage(img, -iw / 2, -ih / 2, iw, ih)
   ctx.restore()
 }
 
