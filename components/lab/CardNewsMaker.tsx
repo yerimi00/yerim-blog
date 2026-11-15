@@ -1,10 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence } from 'motion/react'
+import { TbCrop } from 'react-icons/tb'
 import { useTheme } from 'next-themes'
 import { parseCards, type Card } from '@/lib/card-news'
 import { SITE_DOMAIN_NAME } from '@/lib/site'
 import { DEFAULT_VIEW, DESIGNS, H, W, drawCard, type DesignId, type ImageView, type Kind } from './card-designs'
+import ImageEditor from './ImageEditor'
 
 const PLACEHOLDER = `# 표지 **제목**
 ---
@@ -39,8 +42,12 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, pic
   const [textImage, setTextImage] = useState<HTMLImageElement | null>(null)
   const image = uploaded ?? textImage ?? sharedImage
   const [view, setView] = useState<ImageView>(DEFAULT_VIEW)
-  const [adjusting, setAdjusting] = useState(false)
-  const patch = (p: Partial<ImageView>) => setView((v) => ({ ...v, ...p }))
+  const [editing, setEditing] = useState(false)
+
+  const draw = (canvas: HTMLCanvasElement, v: ImageView) => {
+    const accent = pickedAccent ?? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
+    return drawCard(canvas, design, { card, kind, index, total, image, avatar, accent, customAccent: !!pickedAccent, view: v })
+  }
 
   useEffect(() => {
     let alive = true
@@ -59,10 +66,8 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, pic
       document.fonts.load('400 24px "JetBrains Mono"'),
     ])
       .catch(() => undefined)
-      .then(() => {
-        const accent = pickedAccent ?? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
-        drawCard(canvas, design, { card, kind, index, total, image, avatar, accent, customAccent: !!pickedAccent, view })
-      })
+      .then(() => draw(canvas, view))
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw는 아래 값들로만 만들어진다
   }, [card, kind, index, total, design, image, avatar, pickedAccent, view, version])
 
   const download = () => {
@@ -79,13 +84,42 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, pic
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      <canvas
-        ref={ref}
-        width={W}
-        height={H}
-        aria-label={`카드 ${index + 1}: ${card.title || card.body}`}
-        style={{ width: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}
-      />
+      <div style={{ position: 'relative' }}>
+        <canvas
+          ref={ref}
+          width={W}
+          height={H}
+          aria-label={`카드 ${index + 1}: ${card.title || card.body}`}
+          style={{ display: 'block', width: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}
+        />
+        {/* 사진 편집 앱처럼 오른쪽 위 자르기 아이콘 → 편집 화면 */}
+        {image && (
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            aria-label={`카드 ${index + 1} 이미지 편집 (크기·위치·회전)`}
+            title="이미지 편집"
+            style={{
+              position: 'absolute',
+              top: '0.5rem',
+              right: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '2rem',
+              height: '2rem',
+              color: 'var(--text)',
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-full)',
+              boxShadow: 'var(--shadow-card)',
+              cursor: 'pointer',
+            }}
+          >
+            <TbCrop size={16} aria-hidden />
+          </button>
+        )}
+      </div>
       <div style={{ display: 'flex', gap: '0.4rem' }}>
         <button type="button" onClick={download} style={{ ...buttonStyle, flex: 1 }}>
           PNG 저장
@@ -97,41 +131,20 @@ function CardCanvas({ card, kind, index, total, design, sharedImage, avatar, pic
         >
           {uploaded ? '이미지 빼기' : '이미지'}
         </button>
-        {image && (
-          <button type="button" aria-expanded={adjusting} onClick={() => setAdjusting((a) => !a)} style={buttonStyle}>
-            조절
-          </button>
-        )}
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setUploaded)} />
       </div>
-      {image && adjusting && (
-        <div role="group" aria-label={`카드 ${index + 1} 이미지 조절`} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-          <Slider label="크기" min={0.5} max={3} step={0.05} value={view.zoom} onChange={(zoom) => patch({ zoom })} />
-          <Slider label="가로" min={-0.5} max={0.5} step={0.01} value={view.x} onChange={(x) => patch({ x })} />
-          <Slider label="세로" min={-0.5} max={0.5} step={0.01} value={view.y} onChange={(y) => patch({ y })} />
-          <div style={{ display: 'flex', gap: '0.4rem' }}>
-            <button type="button" onClick={() => patch({ rotate: (view.rotate + 90) % 360 })} style={{ ...buttonStyle, flex: 1 }}>
-              회전 {view.rotate}°
-            </button>
-            <button type="button" aria-pressed={view.flip} onClick={() => patch({ flip: !view.flip })} style={{ ...buttonStyle, flex: 1 }}>
-              좌우 반전
-            </button>
-            <button type="button" onClick={() => setView(DEFAULT_VIEW)} style={buttonStyle}>
-              초기화
-            </button>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {editing && image && (
+          <ImageEditor
+            title={`카드 ${index + 1}`}
+            initial={view}
+            render={draw}
+            onDone={(v) => { setView(v); setEditing(false) }}
+            onCancel={() => setEditing(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
-  )
-}
-
-function Slider({ label, min, max, step, value, onChange }: { label: string; min: number; max: number; step: number; value: number; onChange: (v: number) => void }) {
-  return (
-    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-      <span style={{ width: '2.2rem', flexShrink: 0 }}>{label}</span>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ flex: 1, minWidth: 0, accentColor: 'var(--accent)' }} />
-    </label>
   )
 }
 

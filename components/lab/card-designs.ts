@@ -4,12 +4,12 @@ import { splitHighlight } from '@/lib/card-news'
 import { AUTHOR_NAME, SITE_DOMAIN_NAME } from '@/lib/site'
 import {
   H, MONO, SANS, W, X, arrow, box, clampLines, countLines, drawImage, drawText, drawTitle, fit, pad, pageLabel, wrap,
-  DEFAULT_VIEW, setImageView, type Ctx, type DrawInput,
+  DEFAULT_VIEW, imageBox, setImageView, type Box, type Ctx, type DrawInput,
 } from './card-canvas'
 import { FEED_DESIGNS, FEED_RENDERERS } from './card-designs-feed'
 
 export { H, W } from './card-canvas'
-export type { Kind, ImageView } from './card-canvas'
+export type { Box, DrawInput, Kind, ImageView } from './card-canvas'
 export { DEFAULT_VIEW } from './card-canvas'
 
 export const DESIGNS = {
@@ -660,13 +660,16 @@ function retro(ctx: Ctx, d: DrawInput) {
 
 const RENDERERS: Record<DesignId, (ctx: Ctx, d: DrawInput) => void> = { photo, frame, terminal, tweet, memo, notebook, neon, chat, retro, ...FEED_RENDERERS }
 
-export function drawCard(canvas: HTMLCanvasElement, design: DesignId, d: DrawInput) {
+// 카드 이미지가 그려진 칸을 돌려준다 (이미지가 없거나 안 그려지면 null)
+export function drawCard(canvas: HTMLCanvasElement, design: DesignId, d: DrawInput): Box | null {
   const ctx = canvas.getContext('2d')
-  if (!ctx) return
+  if (!ctx) return null
   ctx.clearRect(0, 0, W, H)
   ctx.textBaseline = 'top'
   ctx.textAlign = 'left'
   setImageView(d.image, d.view)
   RENDERERS[design](ctx, d)
+  const box = imageBox()
   setImageView(null, DEFAULT_VIEW)
+  return box
 }

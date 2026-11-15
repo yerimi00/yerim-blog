@@ -31,10 +31,15 @@ export const DEFAULT_VIEW: ImageView = { zoom: 1, x: 0, y: 0, rotate: 0, flip: f
 // ponytail: 19종 렌더러에 값을 넘기지 않으려고 drawCard가 그리는 동안만 모듈 변수에 둔다. 이 이미지에만 적용(프로필 사진 제외)
 let viewImage: HTMLImageElement | null = null
 let view: ImageView = DEFAULT_VIEW
+// 마지막으로 그 이미지를 그린 칸 — 편집 화면이 격자를 맞추고 드래그 거리를 칸 비율로 바꿀 때 쓴다
+export type Box = { x: number; y: number; w: number; h: number }
+let lastBox: Box | null = null
 export function setImageView(img: HTMLImageElement | null, v: ImageView = DEFAULT_VIEW) {
   viewImage = img
   view = v
+  lastBox = null
 }
+export const imageBox = () => lastBox
 
 export const pad = (n: number) => String(n).padStart(2, '0')
 export const pageLabel = (d: DrawInput) => `${pad(d.index + 1)} / ${pad(d.total)}`
@@ -172,6 +177,7 @@ export function drawImage(ctx: Ctx, img: HTMLImageElement, x: number, y: number,
   ctx.clip()
   if (bg) { ctx.fillStyle = bg; ctx.fillRect(x, y, w, h) }
   const v = img === viewImage ? view : DEFAULT_VIEW
+  if (img === viewImage) lastBox = { x, y, w, h }
   // 90°·270°로 돌리면 가로·세로가 바뀐 상태로 칸에 맞춘다
   const side = v.rotate % 180 !== 0
   const nw = side ? img.naturalHeight : img.naturalWidth
