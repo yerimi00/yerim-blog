@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
-import { TbFlipVertical, TbRestore, TbRotateClockwise2, TbZoomIn, TbZoomOut } from 'react-icons/tb'
+import { TbAngle, TbFlipVertical, TbRestore, TbRotateClockwise2, TbZoomIn, TbZoomOut } from 'react-icons/tb'
 import { fastTween } from '@/components/motion/presets'
 import { DEFAULT_VIEW, H, W, type Box, type ImageView } from './card-designs'
 
@@ -135,7 +135,7 @@ export default function ImageEditor({ title, initial, render, onDone, onCancel }
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem' }}>
-        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>사진을 드래그해 위치를 옮기고, 휠이나 슬라이더로 크기를 바꿔요</p>
+        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>드래그로 위치, 휠·슬라이더로 크기, 각도 슬라이더로 조금씩 기울여요 (더블클릭하면 0°)</p>
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'min(360px, 100%)' }}>
           <TbZoomOut aria-hidden size={18} />
           <input
@@ -150,6 +150,21 @@ export default function ImageEditor({ title, initial, render, onDone, onCancel }
           />
           <TbZoomIn aria-hidden size={18} />
           <span style={{ width: '3rem', textAlign: 'right', fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums' }}>{Math.round(view.zoom * 100)}%</span>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', width: 'min(360px, 100%)' }}>
+          <TbAngle aria-hidden size={18} />
+          <input
+            type="range"
+            aria-label="기울기"
+            min={-45}
+            max={45}
+            step={0.5}
+            value={view.tilt}
+            onChange={(e) => patch({ tilt: Number(e.target.value) })}
+            onDoubleClick={() => patch({ tilt: 0 })}
+            style={{ flex: 1, minWidth: 0, accentColor: 'var(--accent)' }}
+          />
+          <span style={{ width: '3rem', textAlign: 'right', fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums' }}>{view.tilt > 0 ? '+' : ''}{view.tilt}°</span>
         </label>
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <ToolButton label={`회전 ${view.rotate}°`} onClick={() => patch({ rotate: (view.rotate + 90) % 360 })}>

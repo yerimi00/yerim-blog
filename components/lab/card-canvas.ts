@@ -24,9 +24,9 @@ export type DrawInput = {
   view?: ImageView
 }
 
-// 카드 이미지 조절값: zoom 배율, x·y는 칸 크기 대비 이동(-0.5~0.5), rotate 0/90/180/270, flip 좌우 반전
-export type ImageView = { zoom: number; x: number; y: number; rotate: number; flip: boolean }
-export const DEFAULT_VIEW: ImageView = { zoom: 1, x: 0, y: 0, rotate: 0, flip: false }
+// 카드 이미지 조절값: zoom 배율, x·y는 칸 크기 대비 이동, rotate 0/90/180/270, tilt 미세 회전(-45~45°), flip 좌우 반전
+export type ImageView = { zoom: number; x: number; y: number; rotate: number; tilt: number; flip: boolean }
+export const DEFAULT_VIEW: ImageView = { zoom: 1, x: 0, y: 0, rotate: 0, tilt: 0, flip: false }
 
 // ponytail: 19종 렌더러에 값을 넘기지 않으려고 drawCard가 그리는 동안만 모듈 변수에 둔다. 이 이미지에만 적용(프로필 사진 제외)
 let viewImage: HTMLImageElement | null = null
@@ -182,11 +182,17 @@ export function drawImage(ctx: Ctx, img: HTMLImageElement, x: number, y: number,
   const side = v.rotate % 180 !== 0
   const nw = side ? img.naturalHeight : img.naturalWidth
   const nh = side ? img.naturalWidth : img.naturalHeight
-  const scale = (mode === 'cover' ? Math.max : Math.min)(w / nw, h / nh) * v.zoom
+  // 기울이면 칸 모서리가 비지 않게, 칸을 반대로 기울인 바깥 사각형 기준으로 채운다 (사진 앱 수평 맞추기와 같은 자동 확대)
+  const t = (v.tilt * Math.PI) / 180
+  const cos = Math.abs(Math.cos(t))
+  const sin = Math.abs(Math.sin(t))
+  const fw = mode === 'cover' ? w * cos + h * sin : w
+  const fh = mode === 'cover' ? w * sin + h * cos : h
+  const scale = (mode === 'cover' ? Math.max : Math.min)(fw / nw, fh / nh) * v.zoom
   const iw = img.naturalWidth * scale
   const ih = img.naturalHeight * scale
   ctx.translate(x + w / 2 + v.x * w, y + h / 2 + v.y * h)
-  ctx.rotate((v.rotate * Math.PI) / 180)
+  ctx.rotate(((v.rotate + v.tilt) * Math.PI) / 180)
   if (v.flip) ctx.scale(-1, 1)
   ctx.drawImage(img, -iw / 2, -ih / 2, iw, ih)
   ctx.restore()
